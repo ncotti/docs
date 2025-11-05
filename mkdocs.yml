@@ -1,10 +1,12 @@
-site_name: My docs
+site_name: Cotti's Bible
 site_url: https://ncotti.github.io/documentation/
 docs_dir: docs
 
 nav:
   - Home: index.md
   - About: about.md
+
+  - MkDocs: mkdocs/index.md
 
   - GDB: 
     - Home: gdb/index.md
