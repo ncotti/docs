@@ -6,7 +6,9 @@ nav:
   - Home: index.md
   - About: about.md
 
-  - MkDocs: mkdocs/index.md
+  - MkDocs: 
+    - Introduction: mkdocs/index.md
+    - Deployment: mkdocs/deployment.md
 
   - GDB: 
     - Home: gdb/index.md
