@@ -1,0 +1,10 @@
+name: Run hello world on Docker
+
+on: push
+
+jobs:
+    hello_world:
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "hello world"
+            
