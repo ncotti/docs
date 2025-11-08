@@ -1,25 +1,28 @@
-name: "Using actions"
+name: "Environmental variables behavior"
 on: push
 jobs:
-  job_id:
+  job1:
     runs-on: ubuntu-latest
+    env: 
+      ENV_VARIABLE: "0"
+    outputs:
+      job1_output: ${{ steps.step2.outputs.job1_output }}
     steps:
-      - run: |
-          echo $(pwd)
-          echo $(ls)
+      - id: step1
+        run: |
+          echo "Original env variable value: $ENV_VARIABLE" # Prints 0
+          echo "ENV_VARIABLE=1" >> "$GITHUB_ENV"
 
-      - name: "Checkout repo"
-        uses: actions/checkout@v5
+      - id: step2
+        run: |
+          echo "Env variable in new step: $ENV_VARIABLE"    # Prints 1
+          echo "job1_output=55" >> "$GITHUB_OUTPUT"
 
-      - run: |
-          echo $(pwd)
-          echo $(ls)
-        
-
-      - name: "Install Python"
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-
-      - name: "Run Python script"
-        run: python3 sample_script.py
+  job2:
+    runs-on: ubuntu-latest
+    needs: [job1]
+    env:
+      ENV_VARIABLE: ${{ needs.job1.outputs.job1_output }}
+    steps:
+        - run: |
+            echo "Env variable value: $ENV_VARIABLE"        # Prints 55
