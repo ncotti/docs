@@ -1,0 +1,19 @@
+name: "Lots of jobs"
+
+on: push
+
+jobs:
+    job1:
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "Hello from job1"
+
+    job2:
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "Hello from job2"
+
+    job3:
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "Hello from job3"
