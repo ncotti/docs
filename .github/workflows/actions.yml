@@ -4,8 +4,17 @@ jobs:
   job_id:
     runs-on: ubuntu-latest
     steps:
+      - run: |
+          echo $(pwd)
+          echo $(ls)
+
       - name: "Checkout repo"
         uses: actions/checkout@v5
+
+      - run: |
+          echo $(pwd)
+          echo $(ls)
+        
 
       - name: "Install Python"
         uses: actions/setup-python@v6
