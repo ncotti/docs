@@ -8,11 +8,12 @@ jobs:
     steps:
       - run: |
           echo "Original env variable value: $ENV_VARIABLE"   # Prints 0
-          echo "ENV_VARIABLE="1"" >> "$GITHUB_ENV"
-          echo "Env variable after change: $ENV_VARIABLE"     # Prints 0
+          ENV_VARIABLE="1"
+          echo "ENV_VARIABLE="$ENV_VARIABLE"" >> "$GITHUB_ENV"
+          echo "Env variable after change: $ENV_VARIABLE"     # Prints 1
 
       - run: |
-          echo "Env variable in new step: $ENV_VARIABLE"      # Prints 0
+          echo "Env variable in new step: $ENV_VARIABLE"      # Prints 1
 
   job2:
     runs-on: ubuntu-latest
