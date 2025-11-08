@@ -1,9 +1,0 @@
-name: "Manual workflow"
-
-on: [workflow_dispatch, push]
-
-jobs:
-    Hello_world:
-        runs-on: ubuntu-latest
-        steps:
-            - run: echo "Hello World"

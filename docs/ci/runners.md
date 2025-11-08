@@ -1,6 +1,6 @@
 # Runners: Where workflows run
 
-Basically, there are three options: run in a predefined GitHub-hosted runner, a custom GitHub-hosted runner or a self-hosted runner. The runner is chosen by the `jobs.<job_id>.runs-on` key:
+Basically, there are three options: run in a predefined GitHub-hosted runner, a custom GitHub-hosted runner or a self-hosted one. The runner is chosen by the `jobs.<job_id>.runs-on` key:
 
 ```yaml
 jobs:
@@ -8,11 +8,9 @@ jobs:
     runs-on: ubuntu-latest
 ```
 
-[Reference][reference].
-
 ## Predefined GitHub-hosted runners
 
-This type of runners are freshly started, predefined virtual machines that execute the jobs. They are filled with the latest version of development to accommodate for all kinds of environments. A simple example is shown below:
+This type of runners are freshly started, predefined virtual machines that execute the jobs. They are filled with the latest version of development tools to accommodate for all kinds of environments. A simple example is shown below:
 
 ```yaml
 name: Run hello world
@@ -28,9 +26,9 @@ Check the full list of [GitHub-hosted runners][runners].
 
 ## Custom GitHub-hosted runners
 
-This type of runners execute inside a user created Docker container. You should have created a Docker image and uploaded it to [DockerHub][dockerhub].
+This type of runners execute inside a user-created Docker image that should have been previosuly created and uploaded to [DockerHub][dockerhub].
 
-For example, if your Docker image is called `image_repo/image_name`, then you can execute the CI workflow in that container by including the `jobs.<job_id>.containers.image` property. Below is a full workflow example, that uses the `alpine:latest` image, with the environmental `CUSTOM_VARIABLE = "author"`
+Include the `jobs.<job_id>.containers.image` property to make the job's steps execute inside the Docker container. Below is a full workflow example, that uses the `alpine:latest` image, with the environment variable `CUSTOM_VARIABLE = "author"`
 
 ```yaml
 name: Run hello world on a Docker container
@@ -54,8 +52,6 @@ jobs:
 Self hosted runners imply having a local machine hooked to the internet, constantly listening for job request from GitHub. This methodology won't be discussed further since it is not needed by the author.
 
 <!-- Links -->
-[reference]: https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run
-
 [runners]: https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/choose-the-runner-for-a-job#standard-github-hosted-runners-for-public-repositories
 
 [dockerhub]: https://hub.docker.com/
