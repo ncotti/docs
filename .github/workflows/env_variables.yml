@@ -7,12 +7,16 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - run: |
-                echo "Env variable value: $ENV_VARIABLE"
+                echo "Original env variable value: $ENV_VARIABLE"   # Prints 0
                 ENV_VARIABLE="1"
+                echo "Env variable after change: $ENV_VARIABLE"     # Prints 1
+
+            - run: |
+                echo "Env variable in new step: $ENV_VARIABLE"      # Prints 1
 
     job2:
         runs-on: ubuntu-latest
         needs: [job1]
         steps:
             - run: |
-                echo "Env variable value: $ENV_VARIABLE"
+                echo "Env variable value: $ENV_VARIABLE"            # Prints 0
