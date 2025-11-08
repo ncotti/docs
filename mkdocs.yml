@@ -10,6 +10,12 @@ nav:
     - Introduction: mkdocs/index.md
     - Deployment: mkdocs/deployment.md
 
+  - CI:
+    - Introduction: ci/index.md
+    - "Events: When workflows run": ci/events.md
+    - "Jobs: What workflows do": ci/jobs.md
+    - "Runners: Where workflows run": ci/runners.md
+
   - GDB: 
     - Home: gdb/index.md
     - Tutorial: gdb/tutorial.md
