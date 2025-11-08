@@ -1,0 +1,16 @@
+name: "Using actions"
+on: push
+jobs:
+    job_id:
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Checkout repo"
+              uses: actions/checkout@v5
+
+            - name: "Install Python"
+              uses: actions/setup-python@v6
+              with:
+                python-version: "3.12"
+
+            - name: "Run Python script"
+              run: python3 -c "print('Hello from Python script')"
