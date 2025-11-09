@@ -1,3 +1,3 @@
 # My docs
 
-Placeholder text. 
+Placeholder text.
