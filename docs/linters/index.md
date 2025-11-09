@@ -14,7 +14,15 @@ Please review the guide for setting up the linter and formatter for each languag
 
 To be able to use auto-formatters in VS Code, you need to configure your file saving strategy to anything but `"files.autoSave": "afterDelay"`. Auto-formatters can still run after pressing manually `Ctrl + s`, but they won't run on autosaves.
 
-Therefore, the recommended setting is to use `"files.autoSave": "onFocusChange"`. Besi
+Therefore, the recommended setting is to use `"files.autoSave": "onFocusChange"`.
+
+### VS Code extension list
+
+| Extension | Author |
+| --------- | ---------------- |
+| Code Spell Checker | streetsidesoftware.com |
+| GitHub Actions | github.com |
+| Trailing Spaces | Shardul Mahadik |
 
 ## Why pre-commit or pre-push hooks aren't recommended
 
