@@ -6,7 +6,7 @@ nav:
   - Home: index.md
   - About: about.md
 
-  - MkDocs: 
+  - MkDocs:
     - Introduction: mkdocs/index.md
     - Deployment: mkdocs/deployment.md
 
@@ -16,7 +16,7 @@ nav:
     - "Jobs: What workflows do": ci/jobs.md
     - "Runners: Where workflows run": ci/runners.md
 
-  - GDB: 
+  - GDB:
     - Home: gdb/index.md
     - Tutorial: gdb/tutorial.md
     - Reference: gdb/reference.md
@@ -31,11 +31,14 @@ theme:
   name: material
   features:
     - navigation.tabs
-  palette: 
+    - content.code.copy
+    - content.code.annotate
+
+  palette:
     # Palette toggle for light mode
     - scheme: default
       toggle:
-        icon: material/brightness-7 
+        icon: material/brightness-7
         name: Switch to dark mode
 
     # Palette toggle for dark mode
@@ -52,7 +55,16 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+
+  # Admonitions
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+
+  # Footnotes
   - footnotes
+
+  # Anottations
+  - attr_list
+  - md_in_html
+  - pymdownx.superfences
