@@ -1,30 +1,13 @@
-# Based on super-linter GitHub Action:
-# https://github.com/marketplace/actions/super-linter
----
-name: Linter
-on: [push, pull_request]
+name: Markdown Linter
+on: push
 jobs:
-  build:
-    name: Lint
+  markdown_linter:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      packages: read
-      # To report GitHub Actions status checks
-      statuses: write
-
     steps:
-      - name: Checkout code
+      - name: "Checkout repo"
         uses: actions/checkout@v5
+        
+      - name: "Markdown linter"
+        uses: DavidAnson/markdownlint-cli2-action@v20
         with:
-          # super-linter needs the full git history to get the
-          # list of files that changed across commits
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: Super-linter
-        uses: super-linter/super-linter@v8.2.1 # x-release-please-version
-        env:
-          # To report GitHub Actions status checks
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          globs: '**/*.md'
