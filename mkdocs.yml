@@ -23,6 +23,10 @@ nav:
     - How-to Guides:
       - How to create a gdb script: gdb/how-to-guides/how_to_create_a_gdb_script.md
 
+  - Linters:
+    - Overview: linters/index.md
+    - MarkDown: linters/markdown.md
+
 theme:
   name: material
   features:

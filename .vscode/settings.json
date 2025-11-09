@@ -1,0 +1,13 @@
+{
+    "files.autoSave": "onFocusChange",
+
+    "markdownlint.configFile": ".vscode/.markdownlint.json",
+    "[markdown]": {
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 80,
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true,
+        "editor.formatOnSaveMode": "file",
+        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+    },
+}

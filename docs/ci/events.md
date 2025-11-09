@@ -12,7 +12,7 @@ You can filter each event to be more specific, for example, to trigger the workf
 ```yaml
 # Event triggered when pushed code to branch "main",
 # and a file inside the folder "sources" was modified
-on:     
+on:
   push:
     branches:
       - main

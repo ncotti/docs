@@ -1,13 +1,24 @@
 name: Markdown Linter
-on: push
+on: [push, pull_request]
 jobs:
   markdown_linter:
     runs-on: ubuntu-latest
+    env:
+      CONFIG_FILE: '.vscode/.markdownlint.json'
     steps:
       - name: "Checkout repo"
         uses: actions/checkout@v5
-        
+
+      - name: Create config file if it does not exist
+        if: ${{ !hashFiles(env.CONFIG_FILE) }}
+        run: |
+          echo "{\
+            \"default\": true,\
+            \"MD013\": false,\
+            }" > "$CONFIG_FILE"
+
       - name: "Markdown linter"
         uses: DavidAnson/markdownlint-cli2-action@v20
         with:
-          globs: '**/*.md'
+          globs: "**/*.md"
+          config: ${{ env.CONFIG_FILE }}

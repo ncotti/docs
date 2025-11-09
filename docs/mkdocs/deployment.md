@@ -4,8 +4,6 @@ This guide shows you how to deploy your documentation online using different too
 
 ## GitHub Pages
 
-
-
 ## ReadTheDocs
 
 Setting ReadTheDocs is quite easy, only two steps are needed:

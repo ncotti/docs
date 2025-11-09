@@ -4,9 +4,9 @@ Each job runs a series of steps. Each step can have a `name`, and can be either 
 
 Commands are any valid Bash instruction. Actions are pre-made sets of commands that can be used in your workflow, the most common ones being [checkout][checkout_action], to retrieve files from a repository, and [setup-python][python_action], to install a certain Python version.
 
-The syntax for actions is: `uses: actions/<action_name>@v<version_number>`. The following example checkouts this repository, installs Python and then runs a simple Python script located in the repository's root path[^1]:
+The syntax for actions is: `uses: <action_creator>/<action_name>@v<version_number>`. The following example checkouts this repository, installs Python and then runs a simple Python script located in the repository's root path[^1]:
 
-[^1]: By default, the runner's default path is the empty directory `/home/runner/work/<repo_name>/<repo_name>`. After the  `actions/checkout`, the repository is cloned inside this folder and execution proceeds.
+[^1]: By default, the runner's default empty working directory `GITHUB_WORKSPACE=/home/runner/work/<repo_name>/<repo_name>`. After the  `actions/checkout`, the repository is cloned inside this folder and execution proceeds.
 
 ```yaml
 name: "Using actions"
@@ -65,7 +65,7 @@ Each job runs on a separate runner (virtual machine), indicated by the `runs-on`
 ```yaml
 name: "Failed attempt at sharing env variables"
 on: push
-env: 
+env:
   ENV_VARIABLE: "0"
 jobs:
   job1:
@@ -91,7 +91,7 @@ To share results between steps in the same job, you can use use the `$GITHUB_ENV
 ```yaml
 name: "Sharing env variables through GITHUB_ENV"
 on: push
-env: 
+env:
   ENV_VARIABLE: "0"
 jobs:
   job1:
@@ -124,7 +124,7 @@ on: push
 jobs:
   job1:
     runs-on: ubuntu-latest
-    env: 
+    env:
       ENV_VARIABLE: "0"
     outputs:
       job1_output: ${{ steps.step2.outputs.job1_output }}
