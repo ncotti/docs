@@ -1,0 +1,37 @@
+name: docs_example
+
+services:
+  docs_example:
+    image: ${IMAGE}:${TAG}
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+      network: host
+      args:
+        - CPPCHECK_VERSION=2.18.0
+        - HOME_PATH=${HOME_PATH}
+      target: target
+
+    env_file:
+      - .env
+
+    container_name: ${CONTAINER_NAME}
+
+    entrypoint: ${HOME_PATH}/entrypoint.sh
+
+    volumes:
+      - ${PWD}/entrypoint.sh:${HOME_PATH}/entrypoint.sh
+      - ${PWD}/shared_volume:${HOME_PATH}/shared_volume
+      - ${HOME}/.ssh:${HOME_PATH}/.ssh
+      - ${HOME}/.gitconfig:${HOME_PATH}/.gitconfig
+
+    privileged: true
+    tty: true
+    stdin_open: true
+
+    working_dir: ${HOME_PATH}
+
+    network_mode: "host"
+
+    command: ["/bin/bash"]
