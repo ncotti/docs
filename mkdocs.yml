@@ -27,6 +27,11 @@ nav:
     - Overview: linters/index.md
     - MarkDown: linters/markdown.md
 
+  - Docker:
+    - Overview: docker/docker_index.md
+    - Build images: docker/build_images.md
+    - Run containers: docker/run_containers.md
+
 theme:
   name: material
   features:
