@@ -44,11 +44,11 @@ The **bootloader** is a special code, written in Assembly and executed from the 
 
 * Initialize all hardware dependant registers.
 
-![Simplified memory map, showing start of flash memory, MSP location and reset handler.](../media/memory_map.png)
+![Simplified memory map, showing start of flash memory, MSP location and reset handler.](media/memory_map.png)
 
 ## What's needed to flash a program
 
-![All required elements to compile and flash a program to an embedded device](../media/flash_arm.png)
+![All required elements to compile and flash a program to an embedded device](media/flash_arm.png)
 
 * The **Compiler** and **Assembler** interpret the "C" and "Assembly" code and parse it to machine code, generating the ".o" object files.
 
