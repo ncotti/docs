@@ -37,6 +37,9 @@ nav:
     - Build images: docker/build_images.md
     - Run containers: docker/run_containers.md
 
+  - Testing:
+    - Gtest: testing/gtest.md
+
 theme:
   name: material
   features:
