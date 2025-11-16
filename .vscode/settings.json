@@ -12,6 +12,7 @@
         "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
     },
     "cSpell.words": [
+        "cheatsheet",
         "Makefiles"
     ],
 }
