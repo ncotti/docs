@@ -30,8 +30,16 @@ GDB_SCRIPT ?= debug.gdb
 #------------------------------------------------------------------------------
 # Binutils
 #------------------------------------------------------------------------------
-CC 			:= $(TOOLCHAIN)gcc
-AS 			:= $(TOOLCHAIN)as
+ifeq ($(origin CC), default)
+	CC := $(TOOLCHAIN)gcc
+else
+	CC ?= $(TOOLCHAIN)gcc
+endif
+ifeq ($(origin AS), default)
+	AS := $(TOOLCHAIN)as
+else
+	AS ?= $(TOOLCHAIN)as
+endif
 LD 			:= $(TOOLCHAIN)ld
 OBJDUMP 	:= $(TOOLCHAIN)objdump
 OBJCOPY 	:= $(TOOLCHAIN)objcopy
@@ -77,7 +85,6 @@ compile: $(ELF) ## Compile all source code, generate ELF file.
 
 .PHONY: help
 help: ## Display this message.
-	echo $(OBJS)
 	grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 	| sort \
 	| awk 'BEGIN {FS = ":.*?## "}; \
