@@ -40,6 +40,9 @@ nav:
   - Testing:
     - Gtest: testing/gtest.md
 
+  - Git:
+    - Best Practices: git/best_practices.md
+
 theme:
   name: material
   features:
@@ -77,7 +80,14 @@ markdown_extensions:
   # Footnotes
   - footnotes
 
-  # Anottations
+  # Annotations
   - attr_list
   - md_in_html
   - pymdownx.superfences
+
+  # Mermaid
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
