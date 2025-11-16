@@ -11,4 +11,7 @@
         "editor.formatOnSaveMode": "file",
         "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
     },
+    "cSpell.words": [
+        "Makefiles"
+    ],
 }
