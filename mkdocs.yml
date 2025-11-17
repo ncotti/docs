@@ -43,6 +43,9 @@ nav:
   - Git:
     - Best Practices: git/best_practices.md
 
+  - Licencing:
+    - Overview: licencing/licencing.md
+
 theme:
   name: material
   features:
