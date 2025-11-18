@@ -1,4 +1,4 @@
-# MarkDown Linters
+# MarkDown linters
 
 [Markdownlint] has a list of `MDxxx` rules that should be followed. By default, it shows a wabbly line underneath every mistake, with an explanation of the rule being broken.
 

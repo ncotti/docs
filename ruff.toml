@@ -3,8 +3,11 @@ indent-width = 4
 
 [lint]
 
-#select = ["ALL"]
-#ignore = []
+select = ["ALL"]
+ignore = [
+    "D203", # Space for first line of docstring
+    "D213"  # First line of docstring on new line
+]
 
 [format]
 quote-style = "double"

@@ -4,7 +4,10 @@ import logging
 
 
 def my_fun(a: str) -> None:
-    """My fun."""
+    """My own function.
+
+    Multiline docstring
+    """
 
 
 logging.basicConfig(level=logging.INFO)
