@@ -31,6 +31,8 @@ nav:
   - Linters:
     - Overview: linters/index.md
     - MarkDown: linters/markdown.md
+    - Python: linters/python.md
+    - C: linters/c.md
 
   - Docker:
     - Overview: docker/docker_index.md
@@ -45,6 +47,9 @@ nav:
 
   - Licencing:
     - Overview: licencing/licencing.md
+
+  - Bare-metal:
+    - Introduction: bare_metal/index.md
 
 theme:
   name: material
