@@ -1,10 +1,9 @@
 /**
-*	\file       AP_FuncionesMDE.h
-*	\brief      Prototipos, defines, etc. de los Eventos y Acciones asociadas a la M de E
-*	\details    Descripcion detallada del archivo
-*	\author     cotti
-*	\date       24-07-2023 09:36:14
-*/
+ *	\file       AP_FuncionesMDE.h
+ *	\brief      Prototipos, defines, etc. de los Eventos y Acciones
+ *asociadas a la M de E \details    Descripcion detallada del archivo \author
+ *cotti \date       24-07-2023 09:36:14
+ */
 
 #ifndef INC_AP_FUNCIONESMDEE_H_
 #define INC_AP_FUNCIONESMDEE_H_
@@ -16,10 +15,10 @@
 /************************************************************************************************************
  *** DEFINES GLOBALES
  ************************************************************************************************************/
-#define		TRUE		1
-#define		FALSE		0
-#define		ON		1
-#define		OFF		0
+#define TRUE 1
+#define FALSE 0
+#define ON 1
+#define OFF 0
 
 /************************************************************************************************************
  *** VARIABLES GLOBALES PUBLICAS
@@ -29,15 +28,16 @@
  *** PROTOTIPO DE FUNCIONES GLOBALES
  ************************************************************************************************************/
 
-/*-------------------------------------------- EVENTOS ----------------------------------------------------*/
+/*-------------------------------------------- EVENTOS
+ * ----------------------------------------------------*/
 
-int s_evento1 ( void );
-int s_evento_2 ( void );
+int s_evento1(void);
+int s_evento_2(void);
 
-/*-------------------------------------------- ACCIONES ----------------------------------------------------*/
+/*-------------------------------------------- ACCIONES
+ * ----------------------------------------------------*/
 
-
-/*------------------------------------------TEMPORIZADORES -------------------------------------------------*/
-
+/*------------------------------------------TEMPORIZADORES
+ * -------------------------------------------------*/
 
 #endif /* INC_AP_FUNCIONESMDEE_H_ */

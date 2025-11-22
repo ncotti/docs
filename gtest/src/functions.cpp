@@ -1,6 +1,6 @@
 #include "functions.h"
 
-int factorial (int n) {
+int factorial(int n) {
     int result = 1;
 
     if (n < 0) {

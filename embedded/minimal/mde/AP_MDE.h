@@ -1,10 +1,10 @@
 /**
-*	\file       AP_MDE.h
-*	\brief      Prototipos, defines, etc. de las diferentes la M de E
-*	\details    Descripcion detallada del archivo
-*	\author     cotti
-*	\date       24-07-2023 09:36:14
-*/
+ *	\file       AP_MDE.h
+ *	\brief      Prototipos, defines, etc. de las diferentes la M de E
+ *	\details    Descripcion detallada del archivo
+ *	\author     cotti
+ *	\date       24-07-2023 09:36:14
+ */
 
 #ifndef INC_AP_MDEE_H_
 #define INC_AP_MDEE_H_
@@ -24,6 +24,6 @@
 /************************************************************************************************************
  *** PROTOTIPO DE FUNCIONES GLOBALES
  ************************************************************************************************************/
-void MaquinaDeEstados ( void );
+void MaquinaDeEstados(void);
 
 #endif /* INC_AP_MDEE_H_ */

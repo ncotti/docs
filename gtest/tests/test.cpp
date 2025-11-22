@@ -1,9 +1,7 @@
-#include "gtest/gtest.h"
 #include "functions.h"
+#include "gtest/gtest.h"
 
-TEST(FactorialTest, ZeroInput) {
-    EXPECT_EQ(factorial(0), 1);
-}
+TEST(FactorialTest, ZeroInput) { EXPECT_EQ(factorial(0), 1); }
 
 TEST(FactorialTest, PositiveInput) {
     EXPECT_EQ(factorial(1), 1);

@@ -1,10 +1,10 @@
 /**
-*	\file       AP_Inicializacion.c
-*	\brief      Funciones de inicializacion de todo el proyecto
-*	\details    Descripcion detallada del archivo
-*	\author     cotti
-*	\date       24-07-2023 09:36:14
-*/
+ *	\file       AP_Inicializacion.c
+ *	\brief      Funciones de inicializacion de todo el proyecto
+ *	\details    Descripcion detallada del archivo
+ *	\author     cotti
+ *	\date       24-07-2023 09:36:14
+ */
 
 /************************************************************************************************************
  *** INCLUDES
@@ -19,26 +19,25 @@
 /************************************************************************************************************
  *** PROTOTIPO DE FUNCIONES PRIVADAS AL MODULO
  ************************************************************************************************************/
-static void Inicializar_MdE1( void ) ;
+static void Inicializar_MdE1(void);
 
 /************************************************************************************************************
  *** FUNCIONES PRIVADAS AL MODULO
  ************************************************************************************************************/
 
 /**
-*	\fn      void Inicializar_MdE1( void )
-*	\brief   Inicializacion de las diferentes maquinas de estado
-*	\details Amplie la descripcion
-*	\author  cotti
-*	\date    24-07-2023 09:36:14
-*   \param   void
-*	\return  void
-*/
-static void Inicializar_MdE1( void )
-{
+ *	\fn      void Inicializar_MdE1( void )
+ *	\brief   Inicializacion de las diferentes maquinas de estado
+ *	\details Amplie la descripcion
+ *	\author  cotti
+ *	\date    24-07-2023 09:36:14
+ *   \param   void
+ *	\return  void
+ */
+static void Inicializar_MdE1(void) {
     //!< Coloque aqui su codigo
 
-    return ;
+    return;
 }
 
 /************************************************************************************************************
@@ -46,22 +45,18 @@ static void Inicializar_MdE1( void )
  ************************************************************************************************************/
 
 /**
-*	\fn      void Inicializar( void )
-*	\brief   Inicializacion de las diferentes maquinas de estado
-*	\details Amplie la descripcion
-*	\author  cotti
-*	\date    24-07-2023 09:36:14
-*   \param   void
-*	\return  void
-*/
-void Inicializar( void )
-{
-    //Coloque aqui su codigo
+ *	\fn      void Inicializar( void )
+ *	\brief   Inicializacion de las diferentes maquinas de estado
+ *	\details Amplie la descripcion
+ *	\author  cotti
+ *	\date    24-07-2023 09:36:14
+ *   \param   void
+ *	\return  void
+ */
+void Inicializar(void) {
+    // Coloque aqui su codigo
 
+    Inicializar_MdE1();
 
-	Inicializar_MdE1( );
-
-	
-    return ;
+    return;
 }
-
