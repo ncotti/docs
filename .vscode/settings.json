@@ -1,28 +1,33 @@
 // .vscode/settings.json
 {
     "files.autoSave": "onFocusChange",
-
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnSaveMode": "file",
     "markdownlint.configFile": ".vscode/.markdownlint.json",
     "[markdown]": {
         "editor.wordWrap": "wordWrapColumn",
         "editor.wordWrapColumn": 80,
-        "editor.formatOnSave": true,
-        "editor.formatOnPaste": true,
-        "editor.formatOnSaveMode": "file",
         "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
     },
     "[python]": {
-        "editor.formatOnSave": true,
-        "editor.formatOnPaste": true,
-        "editor.formatOnSaveMode": "file",
         "editor.codeActionsOnSave": {
             "source.fixAll": "always",
             "source.organizeImports": "always"
         },
         "editor.defaultFormatter": "charliermarsh.ruff"
     },
+    "clang-format.style": "file",
+    "clang-format.fallbackStyle": "LLVM",
+    "[c]": {
+        "editor.defaultFormatter": "xaver.clang-format"
+    },
+    "[cpp]": {
+        "editor.defaultFormatter": "xaver.clang-format"
+    },
     "cSpell.words": [
         "cheatsheet",
+        "cppcheck",
         "Makefiles",
         "Tivoization"
     ],
