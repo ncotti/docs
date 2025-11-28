@@ -50,6 +50,7 @@ nav:
 
   - Bare-metal:
     - Introduction: bare_metal/index.md
+    - Arduino: bare_metal/arduino.md
 
 theme:
   name: material

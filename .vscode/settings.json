@@ -2,7 +2,6 @@
 {
     "files.autoSave": "onFocusChange",
     "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
     "editor.formatOnSaveMode": "file",
     "markdownlint.configFile": ".vscode/.markdownlint.json",
     "[markdown]": {

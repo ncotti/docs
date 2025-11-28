@@ -1,2 +1,5 @@
-venv
-tmp
+/venv
+/tmp
+/crosstool-ng*
+/bare_metal
+/x-tools
