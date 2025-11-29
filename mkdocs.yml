@@ -50,6 +50,13 @@ nav:
 
   - Bare-metal:
     - Introduction: bare_metal/index.md
+    - Interfaces:
+      - Overview: bare_metal/interfaces/interfaces_overview.md
+      - Jtag/Boundary-scan: bare_metal/interfaces/jtag.md
+      - SWD: bare_metal/interfaces/swd.md
+      - ST-Link: bare_metal/interfaces/stlink.md
+      - USB-UART: bare_metal/interfaces/usb_uart.md
+    - udev: bare_metal/udev.md
     - Arduino: bare_metal/arduino.md
 
 theme:

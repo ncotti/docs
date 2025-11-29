@@ -1,20 +1,32 @@
-# Jtag market
+# Interfaces: the connection from the target to the real world
 
-This section is a market research on JTAG programmers and associated software tools.
+When working with embedded devices, the focus is always on the application: write your code, press some magic button in a GUI, and see how it magically starts executing in the target.
 
-A comparison table is provided below:
+The process of flashing and debugging the code is different for each chip vendor. In this section, we will try to shed light on the matter in order to avoid depending on vendor-locked solutions.
 
-My two cents is that debuggers and probes are expensive because of ignorance. People pay for what they don't know.
+The following table is a comparison of commercially available debuggers[^1], pointing their price and the targets they work on:
 
-## FT2232HL
+[^1]: The words debugger, flasher and probe are using indistinctly and all refer to a device capable of accessing the chip's registers and memories.
+
+| Debugger | Price[^2] [U$D] | Comments |
+|:--------:|:---------------:|:--------:|
+|[J-Link][jlink_base]|$450| Works with almost any device. |
+|[Lauterbatch TRACE32][lauterbatch]|$5000| Expensive, vendor-specific. |
+|[JTAG Live][jtag_live]|$5000| Expensive, vendor-specific. |
+|[ST-LINK/V3][stlink_v3]|$35| Only works for STM chips. |
+|[Black Magic Probe][black_magic_probe]|$75|x|x|x|
+|[FTDI based module][ftdi_module]|$30| Compatible with OpenOCD, configurable. |
+|[CP21XX based module][cp_modules]|$40| Only works for USB-to-UART. |
+
+[^2]: Prices include hardware + software.
+
+My two cents is that debuggers are expensive because of ignorance. People pay for what they don't know.
+
+The following sections give a brief introduction to each debugger, but the focus is in the FTDI debuggers.
+
+## FTDI based probes
 
 TODO
-
-<https://www.mercadolibre.com.ar/conversor-ft232h-usb-gpiospii2c-fifo-multifuncion/up/MLAU213998973#polycard_client=search-nordic&search_layout=grid&position=19&type=product&tracking_id=f1b605ec-717a-4ecc-bb76-8672dcfec577&wid=MLA1128744844&sid=search>
-
-## CP2102
-
-This is the one I have (check todo micro purchase).
 
 ## Black Magic Probe
 
@@ -71,9 +83,9 @@ JLINK is primarly a flasher / debugger with a JTAG interface. For boundary-scan,
 
 The JTAG interface only specifies 5 pins, but the JLink device has a pinout of 20. Most of them are boilerplate GND and extra signals that aren't really needed.
 
-![alt text](images/jlink_pinout.png)
+![alt text](../images/jlink_pinout.png)
 
-## Lauterbach, XJTAG, JTAG Technologies
+## Lauterbach and JTAG Technologies
 
 All these companies are really expensive. They are meant to be used for companies only, since the real value comes from the proprietary software and customer support.
 
@@ -83,7 +95,12 @@ I can only think of one specific use case for these devices, and that is if you 
 
 <!-- External links -->
 
-[jlink_base]: https://shop.segger.com/debug-trace-probes/debug-probes/j-link/j-link-base-classic
-[jlink_commander]: https://www.segger.com/products/debug-probes/j-link/tools/j-link-commander/?mtm_campaign=kb&mtm_kwd=J-link-commander
-
+[jlink_base]: https://www.segger.com/products/debug-probes/j-link/models/j-link-base/
+[lauterbatch]: https://www.lauterbach.com/products/debugger/powerdebug-system
 [black_magic_probe]: https://black-magic.org/index.html
+[ftdi_module]: https://ftdichip.com/products/ft2232h-mini-module/
+[jtag_live]: https://www.jtaglive.com/
+[cp_modules]: https://www.silabs.com/interface/usb-bridges/classic
+[stlink_v3]: https://www.st.com/en/development-tools/stlink-v3set.html
+
+[jlink_commander]: https://www.segger.com/products/debug-probes/j-link/tools/j-link-commander/?mtm_campaign=kb&mtm_kwd=J-link-commander
