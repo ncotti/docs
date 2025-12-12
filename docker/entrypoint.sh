@@ -5,7 +5,7 @@
 ## the host machine (otherwise, files would only be accessible through
 ## the "root" user)
 function change_to_host_user() {
-    userdel "$(id -un "${HOST_UID}")" || true &>/dev/null
+    userdel "$(id -un "${HOST_UID}" &>/dev/null)" &>/dev/null || true
     addgroup --force-badname --gid "${HOST_GID}" "${HOST_GROUP}" &>/dev/null
     adduser --force-badname --quiet --gecos "" --home "${HOME_PATH}" \
         --shell /bin/bash --uid "${HOST_UID}" --gid "${HOST_GID}" \
