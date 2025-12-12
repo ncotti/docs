@@ -6,7 +6,7 @@
 ## the "root" user)
 function change_to_host_user() {
     # Delete the user if already exists
-    if [ "$(id "${HOST_UID}" &>/dev/null)" ]; then
+    if id "${HOST_UID}" &>/dev/null; then
         userdel "$(id -un "${HOST_UID}")" &>/dev/null || true
     fi
     addgroup --force-badname --gid "${HOST_GID}" "${HOST_GROUP}" &>/dev/null || true
