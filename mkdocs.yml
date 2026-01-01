@@ -33,6 +33,7 @@ nav:
     - MarkDown: linters/markdown.md
     - Python: linters/python.md
     - C: linters/c.md
+    - Latex: linters/latex.md
 
   - Docker:
     - Overview: docker/docker_index.md
