@@ -64,11 +64,13 @@ nav:
 
   - ARM Assembly:
     - Introduction: arm_assembly/index.md
+    - Binutils: arm_assembly/binutils.md
     - Directives: arm_assembly/directives.md
     - Instructions: arm_assembly/instructions.md
     - Interruptions: arm_assembly/interruptions.md
     - SIMD: arm_assembly/simd.md
     - ABI: arm_assembly/abi.md
+    - Pagination: arm_assembly/pagination.md
 
   - PCB:
     - Common circuits: pcb/common_circuits.md
