@@ -59,7 +59,14 @@ nav:
       - USB-UART: bare_metal/interfaces/usb_uart.md
     - udev: bare_metal/udev.md
     - Arduino: bare_metal/arduino.md
-  
+    - OpenOCD: bare_metal/openocd.md
+
+
+  - ARM Assembly:
+    - Introduction: arm_assembly/index.md
+    - Directives: arm_assembly/directives.md
+    - Instructions: arm_assembly/instructions.md
+
   - PCB:
     - Common circuits: pcb/common_circuits.md
 
