@@ -1,6 +1,6 @@
 # Assembly instructions
 
-The ARM assembly instructions are all operations that can be performed between registers and memory.
+The ARM assembly instructions are all operations that can be performed between registers and memory. The full list of instructions can be consulted at [ARM® Architecture Reference Manual ARMv7-A and ARMv7-R edition][arm_reference_manual]
 
 ## Architecture review
 
@@ -352,3 +352,4 @@ rfe sp{!}           // Return From Exception, using the stack pointer of #<mode>
 <!-- External links -->
 [CPSR]: https://developer.arm.com/documentation/ddi0406/b/System-Level-Architecture/The-System-Level-Programmers--Model/ARM-processor-modes-and-core-registers/Program-Status-Registers--PSRs-
 [arm_book]: https://shop.elsevier.com/books/modern-assembly-language-programming-with-the-arm-processor/pyeatt/978-0-443-14114-0
+[arm_reference_manual]: https://developer.arm.com/documentation/ddi0406/cd/?lang=en
