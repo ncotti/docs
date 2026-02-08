@@ -67,6 +67,7 @@ nav:
     - Directives: arm_assembly/directives.md
     - Instructions: arm_assembly/instructions.md
     - Interruptions: arm_assembly/interruptions.md
+    - SIMD: arm_assembly/simd.md
 
   - PCB:
     - Common circuits: pcb/common_circuits.md
