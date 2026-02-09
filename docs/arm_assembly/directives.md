@@ -222,7 +222,7 @@ By declaring `.thumb` or `.arm`, you can force the code to be executed on either
 [Modern Assembly Language Programming with the ARM Processor, Larry D Pyeatt][arm_book]
 
 <!-- External links -->
-[gnu_assembler_manual]: https://ftp.gnu.org/old-gnu/Manuals/gas-2.9.1/html_node/as_toc.html
-[assembler_directives]: https://ftp.gnu.org/old-gnu/Manuals/gas-2.9.1/html_chapter/as_7.html
+[gnu_assembler_manual]: https://sourceware.org/binutils/docs/as/index.html
+[assembler_directives]: https://sourceware.org/binutils/docs/as/Pseudo-Ops.html
 [common_section]: https://sourceware.org/binutils/docs/ld/Input-Section-Common.html
 [arm_book]: https://shop.elsevier.com/books/modern-assembly-language-programming-with-the-arm-processor/pyeatt/978-0-443-14114-0
