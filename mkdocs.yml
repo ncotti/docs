@@ -72,6 +72,10 @@ nav:
     - ABI: arm_assembly/abi.md
     - Pagination: arm_assembly/pagination.md
 
+  - Linker:
+    - Linker Script: linker/linker.md
+    - Virtual Memory: linker/virtual_memory.md
+
   - PCB:
     - Common circuits: pcb/common_circuits.md
 
