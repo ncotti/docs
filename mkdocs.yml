@@ -79,6 +79,11 @@ nav:
   - PCB:
     - Common circuits: pcb/common_circuits.md
 
+  - QEMU:
+    - Introduction: qemu/index.md
+    - Renode: qemu/renode.md
+    - Cross-compiling: qemu/cross_compiling.md
+
 theme:
   name: material
   features:

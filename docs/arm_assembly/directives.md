@@ -150,7 +150,14 @@ alias <symbol>, <alias_name>
 By default, all variables are static to the file they are created, unless the `.global` directive is used:
 
 ```arm
-.global symbol              // Set visibility outside of the file
+.global <symbol>             // Set visibility outside of the file
+```
+
+You can use weak aliases to symbols by first declaring the symbol as `.weak`, and then using `.set` to associate it to a **local** symbol or expression. Only **local** symbols can be weak. A strong symbol is defined as any symbol in other module, externally linked by the linker.
+
+```arm
+.weak <weak_symbol>
+.set <weak_symbol>, <expression>
 ```
 
 ### Conditional assembly

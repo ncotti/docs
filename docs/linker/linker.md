@@ -133,9 +133,9 @@ Besides, there is a special linker script variable called the **location counter
 
     * `[AT(lma_address)]`: Sets the initial LMA with and hexadecimal address.
     * `[AT>lma_region]`: Sets the initial LMA on the next free address in the memory region specified.
-    * By default, if the `vma_address` was provided, the VMA and LMA will be equal. Otherwise, it will be stored on the next free memory address of the last section LMA.
+    * By default, if the `vma_address` was provided, the VMA and LMA will be equal. Otherwise, it will be stored on the next free memory address of the last section's LMA.
 
-* `[ALIGN(section_align)]`: Enforce an alignment for the section, so that its initial memory address is a multiple of "section_align".
+* `[ALIGN(section_align)]`: Enforce an alignment for the section, so that its initial memory address is a multiple of "section_align" bytes.
 
 * `[=fillexp]`: Any empty space will be filled with the pattern of `=fillexp`. By default, all "0" will be used.
 <!-- markdownlint-enable MD007 -->
@@ -202,8 +202,8 @@ REGION_ALIAS(<alias>, <memory>) // Alternative name for a memory region
 ```c
 LOADADDR(<section>)     // Returns the initial LMA of the named section.
 ADDR(<section>)         // Returns the address (VMA) of the named section.
-ALIGN(<align>)          // Returns the next multiple of "align" for the location counter (.), without modifying it.
-ALIGN(<exp>, <align>)   // Returns the next multiple of "align" for the "exp".
+ALIGN(<align>)          // Returns the next multiple of "align" for the location counter (.), without modifying it, in bytes.
+ALIGN(<exp>, <align>)   // Returns the next multiple of "align" for the "exp", in bytes.
 SIZEOF(<section>)       // Returns the size in bytes of the named output section.
 ```
 
