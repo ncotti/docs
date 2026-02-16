@@ -12,3 +12,5 @@ b _abort_handler
 b _irq_handler
 b _fiq_handler
 b _default_handler
+#b _write
+#b _sbrk

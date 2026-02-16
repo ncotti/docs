@@ -1,5 +1,6 @@
 .extern ld_text_lma, ld_text_vma, ld_text_size
 .extern ld_data_origin, ld_data_vma, ld_data_size
+.extern ld_rodata_origin, ld_rodata_vma, ld_rodata_size
 .extern ld_bss_vma, ld_bss_size, ld_bss_pattern
 .extern ld_user_stack_top, ld_irq_stack_top, ld_fiq_stack_top
 .extern ld_svc_stack_top, ld_abt_stack_top, ld_und_stack_top
@@ -53,6 +54,12 @@ _start:
     ldr r0, =ld_data_vma
     ldr r1, =ld_data_lma
     ldr r2, =ld_data_size
+    bl _memcopy
+
+    // Copy rodata section
+    ldr r0, =ld_rodata_vma
+    ldr r1, =ld_rodata_lma
+    ldr r2, =ld_rodata_size
     bl _memcopy
 
     // Fill bss section

@@ -92,9 +92,71 @@ Once a sample was decided as a base, run:
 ./ct-ng <tuple>
 ```
 
-Then you can start making configurations.
+Then you can start making configurations in the usual GUI menu:
+
+```bash
+./ct-ng nconfig
+```
 
 ### Second step configuration
+
+Once the default toolchain was selected, is time to fine tune the actual toolchain in the menuconfig. I have done it a few times, there aren't a lot of options and aren't hard to understand, just go one by one.
+
+The only hard one mugh be
+
+After that, build the toolchain with:
+
+```bash
+
+```
+
+' -marm -march=armv5te+fp -mfloat-abi=softfp' --> lib/arm/v5te/softfp (gcc)   lib/arm/v5te/softfp (os)
+[EXTRA]       ' -marm -march=armv5te+fp -mfloat-abi=hard' --> lib/arm/v5te/hard (gcc)   lib/arm/v5te/hard (os)
+[EXTRA]       ' -mthumb -mfloat-abi=soft' --> lib/thumb/nofp (gcc)   lib/thumb/nofp (os)
+[EXTRA]       ' -mthumb -march=armv7 -mfloat-abi=soft' --> lib/thumb/v7/nofp (gcc)   lib/thumb/v7/nofp (os)
+[EXTRA]       ' -mthumb -march=armv7+fp -mfloat-abi=softfp' --> lib/thumb/v7+fp/softfp (gcc)   lib/thumb/v7+fp/softfp (os)
+[EXTRA]       ' -mthumb -march=armv7+fp -mfloat-abi=hard' --> lib/thumb/v7+fp/hard (gcc)   lib/thumb/v7+fp/hard (os)
+[EXTRA]       ' -mthumb -march=armv7-r+fp.sp -mfloat-abi=softfp' --> lib/thumb/v7-r+fp.sp/softfp (gcc)   lib/thumb/v7-r+fp.sp/softfp (os)
+[EXTRA]       ' -mthumb -march=armv7-r+fp.sp -mfloat-abi=hard' --> lib/thumb/v7-r+fp.sp/hard (gcc)   lib/thumb/v7-r+fp.sp/hard (os)
+[EXTRA]       ' -mthumb -march=armv7-a -mfloat-abi=soft' --> lib/thumb/v7-a/nofp (gcc)   lib/thumb/v7-a/nofp (os)
+[EXTRA]       ' -mthumb -march=armv7-a+fp -mfloat-abi=softfp' --> lib/thumb/v7-a+fp/softfp (gcc)   lib/thumb/v7-a+fp/softfp (os)
+[EXTRA]       ' -mthumb -march=armv7-a+fp -mfloat-abi=hard' --> lib/thumb/v7-a+fp/hard (gcc)   lib/thumb/v7-a+fp/hard (os)
+[EXTRA]       ' -mthumb -march=armv7-a+simd -mfloat-abi=softfp' --> lib/thumb/v7-a+simd/softfp (gcc)   lib/thumb/v7-a+simd/softfp (os)
+[EXTRA]       ' -mthumb -march=armv7-a+simd -mfloat-abi=hard' --> lib/thumb/v7-a+simd/hard (gcc)   lib/thumb/v7-a+simd/hard (os)
+[EXTRA]       ' -mthumb -march=armv7ve+simd -mfloat-abi=softfp' --> lib/thumb/v7ve+simd/softfp (gcc)   lib/thumb/v7ve+simd/softfp (os)
+[EXTRA]       ' -mthumb -march=armv7ve+simd -mfloat-abi=hard' --> lib/thumb/v7ve+simd/hard (gcc)   lib/thumb/v7ve+simd/hard (os)
+[EXTRA]       ' -mthumb -march=armv8-a -mfloat-abi=soft' --> lib/thumb/v8-a/nofp (gcc)   lib/thumb/v8-a/nofp (os)
+[EXTRA]       ' -mthumb -march=armv8-a+simd -mfloat-abi=softfp' --> lib/thumb/v8-a+simd/softfp (gcc)   lib/thumb/v8-a+simd/softfp (os)
+[EXTRA]       ' -mthumb -march=armv8-a+simd -mfloat-abi=hard' --> lib/thumb/v8-a+simd/hard (gcc)   lib/thumb/v8-a+simd/hard (os)
+[EXTRA]       ' -mthumb -march=armv6s-m -mfloat-abi=soft' --> lib/thumb/v6-m/nofp (gcc)   lib/thumb/v6-m/nofp (os)
+[EXTRA]       ' -mthumb -march=armv7-m -mfloat-abi=soft' --> lib/thumb/v7-m/nofp (gcc)   lib/thumb/v7-m/nofp (os)
+[EXTRA]       ' -mthumb -march=armv7e-m -mfloat-abi=soft' --> lib/thumb/v7e-m/nofp (gcc)   lib/thumb/v7e-m/nofp (os)
+[EXTRA]       ' -mthumb -march=armv7e-m+fp -mfloat-abi=softfp' --> lib/thumb/v7e-m+fp/softfp (gcc)   lib/thumb/v7e-m+fp/softfp (os)
+[EXTRA]       ' -mthumb -march=armv7e-m+fp -mfloat-abi=hard' --> lib/thumb/v7e-m+fp/hard (gcc)   lib/thumb/v7e-m+fp/hard (os)
+[EXTRA]       ' -mthumb -march=armv7e-m+fp.dp -mfloat-abi=softfp' --> lib/thumb/v7e-m+dp/softfp (gcc)   lib/thumb/v7e-m+dp/softfp (os)
+[EXTRA]       ' -mthumb -march=armv7e-m+fp.dp -mfloat-abi=hard' --> lib/thumb/v7e-m+dp/hard (gcc)   lib/thumb/v7e-m+dp/hard (os)
+[EXTRA]       ' -mthumb -march=armv8-m.base -mfloat-abi=soft' --> lib/thumb/v8-m.base/nofp (gcc)   lib/thumb/v8-m.base/nofp (os)
+[EXTRA]       ' -mthumb -march=armv8-m.main -mfloat-abi=soft' --> lib/thumb/v8-m.main/nofp (gcc)   lib/thumb/v8-m.main/nofp (os)
+[EXTRA]       ' -mthumb -march=armv8-m.main+fp -mfloat-abi=softfp' --> lib/thumb/v8-m.main+fp/softfp (gcc)   lib/thumb/v8-m.main+fp/softfp (os)
+[EXTRA]       ' -mthumb -march=armv8-m.main+fp -mfloat-abi=hard' --> lib/thumb/v8-m.main+fp/hard (gcc)   lib/thumb/v8-m.main+fp/hard (os)
+[EXTRA]       ' -mthumb -march=armv8-m.main+fp.dp -mfloat-abi=softfp' --> lib/thumb/v8-m.main+dp/softfp (gcc)   lib/thumb/v8-m.main+dp/softfp (os)
+[EXTRA]       ' -mthumb -march=armv8-m.main+fp.dp -mfloat-abi=hard' --> lib/thumb/v8-m.main+dp/hard (gcc)   lib/thumb/v8-m.main+dp/hard (os)
+
+## Newlib: embedded C libray
+
+[Newlib][newlib] is a a more compact version of the C library specially designed for embedded systems.
+
+You can use a great subset of the C library functions, provided that you implement the System Calls (syscalls). In the documentation there is a list of all the syscalls and the required syscalls for each function.
+
+You don't need to provide a full implementation if, for example, you don't support filesystems, but at least a mock implementation must be provided to link to the library.
+
+Check the initialization script "crt0.S", and the linker flag that supress it. It could be a great example of bootloader.
+
+Explain why linking directly with "ld" is a bad idea.
+
+Linking everything together... arm-cotti-eabi-gcc: fatal error: environment variable 'GCC_EXEC_PREFIX' not defined
+
+Move the toolchain to anywhere else from its default location
 
 ## Some examples
 
@@ -108,27 +170,10 @@ When looking at the memory map of the device, we find that the address `0x7000_0
 
 Because we are dealing with a Cortex-A8, the architecture expects to see a vector table at address `0x0000_0000` like this:
 
-```asm
-.section .vector_table, "ax", %progbits
-prv_vector_table:
-    ldr pc, =RESET_handler
-    ldr pc, =UND_handler
-    ldr pc, =SVC_handler
-    ldr pc, =PREF_handler
-    ldr pc, =ABT_handler
-    ldr pc, =0x00
-    ldr pc, =IRQ_handler
-    ldr pc, =FIQ_handler
+For the cortex A8 of the realview in baremetal, the closest choice is:
 
-/******************************************************************************
-* Exception handlers
-******************************************************************************/
-/// @brief Reset handler. First instruction executed on power up.
-.global RESET_handler
-.section .init
-.type RESET_handler, %function
-RESET_handler:
-    b _start
+```bash
+
 ```
 
 TODO
@@ -142,6 +187,8 @@ El problema acá es que no quiero escribir una aplicación baremetal en assemble
 [yocto]: https://www.yoctoproject.org/
 [buildroot]: https://buildroot.org
 [crosstool]: https://crosstool-ng.github.io/
+
+[newlib]: https://sourceware.org/newlib/
 
 [realview_user_manual]
 

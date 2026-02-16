@@ -16,10 +16,11 @@ SHELL=/bin/bash
 #------------------------------------------------------------------------------
 # Which compiler, linker, assembler and binutils to use, e.g.:
 # arm-none-eabi, arm-linux-gnueabihf, (left empty), etc
-toolchain := arm-linux-gnueabihf
+toolchain := $(HOME)/cotti/docs/tmp/x-tool/arm-cotti-eabi/bin/arm-cotti-eabi
 
 # User specific flags for C compiler (implicit flags: -c)
-compiler_flags := -Wall -g
+#compiler_flags := -Wall -g -marm -march=armv7-a+fp -mfloat-abi=hard -mcpu=cortex-a8
+compiler_flags := -Wall -g -marm -march=armv7-a+fp -mfloat-abi=softfp
 
 # User specific flags for Assembler
 assembler_flags := -g
@@ -28,7 +29,9 @@ assembler_flags := -g
 linker_script := startup/linker_script.ld
 
 # User specific linker flags (implicit flags: -Map).
-linker_flags := -g
+#linker_flags := -g -L$(HOME)/cotti/docs/tmp/x-tools/arm-cotti-eabi/newlib-nano/arm-cotti-eabi/lib -lc_nano -lg_nano
+#linker_flags := -g -L$(HOME)/cotti/docs/tmp/x-tools/arm-cotti-eabi/newlib-nano/arm-cotti-eabi/lib -lc_nano
+linker_flags := -g -nostartfiles --specs=nano.specs --specs=nosys.specs -lc -lnosys
 
 # List of header files' directories.
 header_dirs := inc
@@ -50,7 +53,7 @@ doxygen_file := sup/Doxyfile
 #------------------------------------------------------------------------------
 cc 			:= ${toolchain}-gcc
 as 			:= ${toolchain}-as
-linker 		:= ${toolchain}-ld
+linker 		:= ${toolchain}-gcc
 objdump 	:= ${toolchain}-objdump
 objcopy 	:= ${toolchain}-objcopy
 
@@ -203,6 +206,7 @@ run: ${bin_file} kill ## Execute compiled program (using QEMU)
 		-m 32M \
 		-no-reboot -nographic \
 		-monitor telnet:127.0.0.1:1234,server,nowait \
+		-serial telnet:127.0.0.1:2222,server,nowait \
 		-S -gdb tcp::2159 \
 		-device loader,file=${bin_file},cpu-num=0 &>/dev/null
 	${print_checkmark}
@@ -229,7 +233,7 @@ ${elf_file}: ${object_files}
 		script="-T ${linker_script}"
 	fi
 	mkdir -p ${build_dir}/${info_dir}
-	${linker} ${linker_flags} $${script} -o $@ $^ -Map ${map_file}
+	${linker} ${linker_flags} -Wl,-Map=$${map_file} $${script} -o $@ $^
 	${print_checkmark}
 	echo "Executable file \"$@\" successfully created."
 

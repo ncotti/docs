@@ -29,11 +29,15 @@ HIDDEN(ld_stack_length = ld_user_stack_size + ld_irq_stack_size +
     ld_fiq_stack_size + ld_svc_stack_size + ld_abt_stack_size +
     ld_und_stack_size);
 
+PROVIDE(ld_heap_origin = ld_stack_origin + ld_stack_length);
+PROVIDE(ld_heap_length = 0x00100000);     /* 1MB */
+PROVIDE(ld_heap_end = ld_heap_origin + ld_heap_length);
+
 /* Rest of user RAM */
-HIDDEN(ld_ram_origin    = ld_stack_origin + ld_stack_length);
+HIDDEN(ld_ram_origin    = ld_heap_origin + ld_heap_length);
 
 /* 256 MB - flash size - stack size */
-HIDDEN(ld_ram_length    = 0x10000000 - ld_stack_length - ld_flash_length);
+HIDDEN(ld_ram_length    = 0x10000000 - ld_stack_length - ld_flash_length - ld_heap_length);
 
 
 /*-----------------------------------------------------------------------------
@@ -42,6 +46,7 @@ HIDDEN(ld_ram_length    = 0x10000000 - ld_stack_length - ld_flash_length);
 MEMORY {
     flash   (rx)    :   ORIGIN = ld_flash_origin,   LENGTH = ld_flash_length
     stack   (wa)    :   ORIGIN = ld_stack_origin,   LENGTH = ld_stack_length
+    heap    (wa)    :   ORIGIN = ld_heap_origin,    LENGTH = ld_heap_length
     ram     (wax)   :   ORIGIN = ld_ram_origin,     LENGTH = ld_ram_length
 }
 
@@ -76,15 +81,23 @@ SECTIONS {
 
     /* Initialized data */
     .data : ALIGN(4) {
-        *(.text*)
+        *(.data*)
     } >ram AT>flash
     PROVIDE(ld_data_lma = LOADADDR(.data));
     PROVIDE(ld_data_vma = ADDR(.data));
     PROVIDE(ld_data_size = SIZEOF(.data));
 
+    .rodata : ALIGN(4) {
+        *(.rodata*)
+    } >ram AT>flash
+    PROVIDE(ld_rodata_lma = LOADADDR(.rodata));
+    PROVIDE(ld_rodata_vma = ADDR(.rodata));
+    PROVIDE(ld_rodata_size = SIZEOF(.rodata));
+
     /* Unitialized data */
     .bss (NOLOAD) : ALIGN(4) {
         *(.bss*)
+        *(COMMON)
     } >ram
     PROVIDE(ld_bss_vma = ADDR(.bss));
     PROVIDE(ld_bss_size = SIZEOF(.bss));

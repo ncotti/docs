@@ -59,6 +59,34 @@ HIDDEN(<symbol> = <mem_address>);   /* Declare a local symbol, only seen within 
 PROVIDE(<symbol> = <mem_address>);  /* Declare a default value for a symbol, which will be defined globally ONLY if it was referenced by other module. */
 ```
 
+### Seing linker symbols in your code
+
+Linker symbols are always treated as addresses.
+
+```c
+/* linker_script.ld */
+PROVIDE(ld_memory_addr      = 0x70000000)
+PROVIDE(ld_memory_length    = 0x00010000)
+```
+
+When working in assembly, we can store the linker symbol as an address into a register:
+
+```asm
+.extern ld_memory_addr, .extern ld_memory_length
+ldr r0, =ld_memory_addr     // r0 gets loaded with the value "0x70000000"
+ldr r1, =ld_memory_length   // r1 gets loaded with the value "0x00010000"
+```
+
+In C, we need to define the variable as `extern`, and get its **address**:
+
+```c
+extern uint32_t ld_memory_addr;
+extern uint32_t ld_memory_length;
+
+uint32_t * memory_addr = &ld_memory_addr;   // memory_addr = 0x70000000
+uint32_t memory_size = &ld_memory_length;   // memory_size = 0x00010000
+```
+
 ## Memory regions: where to place and to execute the code
 
 The [`MEMORY` command][memory_command] creates memory regions where the different sections of the code will be placed. To define a region, you need four properties:
