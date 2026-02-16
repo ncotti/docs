@@ -1,12 +1,7 @@
-# Author: Nicolas Gabriel Cotti (ngcotti@gmail.com)
-
 #------------------------------------------------------------------------------
 # Makefile Initialization
 #------------------------------------------------------------------------------
 SHELL=/bin/bash
-.ONESHELL:
-.POSIX:
-.EXPORT_ALL_VARIABLES:
 .DELETE_ON_ERROR:
 .SILENT:
 .DEFAULT_GOAL := help
@@ -14,193 +9,120 @@ SHELL=/bin/bash
 #------------------------------------------------------------------------------
 # User modifiable variables
 #------------------------------------------------------------------------------
-# Which compiler, linker, assembler and binutils to use, e.g.:
-# arm-none-eabi, arm-linux-gnueabihf, (left empty), etc
-toolchain := $(HOME)/cotti/docs/tmp/x-tool/arm-cotti-eabi/bin/arm-cotti-eabi
+# E.g.: arm-none-eabi-, arm-linux-gnueabihf-, (left empty), etc
+TOOLCHAIN ?= $(HOME)/cotti/docs/tmp/x-tool/arm-cotti-eabi/bin/arm-cotti-eabi-
 
-# User specific flags for C compiler (implicit flags: -c)
-#compiler_flags := -Wall -g -marm -march=armv7-a+fp -mfloat-abi=hard -mcpu=cortex-a8
-compiler_flags := -Wall -g -marm -march=armv7-a+fp -mfloat-abi=softfp
 
-# User specific flags for Assembler
-assembler_flags := -g
+SRC_DIRS ?= src startup
+HEADER_DIRS ?= inc
 
-# Direction to the linker script (can be empty)
-linker_script := startup/linker_script.ld
+CFLAGS ?= -Wall -g -marm -march=armv7-a+fp -mfloat-abi=softfp
+ASFLAGS ?= -g
+LDFLAGS ?= -g -nostartfiles --specs=nano.specs --specs=nosys.specs -lc -lnosys
 
-# User specific linker flags (implicit flags: -Map).
-#linker_flags := -g -L$(HOME)/cotti/docs/tmp/x-tools/arm-cotti-eabi/newlib-nano/arm-cotti-eabi/lib -lc_nano -lg_nano
-#linker_flags := -g -L$(HOME)/cotti/docs/tmp/x-tools/arm-cotti-eabi/newlib-nano/arm-cotti-eabi/lib -lc_nano
-linker_flags := -g -nostartfiles --specs=nano.specs --specs=nosys.specs -lc -lnosys
-
-# List of header files' directories.
-header_dirs := inc
-
-# List of source files' directories.
-source_dirs := src startup
+# Linker script (can be empty)
+LDSCRIPT ?= startup/linker_script.ld
 
 # Name of the final executable (without extension)
-executable_name := exe
+EXE ?= a
 
 # Name of the gdb script (can be empty)
-gdb_script := sup/debug.gdb
-
-# Name of the doxygen script (can be empty)
-doxygen_file := sup/Doxyfile
+GDB_SCRIPT ?= sup/debug.gdb
 
 #------------------------------------------------------------------------------
 # Binutils
 #------------------------------------------------------------------------------
-cc 			:= ${toolchain}-gcc
-as 			:= ${toolchain}-as
-linker 		:= ${toolchain}-gcc
-objdump 	:= ${toolchain}-objdump
-objcopy 	:= ${toolchain}-objcopy
+ifeq ($(origin CC), default)
+CC := $(TOOLCHAIN)gcc
+else
+CC ?= $(TOOLCHAIN)gcc
+endif
+ifeq ($(origin AS), default)
+AS := $(TOOLCHAIN)as
+else
+AS ?= $(TOOLCHAIN)as
+endif
+LD 			:= $(TOOLCHAIN)gcc
+OBJDUMP 	:= $(TOOLCHAIN)objdump
+OBJCOPY 	:= $(TOOLCHAIN)objcopy
 
 #------------------------------------------------------------------------------
-# File extensions
+# Miscellaneous constants
 #------------------------------------------------------------------------------
-obj_ext 		:= .o
-c_ext 			:= .c
-h_ext 			:= .h
-asm_ext 		:= .s
-elf_ext 		:= .elf
-bin_ext 		:= .bin
-obj_header_ext 	:= .txt
-dasm_ext		:= .lst
-
-#------------------------------------------------------------------------------
-# Miscelaneous constants
-#------------------------------------------------------------------------------
-print_checkmark 	:= printf "\\033[0;32m\\u2714\n\\033[0m"
-print_cross 		:= printf "\\u274c\n"
+PRINT_CHECKMARK 	:= printf "\033[0;32m\342\234\224\n\033[0m"
+PRINT_CROSS 		:= printf "\033[0;31m\342\235\214\n\033[0m"
+PRINT_WARNING		:= printf "\033[0;33m\342\232\240\n\033[0m"
 
 #------------------------------------------------------------------------------
 # File location
 #------------------------------------------------------------------------------
-build_dir	:= bin
-info_dir 	:= ../doc
-elf_file 	:= ${build_dir}/${executable_name}${elf_ext}
-bin_file 	:= ${build_dir}/${executable_name}${bin_ext}
-map_file	:= ${build_dir}/${info_dir}/memory.map
+BUILD_DIR	:= build
+INFO_DIR 	:= info
+ELF 		:= $(BUILD_DIR)/$(EXE).elf
+BIN 		:= $(BUILD_DIR)/$(EXE).bin
+MAP			:= $(BUILD_DIR)/$(INFO_DIR)/memory.map
 
-# List all C source files as "source_dir/source_file"
-define c_source_files !=
-	for dir in ${source_dirs}; do
-		if ls $${dir}/*${c_ext} &> /dev/null; then
-			ls $${dir}/*${c_ext} 2> /dev/null
-		fi
-	done
-endef
+# If you use "ld" or "gcc" as linker, the memory map option is declared different
+ifneq (,$(findstring -ld, $(LD)))
+LDFLAGS += -Map $(MAP)
+else
+LDFLAGS += -Wl,-Map=$(MAP)
+endif
 
-# List all assembly source files as "source_dir/source_file"
-define asm_source_files !=
-	for dir in ${source_dirs}; do
-		if ls $${dir}/*${asm_ext} &> /dev/null; then
-			ls $${dir}/*${asm_ext} 2> /dev/null
-		fi
-	done
-endef
+# If you are using a custom linker script, don't use the default crt0.S files
+ifneq (,$(LDSCRIPT))
+LDFLAGS += -T $(LDSCRIPT)
+endif
 
-# List all header files as "header_dir/header_file"
-define header_files !=
-	for dir in ${header_dirs}; do
-		if ls $${dir}/*${h_ext} &> /dev/null; then
-			ls $${dir}/*${h_ext} 2> /dev/null
-		fi
-		if ls $${dir}/*${asm_ext} &> /dev/null; then
-			ls $${dir}/*${asm_ext} 2> /dev/null
-		fi
-	done
-endef
+SRCS := $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.c) $(wildcard $(dir)/*.s))
 
-# List all object files as "build_dir/source_dir/object_file"
-define object_files !=
-	# Replace source extension for object extension
-	for file in ${c_source_files} ${asm_source_files}; do
-		file=$${file//${c_ext}/${obj_ext}}
-		file=$${file//${asm_ext}/${obj_ext}}
-		echo "${build_dir}/$${file}"
-	done
-endef
+HEADERS := $(foreach dir, $(HEADER_DIRS), $(wildcard $(dir)/*.h) $(wildcard $(dir)/*.s))
+HEADER_FLAGS := $(addprefix -I , $(HEADER_DIRS))
 
-# List all object files' headers as "build_dir/info_dir/object_header_file"
-define object_header_files !=
-	for file in ${object_files} ${elf_file}; do
-		# Add info dir after build dir.
-		dst=$${file//"${build_dir}"/"${build_dir}/${info_dir}"}
-		# Change extension to object header.
-		dst=$${dst//"${obj_ext}"/"${obj_header_ext}"}
-		dst=$${dst//"${elf_ext}"/"${obj_header_ext}"}
-		echo "$${dst}"
-	done
-endef
+OBJS := $(addprefix $(BUILD_DIR)/, $(SRCS))
+OBJS := $(patsubst %.c, %.o, $(OBJS))
+OBJS := $(patsubst %.s, %.o, $(OBJS))
 
-# List all disassemblies as "build_dir/info_dir/dasm_file"
-define dasm_files !=
-	# Change extension to dasm_ext
-	for file in ${object_header_files}; do
-		file=$${file//${obj_header_ext}/${dasm_ext}}
-		echo "$${file}"
-	done
-endef
+OBJ_HEADERS := $(patsubst %.o, %.header, $(OBJS) $(ELF))
+OBJ_HEADERS := $(patsubst %.elf, %.header, $(OBJ_HEADERS))
+OBJ_HEADERS := $(patsubst $(BUILD_DIR)%, $(BUILD_DIR)/$(INFO_DIR)%, $(OBJ_HEADERS))
 
-# Function: Kill qemu process running on background
-define kill_qemu :=
-	# Send SIGKILL to coproc qemu if running
-	if ps -e | grep "qemu" &>/dev/null; then
-		echo -n "Old qemu process running on background. Killing... "
-		# Get the line where "qemu" is
-		qemu_line=$$( ps -e | grep "qemu" )
-		# Get only the first numbers (PID)
-		qemu_pid=$$( echo "$${qemu_line}" | grep -P -o '^[^\d]*\d+')
-		# Remove prefixing spaces or non digits
-		qemu_pid=$$( echo "$${qemu_pid}" | grep -P -o '\d+')
-		kill "$${qemu_pid}"
-		${print_checkmark}
-	fi
-endef
+DIS_ASM := $(patsubst %.header, %.d, $(OBJ_HEADERS))
+
+BUILD_SRC_DIRS := $(addprefix $(BUILD_DIR)/, $(SRC_DIRS))
+INFO_SRC_DIRS := $(addprefix $(BUILD_DIR)/$(INFO_DIR)/, $(SRC_DIRS))
 
 #------------------------------------------------------------------------------
 # User targets
 #------------------------------------------------------------------------------
 .PHONY: compile
-compile: ${elf_file} ## Compile all source code, generate ELF file.
+compile: $(ELF) ## Compile all source code, generate ELF file.
 
 .PHONY: help
 help: ## Display this message.
-	grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-10s\033[0m %s\n", $$1, $$2}'
+	grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
+	| sort \
+	| awk 'BEGIN {FS = ":.*?## "}; \
+	{printf "\033[36m%-10s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: binary
-binary: ${bin_file} ## Generate binary file, without ELF headers.
-
+binary: $(BIN) ## Generate binary file, without ELF headers.
 
 .PHONY: headers
-headers: ${object_header_files} ## Generate symbol table and section headers for all object files.
+headers: $(OBJ_HEADERS) ## Generate symbol table and section headers for all object files.
 
 .PHONY: dasm
-dasm: ${dasm_files} ## Generate disassemble for all object files and elf file.
+dasm: $(DIS_ASM) ## Generate disassemble for all object files and elf file.
 
 .PHONY: clean
 clean: ## Erase contents of build directory.
-	if [ -d $${build_dir} ]; then
-		if [ -d $${build_dir}/$${info_dir} ]; then
-			rm -R $${build_dir}/$${info_dir}
-		fi
-		rm -R $${build_dir}
-		echo -n "All files successfully erased "
-		${print_checkmark}
-	else
-		echo -n "Nothing to erase "
-		${print_cross}
-	fi
-
-.PHONY: clear
-clear: clean ## Same as clean.
+	rm -Rf $(BUILD_DIR)
+	echo -n "All files successfully erased "; $(PRINT_CHECKMARK)
 
 .PHONY: run
-run: ${bin_file} kill ## Execute compiled program (using QEMU)
+run: $(BIN) kill ## Execute compiled program (using QEMU)
 	echo -n "Initiating Qemu... "
+	qemu-system-arm --version &>/dev/null
 	coproc qemu-system-arm \
 		-M realview-pb-a8 \
 		-m 32M \
@@ -208,94 +130,80 @@ run: ${bin_file} kill ## Execute compiled program (using QEMU)
 		-monitor telnet:127.0.0.1:1234,server,nowait \
 		-serial telnet:127.0.0.1:2222,server,nowait \
 		-S -gdb tcp::2159 \
-		-device loader,file=${bin_file},cpu-num=0 &>/dev/null
-	${print_checkmark}
+		-device loader,file=$(BIN),cpu-num=0 &>/dev/null
+	$(PRINT_CHECKMARK)
 
 .PHONY: kill
 kill: ## Stop qemu process running on background
-	${kill_qemu}
+	if ps -e | grep "qemu" &>/dev/null; then \
+		echo -n "Old qemu process running on background. Killing... "; \
+		# Get the line where "qemu" is \
+		qemu_line=$$( ps -e | grep "qemu" ); \
+		# Get only the first numbers (PID) \
+		qemu_pid=$$( echo "$${qemu_line}" | grep -P -o '^[^\d]*\d+'); \
+		# Remove prefixing spaces or non digits \
+		qemu_pid=$$( echo "$${qemu_pid}" | grep -P -o '\d+'); \
+		kill "$${qemu_pid}"; \
+		$(PRINT_CHECKMARK); \
+	fi
 
 .PHONY: debug
 debug: run ## Debug the program (no need to "make run" first, compile with "-g")
-	if [ -n "${gdb_script}" ]; then
-		arg_gdb_script="-x ${gdb_script}"
-	fi
-	gdb-multiarch -q $${arg_gdb_script} "${elf_file}"
-	${kill_qemu}
+	gdb-multiarch -q -x "$(GDB_SCRIPT)" "$(ELF)"
 
 #------------------------------------------------------------------------------
 # Compilation targets
 #------------------------------------------------------------------------------
 # Main executable linking
-${elf_file}: ${object_files}
+$(ELF): $(OBJS)
 	echo -n "Linking everything together... "
-	if [ -n "${linker_script}" ]; then
-		script="-T ${linker_script}"
-	fi
-	mkdir -p ${build_dir}/${info_dir}
-	${linker} ${linker_flags} -Wl,-Map=$${map_file} $${script} -o $@ $^
-	${print_checkmark}
+	mkdir -p $(BUILD_DIR)/$(INFO_DIR)
+	$(LD) $(LDFLAGS) -o $@ $^
+	$(PRINT_CHECKMARK)
 	echo "Executable file \"$@\" successfully created."
 
-# Compiling individual object files
-${build_dir}/%${obj_ext}: %.* ${header_files} Makefile ${linker_script}
-	# Create compilation folders if they don't exist
-	for dir in ${source_dirs}; do
-		mkdir -p ${build_dir}/$${dir}
-	done
+# Compiling object files from C sources
+$(BUILD_DIR)/%.o: %.c $(HEADERS) Makefile $(LDSCRIPT) $(BUILD_SRC_DIRS)
+	echo -n "Compiling $< --> $@... "
+	$(CC) $(CFLAGS) $(HEADER_FLAGS) -o $@ -c $<
+	$(PRINT_CHECKMARK)
 
-	# Add "-I" flag in between header direrctories
-	include_headers=""
-	for dir in ${header_dirs}; do
-		include_headers="$${include_headers} -I $${dir}"
-	done
-
-	# Actual compiling
-	if echo $< | grep "\${c_ext}" &>/dev/null; then
-		echo -n "Compiling $< --> $@... "
-		${cc} ${compiler_flags} -o $@ -c $${include_headers} $<
-	elif echo $< | grep "\${asm_ext}" &>/dev/null; then
-		echo -n "Assembling $< --> $@... "
-		${as} ${assembler_flags} -o $@ -c $${include_headers} $<
-	else
-		${print_cross}
-		echo "Unrecognized file extension."
-		exit 1
-	fi
-	${print_checkmark}
+# Compiling object files from asm sources
+$(BUILD_DIR)/%.o: %.s $(HEADERS) Makefile $(LDSCRIPT) $(BUILD_SRC_DIRS)
+	echo -n "Assembling $< --> $@... "
+	$(AS) $(ASFLAGS) $(HEADER_FLAGS) -o $@ -c $<
+	$(PRINT_CHECKMARK)
 
 # Print object files' headers
-${build_dir}/${info_dir}/%${obj_header_ext}: ${build_dir}/%.o
-	for dir in ${source_dirs}; do
-		mkdir -p "${build_dir}/${info_dir}/$${dir}"
-	done
+$(BUILD_DIR)/$(INFO_DIR)/%.header: $(BUILD_DIR)/%.o $(INFO_SRC_DIRS)
 	echo -n "Printing $< -> $@... "
-	${objdump} -x $< > $@
-	${print_checkmark}
+	$(OBJDUMP) -x $< > $@
+	$(PRINT_CHECKMARK)
 
 # Print elf file's header
-${build_dir}/${info_dir}/%${obj_header_ext}: ${build_dir}/%.elf
+$(BUILD_DIR)/$(INFO_DIR)/%.header: $(BUILD_DIR)/%.elf $(INFO_SRC_DIRS)
 	echo -n "Printing $< -> $@... "
-	${objdump} -x $< > $@
-	${print_checkmark}
+	$(OBJDUMP) -x $< > $@
+	$(PRINT_CHECKMARK)
 
 # Print object files' disassembly
-${build_dir}/${info_dir}/%${dasm_ext}: ${build_dir}/%.o
-	for dir in ${source_dirs}; do
-		mkdir -p "${build_dir}/${info_dir}/$${dir}"
-	done
+$(BUILD_DIR)/$(INFO_DIR)/%.d: $(BUILD_DIR)/%.o $(INFO_SRC_DIRS)
 	echo -n "Disassembling $< -> $@... "
-	${objdump} -d $< > $@
-	${print_checkmark}
+	$(OBJDUMP) -d $< > $@
+	$(PRINT_CHECKMARK)
 
 # Print elf file disassembly
-${build_dir}/${info_dir}/%${dasm_ext}: ${build_dir}/%.elf
+$(BUILD_DIR)/$(INFO_DIR)/%.d: $(BUILD_DIR)/%.elf $(INFO_SRC_DIRS)
 	echo -n "Disassembling $< -> $@... "
-	${objdump} -d $< > $@
-	${print_checkmark}
+	$(OBJDUMP) -d $< > $@
+	$(PRINT_CHECKMARK)
 
 # Copy ELF file into BIN file
-${bin_file}: ${elf_file}
+$(BIN): $(ELF)
 	echo -n "Creating binary file $@... "
-	${objcopy} -O binary ${elf_file} ${bin_file}
-	${print_checkmark}
+	$(OBJCOPY) -O binary $(ELF) $(BIN)
+	$(PRINT_CHECKMARK)
+
+# Folders
+$(BUILD_SRC_DIRS) $(INFO_SRC_DIRS) $(BUILD_DIR)/$(INFO_DIR):
+	mkdir -p $@

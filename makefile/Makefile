@@ -1,6 +1,7 @@
 #------------------------------------------------------------------------------
 # Makefile Initialization
 #------------------------------------------------------------------------------
+SHELL=/bin/bash
 .DELETE_ON_ERROR:
 .SILENT:
 .DEFAULT_GOAL := help
@@ -22,7 +23,7 @@ LDFLAGS ?= -g
 LDSCRIPT ?= linker_script.ld
 
 # Name of the final executable (without extension)
-EXE ?= a
+EXE ?= exe
 
 # Name of the gdb script (can be empty)
 GDB_SCRIPT ?= debug.gdb
@@ -31,14 +32,14 @@ GDB_SCRIPT ?= debug.gdb
 # Binutils
 #------------------------------------------------------------------------------
 ifeq ($(origin CC), default)
-	CC := $(TOOLCHAIN)gcc
+CC := $(TOOLCHAIN)gcc
 else
-	CC ?= $(TOOLCHAIN)gcc
+CC ?= $(TOOLCHAIN)gcc
 endif
 ifeq ($(origin AS), default)
-	AS := $(TOOLCHAIN)as
+AS := $(TOOLCHAIN)as
 else
-	AS ?= $(TOOLCHAIN)as
+AS ?= $(TOOLCHAIN)as
 endif
 LD 			:= $(TOOLCHAIN)ld
 OBJDUMP 	:= $(TOOLCHAIN)objdump
@@ -47,8 +48,9 @@ OBJCOPY 	:= $(TOOLCHAIN)objcopy
 #------------------------------------------------------------------------------
 # Miscellaneous constants
 #------------------------------------------------------------------------------
-PRINT_CHECKMARK 	:= printf "\\033[0;32m\\u2714\n\\033[0m"
-PRINT_CROSS 		:= printf "\\u274c\n"
+PRINT_CHECKMARK 	:= printf "\033[0;32m\342\234\224\n\033[0m"
+PRINT_CROSS 		:= printf "\033[0;31m\342\235\214\n\033[0m"
+PRINT_WARNING		:= printf "\033[0;33m\342\232\240\n\033[0m"
 
 #------------------------------------------------------------------------------
 # File location
@@ -58,6 +60,18 @@ INFO_DIR 	:= info
 ELF 		:= $(BUILD_DIR)/$(EXE).elf
 BIN 		:= $(BUILD_DIR)/$(EXE).bin
 MAP			:= $(BUILD_DIR)/$(INFO_DIR)/memory.map
+
+# If you use "ld" or "gcc" as linker, the memory map option is declared different
+ifneq (,$(findstring -ld, $(LD)))
+LDFLAGS += -Map $(MAP)
+else
+LDFLAGS += -Wl,-Map=$(MAP)
+endif
+
+# If you are using a custom linker script, don't use the default crt0.S files
+ifneq (,$(LDSCRIPT))
+LDFLAGS += -T $(LDSCRIPT)
+endif
 
 SRCS := $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.c) $(wildcard $(dir)/*.s))
 
@@ -141,8 +155,8 @@ debug: run ## Debug the program (no need to "make run" first, compile with "-g")
 # Main executable linking
 $(ELF): $(OBJS)
 	echo -n "Linking everything together... "
-	$(if $(LDSCRIPT), script="-T $(LDSCRIPT)", script=""); \
-		$(LD) $(LDFLAGS) $${script} -o $@ $^ -Map $(MAP)
+	mkdir -p $(BUILD_DIR)/$(INFO_DIR)
+	$(LD) $(LDFLAGS) -o $@ $^
 	$(PRINT_CHECKMARK)
 	echo "Executable file \"$@\" successfully created."
 
