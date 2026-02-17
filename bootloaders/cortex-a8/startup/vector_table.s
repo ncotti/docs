@@ -84,7 +84,7 @@ _fiq_handler:
     pop {r0-r3, r12, lr}
     subs pc, lr, #4
 
-/// @brief Deafult Handler (weak symbol)
+/// @brief Default Handler (weak symbol)
 .text
 .type _default_handler, %function
 _default_handler:

@@ -15,9 +15,9 @@ TOOLCHAIN ?= $(HOME)/cotti/docs/tmp/x-tool/arm-cotti-eabi/bin/arm-cotti-eabi-
 SRC_DIRS ?= src startup
 HEADER_DIRS ?= inc
 
-CFLAGS ?= -Wall -g -marm -mcpu=cortex-a8 -mfloat-abi=softfp
+CFLAGS ?= -Wall -g -mthumb -mcpu=cortex-m4 -mfloat-abi=softfp
 ASFLAGS ?= $(CFLAGS)
-LDFLAGS ?= -g --specs=nano.specs --specs=nosys.specs -lc -lnosys
+LDFLAGS ?= -g
 
 # Linker script (can be empty)
 LDSCRIPT ?= startup/linker_script.ld
@@ -126,7 +126,7 @@ run: $(ELF) kill ## Execute compiled program (using QEMU)
 	echo -n "Initiating Qemu... "
 	qemu-system-arm --version &>/dev/null
 	coproc qemu-system-arm \
-		-M netduinoplus2 \
+		-M realview-pb-a8 \
 		-m 32M \
 		-no-reboot -nographic \
 		-monitor telnet:127.0.0.1:1234,server,nowait \
