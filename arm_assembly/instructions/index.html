@@ -1,0 +1,3907 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ncotti.github.io/docs/arm_assembly/instructions/">
+      
+      
+        <link rel="prev" href="../directives/">
+      
+      
+        <link rel="next" href="../interruptions/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+    
+    
+      
+        <title>Instructions - Cotti's Bible</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#assembly-instructions" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Cotti&#39;s Bible" class="md-header__button md-logo" aria-label="Cotti's Bible" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cotti's Bible
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Instructions
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../mkdocs/" class="md-tabs__link">
+          
+  
+  
+  MkDocs
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../ci/" class="md-tabs__link">
+          
+  
+  
+  CI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../build_systems/" class="md-tabs__link">
+          
+  
+  
+  Build Systems
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../gdb/" class="md-tabs__link">
+          
+  
+  
+  GDB
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../linters/" class="md-tabs__link">
+          
+  
+  
+  Linters
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../docker/docker_index/" class="md-tabs__link">
+          
+  
+  
+  Docker
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../testing/gtest/" class="md-tabs__link">
+          
+  
+  
+  Testing
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../git/best_practices/" class="md-tabs__link">
+          
+  
+  
+  Git
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../licencing/licencing/" class="md-tabs__link">
+          
+  
+  
+  Licencing
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../bare_metal/" class="md-tabs__link">
+          
+  
+  
+  Bare-metal
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  ARM Assembly
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../linker/linker/" class="md-tabs__link">
+          
+  
+  
+  Linker
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../pcb/common_circuits/" class="md-tabs__link">
+          
+  
+  
+  PCB
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../qemu/" class="md-tabs__link">
+          
+  
+  
+  QEMU
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cotti&#39;s Bible" class="md-nav__button md-logo" aria-label="Cotti's Bible" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cotti's Bible
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MkDocs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    MkDocs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mkdocs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mkdocs/deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ci/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ci/events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events: When workflows run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ci/jobs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jobs: What workflows do
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ci/runners/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runners: Where workflows run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Systems
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Build Systems
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build_systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build_systems/makefile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Makefile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build_systems/cmake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CMake
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GDB
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GDB
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gdb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gdb/tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gdb/reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-to Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-to Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gdb/how-to-guides/how_to_create_a_gdb_script/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to create a gdb script
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linters
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Linters
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linters/markdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MarkDown
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linters/python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linters/c/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linters/latex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Latex
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Docker
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docker/docker_index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docker/build_images/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build images
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docker/run_containers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run containers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Testing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/gtest/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gtest
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Git
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../git/best_practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Licencing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Licencing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../licencing/licencing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bare-metal
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bare-metal
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bare_metal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_12_2" id="__nav_12_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interfaces
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Interfaces
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bare_metal/interfaces/interfaces_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bare_metal/interfaces/jtag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jtag/Boundary-scan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bare_metal/interfaces/swd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SWD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bare_metal/interfaces/stlink/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ST-Link
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bare_metal/interfaces/usb_uart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    USB-UART
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bare_metal/udev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    udev
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bare_metal/arduino/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arduino
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bare_metal/openocd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenOCD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ARM Assembly
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ARM Assembly
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binutils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Binutils
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../directives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Directives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instructions
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instructions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditional-instructions-and-cpsr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional instructions and CPSR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addresses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addresses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#load-and-store-register-ldr-str-ldm-stm-pop-push" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load and Store register (ldr, str, ldm, stm, pop, push)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#branch-b-bl-bx-blx-adr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Branch (b, bl, bx, blx adr)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-processing-instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Processing instructions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Processing instructions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#second-operand-and-barrel-shifter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Second operand and barrel shifter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shifting-lsl-lsr-asr-ror-rrx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shifting (lsl, lsr, asr, ror, rrx)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-cmp-cmn-tst-teq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison (cmp, cmn, tst, teq)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arithmetic-add-adc-sub-sbc-rsb-rsc-neg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arithmetic (add, adc, sub, sbc, rsb, rsc, neg)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logical-and-orr-eor-orn-bic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logical (and, orr, eor, orn, bic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-movement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data movement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiplication-with-32-bits-result-mul-mla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiplication with 32 bits result (mul, mla)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiplication-with-64-bits-result-smull-umull-smlal-umlal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiplication with 64 bits result (smull, umull, smlal, umlal)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#division-sdiv-udiv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Division (sdiv, udiv)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-clz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Misc (clz)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System instructions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System instructions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nop-nop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nop (nop)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-cpsr-and-spsr-mrs-msr-cps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access CPSR and SPSR (mrs, msr, cps)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#software-interrupt-swi-svc-wfi-srs-rfe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software interrupt (swi, svc, wfi, srs, rfe)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-bibliography" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended bibliography
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interruptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interruptions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SIMD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../abi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ABI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pagination/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pagination
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          <label class="md-nav__link" for="__nav_14" id="__nav_14_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linker
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Linker
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linker/linker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linker Script
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linker/virtual_memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Virtual Memory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+        
+          
+          <label class="md-nav__link" for="__nav_15" id="__nav_15_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PCB
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    PCB
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pcb/common_circuits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Common circuits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <label class="md-nav__link" for="__nav_16" id="__nav_16_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QEMU
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    QEMU
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../qemu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../qemu/renode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Renode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../qemu/cross_compiling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cross-compiling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditional-instructions-and-cpsr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional instructions and CPSR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addresses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addresses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#load-and-store-register-ldr-str-ldm-stm-pop-push" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load and Store register (ldr, str, ldm, stm, pop, push)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#branch-b-bl-bx-blx-adr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Branch (b, bl, bx, blx adr)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-processing-instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Processing instructions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Processing instructions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#second-operand-and-barrel-shifter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Second operand and barrel shifter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shifting-lsl-lsr-asr-ror-rrx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shifting (lsl, lsr, asr, ror, rrx)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-cmp-cmn-tst-teq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison (cmp, cmn, tst, teq)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arithmetic-add-adc-sub-sbc-rsb-rsc-neg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arithmetic (add, adc, sub, sbc, rsb, rsc, neg)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logical-and-orr-eor-orn-bic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logical (and, orr, eor, orn, bic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-movement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data movement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiplication-with-32-bits-result-mul-mla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiplication with 32 bits result (mul, mla)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiplication-with-64-bits-result-smull-umull-smlal-umlal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiplication with 64 bits result (smull, umull, smlal, umlal)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#division-sdiv-udiv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Division (sdiv, udiv)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#misc-clz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Misc (clz)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System instructions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System instructions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nop-nop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nop (nop)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-cpsr-and-spsr-mrs-msr-cps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access CPSR and SPSR (mrs, msr, cps)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#software-interrupt-swi-svc-wfi-srs-rfe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software interrupt (swi, svc, wfi, srs, rfe)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-bibliography" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended bibliography
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="assembly-instructions">Assembly instructions</h1>
+<p>The ARM assembly instructions are all operations that can be performed between registers and memory. The full list of instructions can be consulted at <a href="https://developer.arm.com/documentation/ddi0406/cd/?lang=en">ARM® Architecture Reference Manual ARMv7-A and ARMv7-R edition</a></p>
+<h2 id="architecture-review">Architecture review</h2>
+<p>The following image shows the ARM CPU architecture.</p>
+<p><img alt="ARM processor architecture" src="../images/ARM_arq.png" /></p>
+<p>All ARM instructions depend on two buses: the <strong>A bus</strong> and the <strong>B bus</strong>, both corresponding to registers. Only the <em>B bus</em> can store <strong>Data out</strong> to the memory, or be operated by the <strong>Barrel shifter</strong>.</p>
+<p>Arithmetic operations can be performed between the A and B buses; meanwhile, their result or the <strong>Data in</strong> from the memory, can be stored in another register, while the <strong>Address register</strong> (program counter) updates the <strong>Address bus</strong>.</p>
+<p>All operations, therefore, must be done on registers, and not directly on memory. In the following image there is a list of the available registers under user mode (different modes are explained in the interruptions section).</p>
+<p><img alt="Registers" src="../images/reg.png" /></p>
+<h2 id="conditional-instructions-and-cpsr">Conditional instructions and CPSR</h2>
+<p>The <a href="https://developer.arm.com/documentation/ddi0406/b/System-Level-Architecture/The-System-Level-Programmers--Model/ARM-processor-modes-and-core-registers/Program-Status-Registers--PSRs-">CPSR</a> (Current Program Status Registers) holds information about the flow of the program execution:</p>
+<p><img alt="Current Program Status Register" src="../images/cpsr.png" /></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Logical instruction</th>
+<th style="text-align: center;">Arithmetic instruction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">N (Negative)</td>
+<td style="text-align: center;">---</td>
+<td style="text-align: center;">Bit 31 of result is set (negative number)</td>
+</tr>
+<tr>
+<td style="text-align: center;">Z (Zero)</td>
+<td style="text-align: center;">Result is all zeros</td>
+<td style="text-align: center;">Result is "0"</td>
+</tr>
+<tr>
+<td style="text-align: center;">C (Carry)</td>
+<td style="text-align: center;">After shift operation, "1" was left in carry flag</td>
+<td style="text-align: center;">Result is greater than 32 bits (adding two positive numbers gives a positive and lower number)</td>
+</tr>
+<tr>
+<td style="text-align: center;">V (oVerflow)</td>
+<td style="text-align: center;">---</td>
+<td style="text-align: center;">Result is corrupted (Adding two positives numbers gave a negative one)</td>
+</tr>
+</tbody>
+</table>
+<p>If the instruction ends with and <code>S</code>, the flags in the CPSR will be updated. If the instruction ends with one of the following mnemonics, the instruction will be conditionally executed.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">\<cond></th>
+<th style="text-align: center;">Flags</th>
+<th style="text-align: center;">Math</th>
+<th style="text-align: center;">Abbreviation meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">al</td>
+<td style="text-align: center;">Any</td>
+<td style="text-align: center;">---</td>
+<td style="text-align: center;">Always</td>
+</tr>
+<tr>
+<td style="text-align: center;">eq</td>
+<td style="text-align: center;">Z=1</td>
+<td style="text-align: center;">A=0</td>
+<td style="text-align: center;">Equal "0"</td>
+</tr>
+<tr>
+<td style="text-align: center;">ne</td>
+<td style="text-align: center;">Z=0</td>
+<td style="text-align: center;">A=0</td>
+<td style="text-align: center;">Not Equal "0"</td>
+</tr>
+<tr>
+<td style="text-align: center;">ge</td>
+<td style="text-align: center;">(N=1 &amp; V=1) | (N=0 &amp; V=0)</td>
+<td style="text-align: center;">A ≥ B</td>
+<td style="text-align: center;">Greater or Equal</td>
+</tr>
+<tr>
+<td style="text-align: center;">lt</td>
+<td style="text-align: center;">(N=1 &amp; V=0) | (N=0 &amp; V=1)</td>
+<td style="text-align: center;">A &lt; B</td>
+<td style="text-align: center;">Less Than</td>
+</tr>
+<tr>
+<td style="text-align: center;">gt</td>
+<td style="text-align: center;">Z=0 &amp; ((N=1 &amp; V=1) | (N=0 &amp; V=1))</td>
+<td style="text-align: center;">A &gt; B</td>
+<td style="text-align: center;">Greater Than</td>
+</tr>
+<tr>
+<td style="text-align: center;">le</td>
+<td style="text-align: center;">Z=0 | (N=1 &amp; V=0) | (N=0 &amp; V=1)</td>
+<td style="text-align: center;">A ≤ B</td>
+<td style="text-align: center;">Less or Equal</td>
+</tr>
+<tr>
+<td style="text-align: center;">hi</td>
+<td style="text-align: center;">C=1 &amp; Z=0</td>
+<td style="text-align: center;">A &gt; B</td>
+<td style="text-align: center;">Higher</td>
+</tr>
+<tr>
+<td style="text-align: center;">ls</td>
+<td style="text-align: center;">C=0 | Z=1</td>
+<td style="text-align: center;">A ≤ B</td>
+<td style="text-align: center;">Lower or Same</td>
+</tr>
+<tr>
+<td style="text-align: center;">hs | cs</td>
+<td style="text-align: center;">C=1</td>
+<td style="text-align: center;">A ≥ B</td>
+<td style="text-align: center;">Higher or Same</td>
+</tr>
+<tr>
+<td style="text-align: center;">lo | cc</td>
+<td style="text-align: center;">C=0</td>
+<td style="text-align: center;">A &lt; B</td>
+<td style="text-align: center;">Lower</td>
+</tr>
+<tr>
+<td style="text-align: center;">mi</td>
+<td style="text-align: center;">N=1</td>
+<td style="text-align: center;">A &lt; 0</td>
+<td style="text-align: center;">Minus</td>
+</tr>
+<tr>
+<td style="text-align: center;">pl</td>
+<td style="text-align: center;">N=0</td>
+<td style="text-align: center;">A ≥ 0</td>
+<td style="text-align: center;">Plus</td>
+</tr>
+<tr>
+<td style="text-align: center;">vs</td>
+<td style="text-align: center;">V=1</td>
+<td style="text-align: center;">---</td>
+<td style="text-align: center;">Overflow Set</td>
+</tr>
+<tr>
+<td style="text-align: center;">vc</td>
+<td style="text-align: center;">V=0</td>
+<td style="text-align: center;">---</td>
+<td style="text-align: center;">Overflow Clear</td>
+</tr>
+</tbody>
+</table>
+<p>In the case of a conditional instruction that should update the CPSR, for example <code>addeqs</code>, the operation will be performed and the CPSR will be updated with its result only if the condition holds true.</p>
+<p>The following is an example of conditionally executed instructions:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ldr     r0, =44
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ldr     r1, =55
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>cmp     r0  r1          // compare r0 and r1
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>addlt   r0, r0, #11     // r0 = r0 + 11 if previous comparison gave that r0 &lt; r1 (true)
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>subs    r0, r0, r1      // r0 = r0 - r1 and update flags
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>addeq   r0, r0, #22     // r0 = r0 + 22 if previous operation was equal to &quot;0&quot; (true)
+</span></code></pre></div>
+<h2 id="addresses">Addresses</h2>
+<p>Given a memory address (<code>Rn</code>), its contents can be accessed as follows:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Syntax</th>
+<th style="text-align: center;">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><code>[Rn]</code></td>
+<td style="text-align: center;">Access contents of <code>Rn</code>.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>=&lt;Immediate|symbol&gt;</code></td>
+<td style="text-align: center;">Access contents of the immediate constant or symbol.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>[Rn, #±&lt;offset_12bits&gt;]{!}</code></td>
+<td style="text-align: center;">Access contents of <code>Rn ± &lt;offset&gt;</code>. Offset is a 12 bit number [-4095, 4095]. If it ends with <code>!</code>, then Rn is updated.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>[Rn, ±Rm, &lt;shift_op&gt; #&lt;shift&gt;]{!}</code></td>
+<td style="text-align: center;">Access contents of <code>Rn ± (Rm &lt;&lt; shift)</code>. If it ends with <code>!</code>, then Rn es updated.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>[Rn], #±&lt;offset_12bits&gt;</code></td>
+<td style="text-align: center;">Access contents of <code>Rn</code>, and then let <code>Rn = Rn ± &lt;offset&gt;</code>.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><code>[Rn], ±Rm, &lt;shift_op&gt; #&lt;shift&gt;</code></td>
+<td style="text-align: center;">Access contents of <code>Rn</code>, and then let <code>Rn = Rn ± (Rm &lt;&lt; shift)</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="load-and-store-register-ldr-str-ldm-stm-pop-push">Load and Store register (ldr, str, ldm, stm, pop, push)</h2>
+<p>For single registers use load <code>ldr</code> and store <code>str</code> instructions:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ldr{&lt;cond&gt;}{&lt;size&gt;} Rd, &lt;address&gt;   // Load register: Rd &lt;== *Address
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>str{&lt;cond&gt;}{&lt;size&gt;} Rd, &lt;address&gt;   // Store register: *Address &lt;== Rd
+</span></code></pre></div>
+<!-- markdownlint-disable MD007 -->
+<ul>
+<li><code>&lt;size&gt;</code>: By default, it will work on words (32 bits).<ul>
+<li><code>b</code>: unsigned byte.</li>
+<li><code>h</code>: unsigned half-word.</li>
+<li><code>sb</code>: signed byte.</li>
+<li><code>sh</code>: signed half-word.</li>
+</ul>
+</li>
+</ul>
+<!-- markdownlint-enable MD007 -->
+
+<p>For multiple registers:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ldm&lt;variant&gt; Rd{!}, &lt;register_list&gt; // Load multiple
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>stm&lt;variant&gt; Rd{!}, &lt;register_list&gt; // Store multiple
+</span></code></pre></div>
+<!-- markdownlint-disable MD007 -->
+<ul>
+<li>
+<p><code>&lt;variant&gt;</code>: How to navigate the memory (normally use full descending mode).</p>
+<ul>
+<li><code>ia|fd</code>: Increment after | full descending.</li>
+<li><code>ib|ed</code>: Increment before | empty descending.</li>
+<li><code>da|fa</code>: Decrement after | full ascending.</li>
+<li><code>db|ea</code>: Decrement before | empty ascending.</li>
+</ul>
+</li>
+<li>
+<p><code>{!}</code>: If included, value of Rd is updated with the new address.</p>
+</li>
+<li>
+<p><code>&lt;register_list&gt;</code>: enclosed with <code>{}</code>, comma separated registers, or range of registers with a <code>-</code>, for example <code>{r1, r3, r6-r8} = r1, r3, r6, r7, r8</code>.</p>
+</li>
+</ul>
+<!-- markdownlint-enable MD007 -->
+
+<p>To manage stack variables, the preferred way is to use the following instructions. The stack behaves like a LIFO (Last In, First Out).</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pop{&lt;cond&gt;}  &lt;reg_list&gt; // Pop from stack. Equivalent to &quot;ldmfd sp!, &lt;reg_list&gt;&quot;
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>push{&lt;cond&gt;} &lt;reg_list&gt; // Push to stack. Equivalent to &quot;stmfd sp!, &lt;reg_list&gt;&quot;
+</span></code></pre></div>
+<p>When using a register list, the lowest register will be stored in the lowest address. For example, if you were to push multiple registers, you'd see in memory:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>`push {r1, r5, r9-11}`
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>`TOP | r11 | r10 | r9 | r5 | r1 | BOTTOM`.
+</span></code></pre></div>
+<p>Likewise, if you were to pop multiple registers like <code>pop {r1, r5, r9-11}</code>, you will retrieve the lowest address' contents into the lowest register, and end up retrieving everything correctly.</p>
+<div class="language-c highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">push</span><span class="w"> </span><span class="p">{</span><span class="n">r0</span><span class="p">,</span><span class="w"> </span><span class="n">r2</span><span class="p">,</span><span class="w"> </span><span class="n">r7</span><span class="o">-</span><span class="n">r9</span><span class="p">}</span><span class="w">    </span><span class="c1">// TOP | r9 | r8 | r7 | r2 | r0 |    | BOTTOM</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">push</span><span class="w"> </span><span class="p">{</span><span class="n">r5</span><span class="p">}</span><span class="w">               </span><span class="c1">// TOP | r9 | r8 | r7 | r2 | r0 | r5 | BOTTOM</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">pop</span><span class="w"> </span><span class="p">{</span><span class="n">r5</span><span class="p">}</span><span class="w">                </span><span class="c1">// TOP | r9 | r8 | r7 | r2 | r0 |    | BOTTOM   r5=r5</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">pop</span><span class="w"> </span><span class="p">{</span><span class="n">r0</span><span class="p">,</span><span class="w"> </span><span class="n">r2</span><span class="p">}</span><span class="w">            </span><span class="c1">// TOP | r9 | r8 | r7 |    |    |    | BOTTOM   r0=r0; r2=r2</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">pop</span><span class="w"> </span><span class="p">{</span><span class="n">r7</span><span class="o">-</span><span class="n">r9</span><span class="p">}</span><span class="w">             </span><span class="c1">// TOP |    |    |    |    |    |    | BOTTOM   r7=r7, r8=r8, r9=r9</span>
+</span></code></pre></div>
+<p><img alt="Stack examples" src="../images/stack_examples.png" /></p>
+<h2 id="branch-b-bl-bx-blx-adr">Branch (b, bl, bx, blx adr)</h2>
+<p>A <strong>label</strong> is defined in assembler as a name followed by a colon. Labels are useful to define points in the code to branch to, such as the start of a function, a for loop, or just as a reference.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>// This is a label
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>my_label:
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    nop
+</span></code></pre></div>
+<p>A branch instruction can be as large as +-32 MBytes in memory, if used with a label. This is because the 32-bit instruction can't hold a 32-bit address, because some of the bits are used to encode the branch instruction itself. If the jump is larger than that, then a <strong>veneer</strong> is used by the compiler, which means that the address is loaded in the register <code>r12</code>, and jumps from that register.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>b{&lt;cond&gt;} &lt;label&gt;           // Branch to target label
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>bl{&lt;cond&gt;} &lt;label&gt;          // Branch and Link. lr = pc (for returning)
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>bx{&lt;cond&gt;} Rn               // Branch and exchange. Change to Thumb (pc_LSB=1) or ARM (pc_LSB=0) mode.
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>blx{&lt;cond&gt;} &lt;label&gt;         // Branch, link and exchange. Same as &quot;bx&quot;, but lr = pc
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>adr{&lt;cond&gt;}{s} Rd, &lt;label&gt;  // Copy address from label to register
+</span></code></pre></div>
+<p>A typical application of the branch instruction is to perform a <strong>for loop</strong>, such as:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>// This is equivalent to 
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>// for(i=0; i&lt;5; i++) {}
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>mov r0, #0
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>loop:
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    add r0, r0, #1
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    cmp r0, #5 
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    blt loop
+</span></code></pre></div>
+<h2 id="data-processing-instructions">Data Processing instructions</h2>
+<h3 id="second-operand-and-barrel-shifter">Second operand and barrel shifter</h3>
+<p>The second operand for data processing instruction will go through the barrel shifter, which can do the following in the same clock cycle:</p>
+<ul>
+<li>Define an immediate constant of 8 bits (0-255).</li>
+</ul>
+<!-- markdownlint-disable MD007 -->
+<ul>
+<li>Define an immediate constant of 32 bits, only if that value can be constructed by:<ul>
+<li>Rotating right an 8 bit constant for an even number from 0 to 30. (For example, 0x400 = 0x40 ROR 28)</li>
+<li>Making the 1's complement.</li>
+</ul>
+</li>
+</ul>
+<!-- markdownlint-enable MD007 -->
+
+<ul>
+<li>Rotate left or right the register <code>Rm</code> up to 31 positions.</li>
+</ul>
+<p>The list of possible second operands is as follows:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>#&lt;immediate_value&gt;              // Constant value of 8 bits or specially rotated.
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Rm                              // Single register
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Rm, &lt;shift_op&gt; #&lt;shift_value&gt;   // Rm &lt;&lt; shift_value (Rotate register by constant)
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Rm, &lt;shift_op&gt; Rs               // Rm &lt;&lt; Rs (Rotate register by other register)
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Rm, rxx                         // (C|Rm) &gt;&gt; 1 (Rotate right 1 position, including the Carry flag)
+</span></code></pre></div>
+<h3 id="shifting-lsl-lsr-asr-ror-rrx">Shifting (lsl, lsr, asr, ror, rrx)</h3>
+<p>All shifting operations can be used as <code>&lt;shift_op&gt;</code> with the barrel shifter, or as independent commands.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Rm, lsl #&lt;value&gt;    // Logical shift left
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Rm, lsr #&lt;value&gt;    // Logical shift right
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Rm, asr #&lt;value&gt;    // Arithmetic shift right (sign preserved)
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Rm, ror #&lt;value&gt;    // Rotate Right
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>Rm, rrx             // Rotate right by 1 position, but the Carry flag is included.
+</span></code></pre></div>
+<h3 id="comparison-cmp-cmn-tst-teq">Comparison (cmp, cmn, tst, teq)</h3>
+<p>These instructions only update the CPSR. They perform and arithmetic operation, but discard the result.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>cmp{&lt;cond&gt;} Rn, Operand2 // Compare: Rn - op2
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>cmn{&lt;cond&gt;} Rn, Operand2 // Compare negative: Rn + op2
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>tst{&lt;cond&gt;} Rn, Operand2 // Test: Rn &amp; Op2
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>teq{&lt;cond&gt;} Rn, Operand2 // Test equivalence: Rn XOR Op2
+</span></code></pre></div>
+<h3 id="arithmetic-add-adc-sub-sbc-rsb-rsc-neg">Arithmetic (add, adc, sub, sbc, rsb, rsc, neg)</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>add{&lt;cond&gt;}{s} Rd, Rn, Operand2 // Add: Rd = Rn + op2
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>adc{&lt;cond&gt;}{s} Rd, Rn, Operand2 // Add with carry: Rd = Rn + op2 + carry
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>sub{&lt;cond&gt;}{s} Rd, Rn, Operand2 // Subtract: Rd = Rn - op2
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>sbc{&lt;cond&gt;}{s} Rd, Rn, Operand2 // Subtract with carry: Rd = Rn - op2 + carry - 1
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>rsb{&lt;cond&gt;}{s} Rd, Rn, Operand2 // Reverse subtract: Rd = op2 - Rn
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>rsc{&lt;cond&gt;}{s} Rd, Rn, Operand2 // Reverse subtract with carry: Rd= op2 - Rn + Carry - 1
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>neg{&lt;cond&gt;}{s} Rd, Rn           // Negate: Rd = -Rn. Same as &quot;rsb Rd, Rn, #0&quot;
+</span></code></pre></div>
+<h3 id="logical-and-orr-eor-orn-bic">Logical (and, orr, eor, orn, bic)</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>and{&lt;cond&gt;}{s} Rd, Rn, Operand2 // Bitwise AND: Rd = Rn &amp; op2
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>orr{&lt;cond&gt;}{s} Rd, Rn, Operand2 // Bitwise OR: Rd = Rn | op2
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>eor{&lt;cond&gt;}{s} Rd, Rn, Operand2 // Bitwise XOR: Rd = Rn XOR op2
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>orn{&lt;cond&gt;}{s} Rd, Rn, Operand2 // Bitwise OR negated: Rd = !(Rn | op2)
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>bic{&lt;cond&gt;}{s} Rd, Rn, Operand2 // Bit clear: Rd = Rn &amp; !(op2)
+</span></code></pre></div>
+<h3 id="data-movement">Data movement</h3>
+<p>Unlike <code>ldr</code> instructions, which load a value from memory, these instructions load a value from other register or use an immediate value. In the case of the instructions of the type <code>ldr Rn, =&lt;immediate_const&gt;</code>, they will be assembled into an equivalent <code>mov Rn, #&lt;immediate_const&gt;</code> if possible, or load a value in ROM and read it as <code>ldr Rn, [pc, #offset_pc]</code>.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>mov{&lt;cond&gt;}{s} Rd, Operand2 // Move: Rd = op2
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>mvn{&lt;cond&gt;}{s} Rd, Operand2 // Move not: Rd = !op2 (1&#39;s complement)
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>movt{&lt;cond&gt;} Rd, #immed16   // Move top: Rd = (immed16 &lt;&lt; 16) | (Rd &amp; 0xFFFF)
+</span></code></pre></div>
+<h3 id="multiplication-with-32-bits-result-mul-mla">Multiplication with 32 bits result (mul, mla)</h3>
+<p>Registers Rd and Rm should be different, or a compiler warning may appear.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>mul{&lt;cond&gt;}{s} Rd, Rm, Rs       // Multiply: Rd = Rm * Rs
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>mla{&lt;cond&gt;}{s} Rd, Rm, Rs, Rn   // Multiply and accumulate: Rd = Rm * Rs + Rn
+</span></code></pre></div>
+<h3 id="multiplication-with-64-bits-result-smull-umull-smlal-umlal">Multiplication with 64 bits result (smull, umull, smlal, umlal)</h3>
+<p>The 32 LSB will be stored in RdLo, while the 32 MSB will be stored in RdHi (RdHi : RdLo).</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>smull{&lt;cond&gt;}{s} RdLo, RdHi, Rm, Rs // Signed multiply long: RdHi : RdLo = Rm * Rs
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>umull{&lt;cond&gt;}{s} RdLo, RdHi, Rm, Rs // Unsigned multiply long: RdHi : RdLo = Rm * Rs
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>smlal{&lt;cond&gt;}{s} RdLo, RdHi, Rm, Rs // Signed multiply and accumulate long: RdHi : RdLo = Rm * Rs + RdHi : RdLo
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>umlal{&lt;cond&gt;}{s} RdLo, RdHi, Rm, Rs // Unsigned multiply and accumulate long: RdHi : RdLo = Rm * Rs + RdHi : RdLo
+</span></code></pre></div>
+<h3 id="division-sdiv-udiv">Division (sdiv, udiv)</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>sdiv{&lt;cond&gt;}{s} Rd, Rm, Rn // Signed division: Rd = Rm / Rn
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>udiv{&lt;cond&gt;}{s} Rd, Rm, Rn // Unsigned division: Rd = Rm / Rn
+</span></code></pre></div>
+<h3 id="misc-clz">Misc (clz)</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>clz{&lt;cond&gt;} Rd, Rm // Count Leading Zeros: Rd = 31 - Int(log_2(Rm))
+</span></code></pre></div>
+<h2 id="system-instructions">System instructions</h2>
+<h3 id="nop-nop">Nop (nop)</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>nop // No operation, equivalent to &quot;mov r0, r0&quot;
+</span></code></pre></div>
+<h3 id="access-cpsr-and-spsr-mrs-msr-cps">Access CPSR and SPSR (mrs, msr, cps)</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>mrs{&lt;cond&gt;} Rd, &lt;special_reg&gt;{_&lt;fields&gt;} // Move status to register: Rd = &lt;special_reg&gt;
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>msr{&lt;cond&gt;} &lt;special_reg&gt;{_&lt;fields&gt;}, Rd // Move register to status: special_reg = Rd
+</span></code></pre></div>
+<p>The special register can be:</p>
+<ul>
+<li>CPSR: Current program status register.</li>
+<li>SPSR: Saved program status register.</li>
+<li>xPSR (APSR, IPSR, EPSR): Current program status register, but for Cortex-M processor.</li>
+<li>PRIMASK|FAULTMASK|BASEPRI: Cortex-M interrupt priority.</li>
+<li>CONTROL: Cortex-M operation mode.</li>
+</ul>
+<p>The optional &lt;fields&gt; is any combination of (see CPSR image for meaning):</p>
+<ul>
+<li><code>c</code>: control field.</li>
+<li><code>x</code>: extension field.</li>
+<li><code>s</code>: status field.</li>
+<li><code>f</code>: flag field.</li>
+</ul>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>cps #&lt;mode&gt;  // Change Processor State (to certain operation mode)
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>cps{ie|id} a|i|f {, #&lt;mode&gt;} // Interrupt Enable or Interrupt Disable any combination of the &quot;Abort, IRQ, or FIQ&quot; interrupts.
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">\<mode></th>
+<th style="text-align: center;">User</th>
+<th style="text-align: center;">FIQ</th>
+<th style="text-align: center;">IRQ</th>
+<th style="text-align: center;">Supervisor</th>
+<th style="text-align: center;">Abort</th>
+<th style="text-align: center;">Undef</th>
+<th style="text-align: center;">System</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">Code</td>
+<td style="text-align: center;">0x10</td>
+<td style="text-align: center;">0x11</td>
+<td style="text-align: center;">0x12</td>
+<td style="text-align: center;">0x13</td>
+<td style="text-align: center;">0x17</td>
+<td style="text-align: center;">0x1B</td>
+<td style="text-align: center;">0x1F</td>
+</tr>
+</tbody>
+</table>
+<h3 id="software-interrupt-swi-svc-wfi-srs-rfe">Software interrupt (swi, svc, wfi, srs, rfe)</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>svc{cond} #&lt;syscall_number&gt; // SuperVisor Call
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>swi{cond} #&lt;syscall_number&gt; // Software interrupt, same as SVC
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>SVC_handler:
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>    ldrb r0, [lr, #-4]  // Get in r0 the syscall_number
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>    movs pc, lr
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>WFI{cond} // Wait for interrupt. Suspends execution until IRQ, FIQ or Data Abort.
+</span></code></pre></div>
+<p>The <code>srs</code> instruction (Save Return Status) saves the Link Register (lr) and the SPSR of the current mode in the stack of the &lt;mode&gt; specified. The <code>rfe</code> instruction (Return From Interrupt) is the opposite, and must be used always in conjunction with the <code>srs</code> one.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>srs sp{!}, #&lt;mode&gt;  // Store Return Status
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>cps #&lt;mode&gt;         // Change to different mode
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>rfe sp{!}           // Return From Exception, using the stack pointer of #&lt;mode&gt;
+</span></code></pre></div>
+<h2 id="recommended-bibliography">Recommended bibliography</h2>
+<p><a href="https://shop.elsevier.com/books/modern-assembly-language-programming-with-the-arm-processor/pyeatt/978-0-443-14114-0">Modern Assembly Language Programming with the ARM Processor, Larry D Pyeatt</a></p>
+<!-- External links -->
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
