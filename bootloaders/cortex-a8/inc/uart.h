@@ -16,5 +16,7 @@
 void uart_init(void);
 uint8_t uart_is_busy(void);
 void uart_write_char(char a);
+uint8_t uart_new_data(void);
+uint8_t uart_read_char(void);
 
 #endif // _UART_H_

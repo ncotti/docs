@@ -1,9 +1,9 @@
-#include "syscalls.h"
-#include "uart.h"
+#include "interrupt.h"
+#include <errno.h>
+#include <sys/stat.h>
+#include <sys/times.h>
 
-char *__env[1] = { 0 };
-char **environ = __env;
-int errno;
+#include "uart.h"
 
 void _exit(int status) {
     while(1);
@@ -73,13 +73,15 @@ int _open(const char *name, int flags, int mode) {
 
 int _read(int file, char *ptr, int len)
 {
-    (void)file;
-    (void) ptr;
-    (void) len;
-    return 0;
+    (void) file;
+    while(uart_new_data());
+    for(int i=0; i < len; i++) {
+        ptr[i] = uart_read_char();
+    }
+    return len;
 }
 
-caddr_t _sbrk(int incr) {
+void* _sbrk(int incr) {
 	extern char ld_heap_origin;   // set by linker
 	extern char ld_heap_end;     // set by linker
 
@@ -94,7 +96,7 @@ caddr_t _sbrk(int incr) {
 		_exit(ENOMEM);
 	}
 
-	return (caddr_t) prev_heap_end;
+	return (void*) prev_heap_end;
 }
 
 int _stat(char *file, struct stat *st)

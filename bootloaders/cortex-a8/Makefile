@@ -10,17 +10,20 @@ SHELL=/bin/bash
 # User modifiable variables
 #------------------------------------------------------------------------------
 # E.g.: arm-none-eabi-, arm-linux-gnueabihf-, (left empty), etc
-TOOLCHAIN ?= $(HOME)/cotti/docs/tmp/x-tool/arm-cotti-eabi/bin/arm-cotti-eabi-
+TOOLCHAIN ?= $(HOME)/cotti/docs/tmp/x-tools_picolib/arm-cotti-eabi/bin/arm-cotti-eabi-
+
+# pico | nano | newlib
+LIBC ?= pico
 
 SRC_DIRS ?= src startup
 HEADER_DIRS ?= inc
 
 CFLAGS ?= -Wall -g -marm -mcpu=cortex-a8 -mfloat-abi=softfp
 ASFLAGS ?= $(CFLAGS)
-LDFLAGS ?= -g --specs=nano.specs --specs=nosys.specs -lc -lnosys
+LDFLAGS ?= -g -Wl,--gc-sections
 
 # Linker script (can be empty)
-LDSCRIPT ?= startup/linker_script.ld
+LDSCRIPT ?= sup/linker_script.ld
 
 # Name of the final executable (without extension)
 EXE ?= exe
@@ -31,22 +34,15 @@ GDB_SCRIPT ?= sup/debug.gdb
 #------------------------------------------------------------------------------
 # Binutils
 #------------------------------------------------------------------------------
-ifeq ($(origin CC), default)
-CC := $(TOOLCHAIN)gcc
-else
-CC ?= $(TOOLCHAIN)gcc
-endif
-ifeq ($(origin AS), default)
-AS := $(TOOLCHAIN)gcc
-else
-AS ?= $(TOOLCHAIN)gcc
-endif
+CC 			:= $(TOOLCHAIN)gcc
+AS 			:= $(TOOLCHAIN)gcc
 LD 			:= $(TOOLCHAIN)gcc
 OBJDUMP 	:= $(TOOLCHAIN)objdump
 OBJCOPY 	:= $(TOOLCHAIN)objcopy
+GDB 		:= $(TOOLCHAIN)gdb
 
 #------------------------------------------------------------------------------
-# File location
+# Output files
 #------------------------------------------------------------------------------
 BUILD_DIR	:= build
 INFO_DIR 	:= info
@@ -54,6 +50,27 @@ ELF 		:= $(BUILD_DIR)/$(EXE).elf
 BIN 		:= $(BUILD_DIR)/$(EXE).bin
 MAP			:= $(BUILD_DIR)/$(INFO_DIR)/memory.map
 
+#------------------------------------------------------------------------------
+# Special rules
+#------------------------------------------------------------------------------
+# Default linker flags
+LDFLAGS += -Wl,-Map=$(MAP) -T $(LDSCRIPT) -nostartfiles
+
+ifeq (pico,$(LIBC))
+SRC_DIRS += src/syscalls_picolib
+LDFLAGS += --specs=picolibc.specs
+else ifeq (nano,$(LIBC))
+SRC_DIRS += src/syscalls_newlib
+LDFLAGS += --specs=nano.specs
+else ifeq (newlib,$(LIBC))
+SRC_DIRS += src/syscalls_newlib
+else
+$(error Unknown C library "$(LIBC)", try "pico", "nano" or "newlib")
+endif
+
+#------------------------------------------------------------------------------
+# File location
+#------------------------------------------------------------------------------
 SRCS := $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.c) $(wildcard $(dir)/*.s))
 
 HEADERS := $(foreach dir, $(HEADER_DIRS), $(wildcard $(dir)/*.h) $(wildcard $(dir)/*.s))
@@ -71,21 +88,6 @@ DIS_ASM := $(patsubst %.header, %.d, $(OBJ_HEADERS))
 
 BUILD_SRC_DIRS := $(addprefix $(BUILD_DIR)/, $(SRC_DIRS))
 INFO_SRC_DIRS := $(addprefix $(BUILD_DIR)/$(INFO_DIR)/, $(SRC_DIRS))
-
-#------------------------------------------------------------------------------
-# Special rules
-#------------------------------------------------------------------------------
-# If you use "ld" or "gcc" as linker, the memory map option is declared different
-ifneq (,$(findstring -ld, $(LD)))
-LDFLAGS += -Map $(MAP)
-else
-LDFLAGS += -Wl,-Map=$(MAP)
-endif
-
-# If you are using a custom linker script, don't use the default crt0.S files
-ifneq (,$(LDSCRIPT))
-LDFLAGS += -T $(LDSCRIPT) -nostartfiles
-endif
 
 #------------------------------------------------------------------------------
 # Miscellaneous constants
@@ -126,13 +128,13 @@ run: $(ELF) kill ## Execute compiled program (using QEMU)
 	echo -n "Initiating Qemu... "
 	qemu-system-arm --version &>/dev/null
 	coproc qemu-system-arm \
-		-M netduinoplus2 \
+		-M realview-pb-a8  \
 		-m 32M \
 		-no-reboot -nographic \
 		-monitor telnet:127.0.0.1:1234,server,nowait \
 		-serial telnet:127.0.0.1:2222,server,nowait \
 		-S -gdb tcp::2159 \
-		-device loader,file=$(ELF),cpu-num=0 &>/dev/null
+		-device loader,file=$(ELF) &>/dev/null
 	$(PRINT_CHECKMARK)
 
 .PHONY: kill
@@ -151,7 +153,8 @@ kill: ## Stop qemu process running on background
 
 .PHONY: debug
 debug: run ## Debug the program (no need to "make run" first, compile with "-g")
-	gdb-multiarch -q -x "$(GDB_SCRIPT)" "$(ELF)"
+	gnome-terminal -- bash -c "telnet localhost 2222"
+	$(GDB) -q -x "$(GDB_SCRIPT)" "$(ELF)"
 	$(MAKE) kill
 
 #------------------------------------------------------------------------------

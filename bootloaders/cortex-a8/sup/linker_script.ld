@@ -58,7 +58,7 @@ SECTIONS {
     /* The vector table should always be the first thing to store in memory.
     Must be identity mapped. */
     .vector_table : ALIGN(4) {
-        *(.vector_table*)
+        KEEP(*(.vector_table*))
     } >flash AT>flash
     PROVIDE(ld_vector_table_lma = LOADADDR(.vector_table));
     PROVIDE(ld_vector_table_vma = ADDR(.vector_table));
@@ -68,7 +68,7 @@ SECTIONS {
     memcopys from flash to ram.
     Must be identity mapped. */
     .init : ALIGN(4) {
-        *(.init*)
+        KEEP(*(.init*))
     } >flash AT>flash
 
     /* User code is copied from flash to RAM before executing */

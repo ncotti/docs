@@ -1,16 +1,13 @@
 #include "main.h"
-#include <stdlib.h>
-#include <stdio.h>
 
-char buf[BUFSIZ]; // BUFSIZ is an implementation-defined size
-
+char buf;
 
 int main(void) {
-    int time = 0;
-    time++; // Avoid unused variable
-    uart_init();
-    //time = rand();
+    char value_read;
     char * dyn_mem;
+
+    uart_init();
+
     dyn_mem = malloc(20);
     dyn_mem[0] = 'a';
     dyn_mem[1] = 'b';
@@ -20,14 +17,18 @@ int main(void) {
     uart_write_char(dyn_mem[1]);
     uart_write_char(dyn_mem[2]);
 
-    //setbuf(stdout, 0)
-    setvbuf(stdout, buf, _IOFBF, BUFSIZ);
+    free(dyn_mem);
+
+    // This is required for newlib.
+    // "1" is the amount of chars that "_read()" will handle at the same time.
+    // By default BUFF_SIZE = 1024, and read would be called with a "len" of
+    // 1024 for "getchar()".
+    setvbuf(stdin, &buf, _IOFBF, 1);
 
     while (1) {
-        time++;
-        printf("Hola\n");
-        fflush(stdout);
-        //uart_write_char('x');
+        printf("Reading a single character ...\n");
+        value_read = getchar();
+        printf("Character read: \"%c\"\n", value_read);
     }
 }
 

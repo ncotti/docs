@@ -30,7 +30,7 @@ _reset_handler:
     b _start
 
 /// @brief Undefined instruction handler
-.text
+.section .init
 .type _undef_handler, %function
 _undef_handler:
     push {r0-r3, r12, lr}
@@ -40,7 +40,7 @@ _undef_handler:
 
 
 /// @brief Software interrupt handler (Supervisor Call)
-.text
+.section .init
 .type _svc_handler, %function
 _svc_handler:
     push {r0-r3, r12, lr}
@@ -49,7 +49,7 @@ _svc_handler:
     movs pc, lr
 
 /// @brief Prefetch error handler
-.text
+.section .init
 .type _prefetch_handler, %function
 _prefetch_handler:
     push {r0-r3, r12, lr}
@@ -58,7 +58,7 @@ _prefetch_handler:
     subs pc, lr, #4
 
 /// @brief Data abort handler
-.text
+.section .init
 .type _abort_handler, %function
 _abort_handler:
     push {r0-r3, r12, lr}
@@ -67,7 +67,7 @@ _abort_handler:
     subs pc, lr, #8
 
 /// @brief Interrupt handler (IRQ)
-.text
+.section .init
 .type _irq_handler, %function
 _irq_handler:
     push {r0-r3, r12, lr}
@@ -76,7 +76,7 @@ _irq_handler:
     subs pc, lr, #4
 
 /// @brief Fast Interrupt handler (FIQ)
-.text
+.section .init
 .type _fiq_handler, %function
 _fiq_handler:
     push {r0-r3, r12, lr}
@@ -85,7 +85,7 @@ _fiq_handler:
     subs pc, lr, #4
 
 /// @brief Default Handler (weak symbol)
-.text
+.section .init
 .type _default_handler, %function
 _default_handler:
     bl default_handler
