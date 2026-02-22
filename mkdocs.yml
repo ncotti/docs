@@ -79,6 +79,10 @@ nav:
   - PCB:
     - Common circuits: pcb/common_circuits.md
 
+  - Simulators:
+    - QEMU: simulators/qemu.md
+    - Renode: simulators/renode.md
+
   - QEMU:
     - Introduction: qemu/index.md
     - Renode: qemu/renode.md

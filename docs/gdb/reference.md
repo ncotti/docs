@@ -144,6 +144,12 @@ The **info** command displays all the information needed at the current step in 
 (gdb) p *vector@[len]
 ```
 
+Or print the content of memory addresses:
+
+```gdb
+(gdb) x[/amount] [hex_address]
+```
+
 **Display** a variable's value each time the execution stops with the `display` command.
 
 ```gdb

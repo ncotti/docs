@@ -233,6 +233,7 @@ ADDR(<section>)         // Returns the address (VMA) of the named section.
 ALIGN(<align>)          // Returns the next multiple of "align" for the location counter (.), without modifying it, in bytes.
 ALIGN(<exp>, <align>)   // Returns the next multiple of "align" for the "exp", in bytes.
 SIZEOF(<section>)       // Returns the size in bytes of the named output section.
+KEEP(<input_section>)   // If linking with garbage collection (--gc-sections), the section marked with KEEP() won't be optimized away.
 ```
 
 ## Complete example

@@ -111,6 +111,9 @@ $(addprefix prefix, names…)
 # "list" is the iterable, "var" is the iterator's value (represented as
 # a variable), and "text" is what it is done for each "var"
 $(foreach var, list, text)
+
+# Throw an error and stop execution:
+$(error message)
 ```
 
 ### Wildcards
