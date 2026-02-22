@@ -5,6 +5,9 @@
 
 #include "uart.h"
 
+char *__env[1] = { 0 };
+char **environ = __env;
+
 void _exit(int status) {
     while(1);
 }
