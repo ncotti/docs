@@ -83,10 +83,15 @@ nav:
     - QEMU: simulators/qemu.md
     - Renode: simulators/renode.md
 
-  - QEMU:
-    - Introduction: qemu/index.md
-    - Renode: qemu/renode.md
-    - Cross-compiling: qemu/cross_compiling.md
+  - Embedded:
+    - Introduction: embedded/introduction.md
+    - Toolchain:
+      - Toolchain introduction: embedded/toolchain.md
+      - Bare-metal toolchain: embedded/toolchain_baremetal.md
+      - Embedded Linux toolchain: embedded/toolchain_linux.md
+        
+    - Bootloader: embedded/bootloader.md
+    - Linux Kernel: embedded/linux_kernel.md
 
 theme:
   name: material
