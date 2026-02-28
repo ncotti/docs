@@ -1,0 +1,15 @@
+:name: STM32F4 Discovery
+:description: Something
+
+using sysbus
+$name?="STM32F4_Discovery"
+mach create $name
+
+machine LoadPlatformDescription @sup/platform.repl
+
+$bin?=@build/exe.elf
+
+showAnalyzer usart1
+
+machine StartGdbServer 3333
+sysbus LoadELF $bin

@@ -10,17 +10,20 @@ SHELL=/bin/bash
 # User modifiable variables
 #------------------------------------------------------------------------------
 # E.g.: arm-none-eabi-, arm-linux-gnueabihf-, (left empty), etc
-TOOLCHAIN ?= $(HOME)/cotti/docs/tmp/x-tool/arm-cotti-eabi/bin/arm-cotti-eabi-
+TOOLCHAIN ?= $(HOME)/cotti/docs/tmp/x-tools_nano_m4/arm-cotti-eabi/bin/arm-cotti-eabi-
+
+# pico | nano | newlib
+LIBC ?= nano
 
 SRC_DIRS ?= src startup
 HEADER_DIRS ?= inc
 
 CFLAGS ?= -Wall -g -mthumb -mcpu=cortex-m4 -mfloat-abi=softfp
 ASFLAGS ?= $(CFLAGS)
-LDFLAGS ?= -g
+LDFLAGS ?= -g -Wl,--gc-sections
 
 # Linker script (can be empty)
-LDSCRIPT ?= startup/linker_script.ld
+LDSCRIPT ?= sup/linker_script.ld
 
 # Name of the final executable (without extension)
 EXE ?= exe
@@ -31,22 +34,15 @@ GDB_SCRIPT ?= sup/debug.gdb
 #------------------------------------------------------------------------------
 # Binutils
 #------------------------------------------------------------------------------
-ifeq ($(origin CC), default)
-CC := $(TOOLCHAIN)gcc
-else
-CC ?= $(TOOLCHAIN)gcc
-endif
-ifeq ($(origin AS), default)
-AS := $(TOOLCHAIN)gcc
-else
-AS ?= $(TOOLCHAIN)gcc
-endif
+CC 			:= $(TOOLCHAIN)gcc
+AS 			:= $(TOOLCHAIN)gcc
 LD 			:= $(TOOLCHAIN)gcc
 OBJDUMP 	:= $(TOOLCHAIN)objdump
 OBJCOPY 	:= $(TOOLCHAIN)objcopy
+GDB 		:= $(TOOLCHAIN)gdb
 
 #------------------------------------------------------------------------------
-# File location
+# Output files
 #------------------------------------------------------------------------------
 BUILD_DIR	:= build
 INFO_DIR 	:= info
@@ -54,6 +50,27 @@ ELF 		:= $(BUILD_DIR)/$(EXE).elf
 BIN 		:= $(BUILD_DIR)/$(EXE).bin
 MAP			:= $(BUILD_DIR)/$(INFO_DIR)/memory.map
 
+#------------------------------------------------------------------------------
+# Special rules
+#------------------------------------------------------------------------------
+# Default linker flags
+LDFLAGS += -Wl,-Map=$(MAP) -T $(LDSCRIPT) -nostartfiles
+
+ifeq (pico,$(LIBC))
+SRC_DIRS += src/syscalls_picolib
+LDFLAGS += --specs=picolibc.specs
+else ifeq (nano,$(LIBC))
+SRC_DIRS += src/syscalls_newlib
+LDFLAGS += --specs=nano.specs
+else ifeq (newlib,$(LIBC))
+SRC_DIRS += src/syscalls_newlib
+else
+$(error Unknown C library "$(LIBC)", try "pico", "nano" or "newlib")
+endif
+
+#------------------------------------------------------------------------------
+# File location
+#------------------------------------------------------------------------------
 SRCS := $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.c) $(wildcard $(dir)/*.s))
 
 HEADERS := $(foreach dir, $(HEADER_DIRS), $(wildcard $(dir)/*.h) $(wildcard $(dir)/*.s))
@@ -71,21 +88,6 @@ DIS_ASM := $(patsubst %.header, %.d, $(OBJ_HEADERS))
 
 BUILD_SRC_DIRS := $(addprefix $(BUILD_DIR)/, $(SRC_DIRS))
 INFO_SRC_DIRS := $(addprefix $(BUILD_DIR)/$(INFO_DIR)/, $(SRC_DIRS))
-
-#------------------------------------------------------------------------------
-# Special rules
-#------------------------------------------------------------------------------
-# If you use "ld" or "gcc" as linker, the memory map option is declared different
-ifneq (,$(findstring -ld, $(LD)))
-LDFLAGS += -Map $(MAP)
-else
-LDFLAGS += -Wl,-Map=$(MAP)
-endif
-
-# If you are using a custom linker script, don't use the default crt0.S files
-ifneq (,$(LDSCRIPT))
-LDFLAGS += -T $(LDSCRIPT) -nostartfiles
-endif
 
 #------------------------------------------------------------------------------
 # Miscellaneous constants
@@ -122,36 +124,24 @@ clean: ## Erase contents of build directory.
 	echo -n "All files successfully erased "; $(PRINT_CHECKMARK)
 
 .PHONY: run
-run: $(ELF) kill ## Execute compiled program (using QEMU)
-	echo -n "Initiating Qemu... "
-	qemu-system-arm --version &>/dev/null
-	coproc qemu-system-arm \
-		-M realview-pb-a8 \
-		-m 32M \
-		-no-reboot -nographic \
-		-monitor telnet:127.0.0.1:1234,server,nowait \
-		-serial telnet:127.0.0.1:2222,server,nowait \
-		-S -gdb tcp::2159 \
-		-device loader,file=$(ELF),cpu-num=0 &>/dev/null
+run: $(ELF) kill ## Execute compiled program (using Renode)
+	echo -n "Initiating Renode... "
+	gnome-terminal -- bash -c "renode --pid-file $(BUILD_DIR)/renode_pid.txt sup/resc.resc"
 	$(PRINT_CHECKMARK)
 
+
 .PHONY: kill
-kill: ## Stop qemu process running on background
-	if ps -e | grep "qemu" &>/dev/null; then \
-		echo -n "Old qemu process running on background. Killing... "; \
-		# Get the line where "qemu" is \
-		qemu_line=$$( ps -e | grep "qemu" ); \
-		# Get only the first numbers (PID) \
-		qemu_pid=$$( echo "$${qemu_line}" | grep -P -o '^[^\d]*\d+'); \
-		# Remove prefixing spaces or non digits \
-		qemu_pid=$$( echo "$${qemu_pid}" | grep -P -o '\d+'); \
-		kill "$${qemu_pid}"; \
+kill: ## Stop Renode process running on background
+	if [ -f $(BUILD_DIR)/renode_pid.txt ]; then \
+		echo -n "Killing Renode... "; \
+		kill "$$(cat $(BUILD_DIR)/renode_pid.txt)" &>/dev/null; \
+		rm $(BUILD_DIR)/renode_pid.txt; \
 		$(PRINT_CHECKMARK); \
 	fi
 
 .PHONY: debug
-debug: run ## Debug the program (no need to "make run" first, compile with "-g")
-	gdb-multiarch -q -x "$(GDB_SCRIPT)" "$(ELF)"
+debug: run ## Debug the program (must had been compiled with "-g")
+	$(GDB) -q -x "$(GDB_SCRIPT)" "$(ELF)"
 	$(MAKE) kill
 
 #------------------------------------------------------------------------------

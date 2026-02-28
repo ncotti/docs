@@ -13,12 +13,13 @@ HIDDEN(ld_stack_size  = 0x1000);   /* 1KB */
 /*-----------------------------------------------------------------------------
 *   Memory regions' origins and lengths
 -----------------------------------------------------------------------------*/
-/* Aliased from 0x0800_0000 to 0x0000_0000 */
 HIDDEN(ld_flash_origin          = 0x08000000);
-HIDDEN(ld_flash_length          = 0x00100000);   /* 1 MB */
+HIDDEN(ld_flash_length          = 0x00200000);  /* 2 MB */
 
-HIDDEN(ld_ram_origin            = 0x10000000);
-HIDDEN(ld_ram_length            = 0x00010000);  /* 64 KB */
+HIDDEN(ld_ram_origin            = 0x20000000);
+HIDDEN(ld_ram_length            = 0x00040000);  /* 64 KB */
+
+HIDDEN(ld_heap_length           = 0x00002000);  /* 8 KB */
 
 /*-----------------------------------------------------------------------------
 *   Memory sections
@@ -36,7 +37,7 @@ SECTIONS {
     /* The vector table should always be the first thing to store in memory.
     Must be identity mapped. */
     .vector_table : ALIGN(4) {
-        *(.vector_table*)
+        KEEP(*(.vector_table*))
     } >flash AT>flash
     PROVIDE(ld_vector_table_lma = LOADADDR(.vector_table));
     PROVIDE(ld_vector_table_vma = ADDR(.vector_table));
@@ -46,7 +47,7 @@ SECTIONS {
     memcopys from flash to ram.
     Must be identity mapped. */
     .init : ALIGN(4) {
-        *(.init*)
+        KEEP(*(.init*))
     } >flash AT>flash
 
     /* User code is copied from flash to RAM before executing */
@@ -86,4 +87,11 @@ SECTIONS {
         PROVIDE(ld_stack_top = .);
     } >ram
     PROVIDE(ld_stack_size = SIZEOF(.stack));
+
+    .heap (NOLOAD) : ALIGN(4) {
+        PROVIDE(ld_heap_origin = .);
+        . += ld_heap_length;
+        PROVIDE(ld_heap_end = .);
+
+    } >ram
 }

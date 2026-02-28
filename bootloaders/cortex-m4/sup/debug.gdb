@@ -1,5 +1,5 @@
-set architecture arm
-target remote localhost:2159
+set architecture armv7e-m
+target remote localhost:3333
 lay regs
 b _reset_handler
 b _start

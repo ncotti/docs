@@ -6,21 +6,6 @@
 _start:
 
     // Initialize stack pointer
-    ldr sp, =ld_stack_top
-
-    .short 0x7059
-    .short 0x7777
-
-    @ mov r0, #1
-    @ mrs r1, CONTROL
-    @ msr CONTROL, r0
-
-    mov r0, #0
-    cmp r0, #0
-    mov r1, #1
-    cmp r0, #0
-
-    mrs r0, xPSR
 
     // Copy text section
     ldr r0, =ld_text_vma

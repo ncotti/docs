@@ -5,22 +5,14 @@
 _vector_table:
     // Load contents of 24 bytes ahead, instead of 32, because the PC
     // advances two positions in the pipeline for the execution
-    ldr pc, [pc, #24]
-    ldr pc, [pc, #24]
-    ldr pc, [pc, #24]
-    ldr pc, [pc, #24]
-    ldr pc, [pc, #24]
-    ldr pc, [pc, #24]
-    ldr pc, [pc, #24]
-    ldr pc, [pc, #24]
-    rh: .word _reset_handler
-    uh: .word _undef_handler
-    sh: .word _svc_handler
-    ph: .word _prefetch_handler
-    dh: .word _abort_handler
-    vh: .word 0x00
-    ih: .word _irq_handler
-    fh: .word _fiq_handler
+    ldr pc, =_reset_handler
+    ldr pc, =_undef_handler
+    ldr pc, =_svc_handler
+    ldr pc, =_prefetch_handler
+    ldr pc, =_abort_handler
+    ldr pc, =0x00
+    ldr pc, =_irq_handler
+    ldr pc, =_fiq_handler
 
 /// @brief Reset handler
 .global _reset_handler
