@@ -141,6 +141,15 @@ Picolibc also requires the developer to provide definitions for `stdin`, `stdout
 
     This error is fixed by recompiling the toolchain without the Newlib library.
 
+4. If you see either of these errors:
+
+    ```bash
+    dangerous relocation: unsupported relocation
+    Unknown destination type (ARM/Thumb)
+    ```
+
+    That's because you compiled the library with "multilib" support. The compiler probably built the library with the "ARM" instruction set, and you are trying to link it in a device that only supports "Thumb" instructions. The solution is to rebuild the toolchain and specify the CPU architecture )(`-mcpu=XXX`) yourself.
+
 <!--Footnotes-->
 
 [^1]: If you chose only one architecture when building the toolchain, the compiler flags that define the CPU are not mandatory. However, if you built a multilib toolchain, then you **must** define them.
