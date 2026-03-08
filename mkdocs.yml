@@ -96,6 +96,7 @@ nav:
       - Bare-metal bootloader: embedded/bootloader_baremetal.md
       - Embedded Linux bootloader: embedded/bootloader_linux.md
     - Linux Kernel: embedded/linux_kernel.md
+    - Filesystems: embedded/filesystems.md
 
 theme:
   name: material
