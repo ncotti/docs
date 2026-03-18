@@ -15,6 +15,8 @@ For reference, the [Bootlin's Embedded Linux Training][bootlin_ppt] is a great p
 
 TODO: link to buildroot and yocto.
 
+<https://elixir.bootlin.com>
+
 <!--External links-->
 [bootlin_ppt]: https://bootlin.com/training/embedded-linux/
 

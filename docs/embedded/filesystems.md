@@ -115,6 +115,8 @@ sudo mount -t vfat <device_partition> <path> [-o uid=$(id -u),gid=$(id -g),umask
 sudo umount <path>
 ```
 
+Note: If you don't specify the user id and group id, writing to the mounted device will always fail unless you log in as the root user with `su -`
+
 Creating a read-only filesystem is different, because you can't write to it. To create a squashFS, you need to convert a directory into a read only image:
 
 ```bash

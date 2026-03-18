@@ -122,7 +122,7 @@ make nconfig
 ```
 
 !!! tip
-    The sheer amount of configuration options can be daunting. First, start by making sure you are programming the right target with "ARM architecture --> Target select ()". There are a lot of bells and whistles, but try to imagine what the actual booting flow looks like, and set-up the parameters accordingly. Most of the time 95% of the options are irrelevant or just "good to have, not required" things.
+    The sheer amount of configuration options can be daunting. First, start by making sure you are programming the right target with "ARM architecture --> Target select ()". There are a lot of bells and whistles, but try to imagine what the actual booting flow looks like, and set-up the parameters accordingly. 98% of the options are irrelevant or just "good to have, not required" things.
 
 !!! warning
     Make sure that the first line of the `nconfig` menu points to your cross-compiler. Remember to set the `CROSS_COMPILE` env. variable.
