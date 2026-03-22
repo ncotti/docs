@@ -20,6 +20,7 @@ nav:
     - Introduction: build_systems/index.md
     - Makefile: build_systems/makefile.md
     - CMake: build_systems/cmake.md
+    - KConfig: build_systems/kconfig.md
 
   - GDB:
     - Home: gdb/index.md

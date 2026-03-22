@@ -1,0 +1,80 @@
+mainmenu "Cotti's menuconfig"
+
+comment "Printfs configuration"
+
+config FIRST_PRINTF_TEXT
+    string "Text to be shown in the code's first \"printf()\""
+    default "Hello world!"
+    help
+        This is the text that will be printed in the first call to
+        "printf()" inside the main() function.
+
+menuconfig ENABLE_SECOND_PRINTF
+    bool "Enable second printf()"
+    default n
+    help
+        Enables a second "printf()" after the first one.
+
+if ENABLE_SECOND_PRINTF
+
+    config SECOND_PRINTF_TEXT
+        string "Text to be shown in the code's second \"printf()\""
+        default "This second printf is optional."
+
+endif
+
+menu "Math operation"
+
+    config MATH_FIRST_OPERAND
+        int "First operand"
+        default 10
+
+    config MATH_SECOND_OPERAND
+        int "Second operand"
+        default 5
+
+    choice
+        bool "Math operation to perform"
+
+        config MATH_OPERATION_ADD
+            bool "Addition"
+
+        config MATH_OPERATION_SUB
+            bool "Subtraction"
+
+        config MATH_OPERATION_MUL
+            bool "Multiplication"
+
+    endchoice
+
+endmenu
+
+comment "Compiler configuration"
+
+config USE_CUSTOM_CFLAGS
+    bool "Use custom gcc C flags"
+    default n
+    imply CFLAGS_OPT
+    select CFLAGS_WALL
+
+
+config CFLAGS_OPT
+    bool "Compile with optimization enabled -O3"
+    depends on USE_CUSTOM_CFLAGS
+    default n
+
+config CFLAGS_WALL
+    bool "Compile with all warnings enabled -Wall"
+    depends on USE_CUSTOM_CFLAGS
+    default n
+
+
+config GENERATE_MEMORY_MAP
+    bool "Generate a memory map"
+    default n
+
+config LDFLAGS_MEMORY_MAP
+    string "Name of the memory map"
+    default ""
+    depends on GENERATE_MEMORY_MAP
+
