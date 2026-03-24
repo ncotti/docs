@@ -16,6 +16,8 @@ kconfig-nconf <KConfig_file>    # Launches nconfig
 kconfig-qconf <KConfig_file>    # Launches xconfig
 ```
 
+KConfig files don't have a "standard" name, but the Linux kernel repo uses the name`Kconfig` in different paths.
+
 ## Using KConfig variables
 
 All symbols declared within KConfig are prefixed with `CONFIG_`. Symbols that have not been set in the TUI are not declared. From the Makefile, include the `.config` file and use the variables as needed.
