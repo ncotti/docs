@@ -21,6 +21,7 @@ nav:
     - Makefile: build_systems/makefile.md
     - CMake: build_systems/cmake.md
     - KConfig: build_systems/kconfig.md
+    - Patches: build_systems/patches.md
 
   - GDB:
     - Home: gdb/index.md

@@ -1,0 +1,1 @@
+source "$BR2_EXTERNAL_COTTI_PATH/package/ninvaders/Config.in"

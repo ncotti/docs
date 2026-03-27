@@ -1,0 +1,12 @@
+menuconfig BR2_PACKAGE_NINVADERS
+    bool "nInvaders"
+    select BR2_PACKAGE_NCURSES
+    help
+        A custom package created by Cotti.
+if BR2_PACKAGE_NINVADERS
+
+config BR2_NINVADERS_SOME_CONFIG
+    bool "Some config related to nInvaders"
+    default n
+endif
+
