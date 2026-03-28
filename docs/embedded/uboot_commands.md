@@ -372,14 +372,13 @@ For initialization:
 
 * `init=<script>`: Program to run as PID 1. By default, it searches in order: `/sbin/init`, `/etc/init`, `/bin/init`, `/bin/sh`.
 
-Ideally, you would store these commands in the `bootcmd` env. variable, so you can use the `boot` or `bootd` commands, which are equivalent to execute `run bootcmd`, i.e., to execute the command stored in `bootcmd`.
+Ideally, you would store these commands in the `bootcmd` env. variable, so you can use the `boot` command, which are equivalent to execute `run bootcmd`, i.e., to execute the command stored in `bootcmd`.
 
 ```bash
 setenv bootcmd "fatload mmc 0:1 0x81000000 zImage; fatload mmc 0:1 0x82000000 device_tree.dtb; bootz 0x81000000 - 0x82000000"
-setenv bootargs "console=ttyS0,115200n8
+setenv bootargs "console=ttyS0,115200n8 root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait"
 saveenv
 boot
-bootd
 ```
 
 ### Booting from nfs

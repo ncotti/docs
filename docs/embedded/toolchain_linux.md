@@ -1,13 +1,13 @@
 # Embedded Linux toolchain
 
-Running your embedded application under Linux makes it so that the toolchain does not behave so differently compared to the host's.
+Provided that your host's OS is Linux, the toolchain required for embedded Linux behaves quite similarly.
 
 When making the toolchain, only two things need to be taken into account:
 
 1. The hardware architecture.
 2. The choice of the C-library.
 
-For the hardware architecture, the same compiler flags than in the [Selecting the hardware architecure section][hardware_arch_section] for bare-metal apply. It is then encouraged to define:
+For the hardware architecture, the same compiler flags explained in the [Selecting the hardware architecture section][hardware_arch_section] for bare-metal apply. Therefore, it is encouraged to define:
 
 ```bash
 -mcpu=<CPU>
@@ -17,7 +17,7 @@ For the hardware architecture, the same compiler flags than in the [Selecting th
 
 Regarding the C-library, there are three choices:
 
-* [Musl][musl] is the preferred choice. Is a lightweight implementation of the C-library, and reduces greatly the size of statically linked binaries.
+* [Musl][musl] is the preferred choice. It is a lightweight implementation of the C-library, and reduces greatly the size of statically linked binaries.
 * [Glibc][glibc] is the de-facto standard. Is the most complete but quite heavy C-library. It is more suitable for full desktops rather than embedded.
 * [uClibc-ng][uclibc]. Never used it, since it is not supported by Yocto. Very similar to Musl in spirit.
 

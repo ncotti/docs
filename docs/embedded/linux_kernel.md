@@ -35,24 +35,20 @@ make -j$(nproc)
 
 Results stored in:
 
-`arch/<arch>/boot/Image`: bootable uncompressed kernel image.
-`arch/<arch>/boot/*Image*`: bootable compressed kernel image.
-`arch/<arch>/boot/dts/<vendor>/*.dtb`: device tree blob.
+* `arch/<arch>/boot/Image`: bootable uncompressed kernel image.
+* `arch/<arch>/boot/*Image*`: bootable compressed kernel image.
+* `arch/<arch>/boot/dts/<vendor>/*.dtb`: device tree blob.
 
 ![Kernel building overview](images/kernel_building_overview.png)
 
 Embedded architectures usually have a lot of non-discoverable hardware (serial, Ethernet, I2C, NAND flash, etc). This hardware needs to be described and passed to the Linux Kernel using device trees.
-
-Path: `arch/<arch>/boot/dts/<vendor>/<board>.dtb`
-
-Bootargs: <https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html>
 
 !!! tip
     The configuration options in `make nconfig` are quite a lot, but very straight forward. Once you get it to boot, you can start trimming the fat and seeing what actually is truly needed. Your Linux won't stop booting for adding stuff just for the sake of it, but it will not work if one key configuration was not marked.
 
 ## Booting the kernel
 
-The genereated compressed kernel image, the `zImage` file, and the device tree blob `.dtb` are not enough to boot a Linux OS. You still require a minimal filesystem and some applications.
+The generated compressed kernel image, the `zImage` file, and the device tree blob `.dtb` are not enough to boot a Linux OS. You still require a minimal filesystem and some applications.
 
 * The `init` application, located at `/sbin/init`, `/etc/init`, `/bin/init` or `/bin/sh`. It is responsible for starting all other user space applications and services.
 * A shell to implement scripts and allow a user to interact with the system.
@@ -64,7 +60,7 @@ The genereated compressed kernel image, the `zImage` file, and the device tree b
 
 It is integrated in a single project and in a single executable `/bin/busybox`. All other applications are symbolic links to `/bin/busybox`, with the first argument being the name of the script
 
-### Installation
+### Busybox installation
 
 Get the latest stable source.
 
@@ -79,7 +75,6 @@ Set default configuration, and modify with menuconfig (doesn't have nconfig):
 ```bash
 make defconfig
 make menuconfig
-# Make sure to compile with static libraries
 ```
 
 Set the path to the cross compiler and compile:
@@ -87,15 +82,13 @@ Set the path to the cross compiler and compile:
 ```bash
 export CROSS_COMPILE=<path_to_toolchain->
 make
-# By default, installation goes to ./_install
-# Can be changed in Settings -> Install Options -> Destination path for 'make install'.
-make install
-# Create empty /dev folder
 ```
 
-Copy all files into the SD card.
+Install it. By default, all required files go to `./_install`. You should copy and paste this folder into your Linux partition, maybe including and empty `/dev` folder if not present.
 
-After that, it should be booting. Congrats!
+```bash
+make install
+```
 
 <!--External links-->
 [linux_git]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git

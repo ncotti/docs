@@ -100,6 +100,7 @@ nav:
       - U-Boot commands: embedded/uboot_commands.md
     - Linux Kernel: embedded/linux_kernel.md
     - Filesystems: embedded/filesystems.md
+    - Buildroot: embedded/buildroot.md
 
 theme:
   name: material

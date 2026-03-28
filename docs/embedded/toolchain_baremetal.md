@@ -6,7 +6,7 @@ Therefore, there are three alternatives for the C-library: [Newlib][newlib], New
 
 It is recommended to choose Picolibc when possible. The story between these libraries goes like this:
 
-1. [Newlib][newlib] is the original library. It bigger in size than the others.
+1. [Newlib][newlib] is the original library, bigger in size than the others.
 2. Newlib-nano uses the same sources as Newlib, but optimized in size for embedded systems.
 3. [Picolibc][picolibc] is a fork of Newlib, but further optimized and specifically designed for embedded.
 
@@ -28,7 +28,7 @@ In the following sections we will be reviewing the linker flags from above and h
 
 The vendor IDE the author has used the most is the [STM32Cube IDE][cube_ide], with development boards such as the [STM32F401 Nucleo Board][nucleo].
 
-It's usage is as simple as writing your C code, maybe with the help of the HAL library, pressing the "run" button on the IDE, and then the code is compiled and flashed into the device.
+Its usage is as simple as writing your C code, maybe with the help of the HAL library, pressing the "run" button on the IDE, and then the code is compiled and flashed into the device.
 
 The IDE already comes with an `arm-none-eabi` toolchain with Newlib and Newlib-nano, a default bootloader in an assembler file (`startup_stm32f401retx.s`) and a default linker script (`STM32F401RETX_FLASH.ld`).
 
@@ -56,9 +56,9 @@ Nonetheless, when compiling you should[^1] define the following flags so the com
     * `soft` Causes GCC to generate output containing library calls for floating-point operations. You must link with a compatible set of libraries.
     * `softfp` Allows generation of code using hardware floating-point instructions, but still uses the soft-float calling instructions. You must link with a compatible set of libraries.
     * `hard`: Allows generation of floating-point instructions and uses FPU-specific calling conventions.
-* `-marm | -mthumb`: Selects between generating code that executes in ARM or Thumb states by default. These declaration gets overwritten by using the "target("arm")" or "target("thumb")" attributes or pragmas.
+* `-marm | -mthumb`: Selects between generating code that executes in ARM or Thumb states by default. These declaration get overwritten by using the "target("arm")" or "target("thumb")" attributes or pragmas.
 
-### Selecting the bootloader
+### Bootloader selection
 
 If you are writing a bare-metal application, you probably have your own linker script. Your command for linking should look something like this:
 

@@ -1,4 +1,0 @@
-spl:
-  path: bin/u-boot-spl.bin
-u-boot:
-  path: bin/u-boot.img

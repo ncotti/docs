@@ -2,7 +2,7 @@
 
 A toolchain is defined as the set of tools required to produce a software. In the context of embedded development, a toolchain is composed of:
 
-* [Binutils][binutils_section]: a set of tools to generate and manipulate binaries (usually with the ELF format) for a given CPU architecture. They include tools such as the assembler `as`, the linker `ld`, between others.
+* [Binutils][binutils_section]: a set of tools that generate and manipulate binaries (usually with the ELF format) for a given CPU architecture. They include tools such as the assembler `as`, and the linker `ld`, between others.
 * Kernel headers: they define the way in which the application code interacts with the underlying OS.
 * C/C++ libraries: musl, glibc, newlib, picolibc, etc.
 * C/C++ compiler: normally `gcc`, althoug LLVM `clang` is rising in popularity.
@@ -19,10 +19,10 @@ A toolchain is identified by a **tuple** like:
 
 Where:
 
-* Arch: CPu architecture (`arm`, `riscv`).
+* Arch: CPU architecture (`arm`, `riscv`).
 * Vendor: Free-form vendor name.
 * OS: Operating system name (`linux`, `none`).
-* ABI: Application Binary Interface (`gnueabihf`, `eabi`).
+* ABI: [Application Binary Interface][abi_section] (`gnueabihf`, `eabi`).
 
 ## Introduction to cross compilation
 
@@ -38,13 +38,11 @@ There are three approaches to getting a cross-compilation toolchain:
 
 3. Using [Crosstool-NG][crosstool], which lets you customize the toolchain to your liking. This approach will be reviewed in the remainder of this article.
 
-In the remaining of this article we will review this last tool.
-
 ## Crosstool-NG
 
-[Crosstool-NG][crosstool] purpose is to build toolchains. Nothing more, nothing less. It is quite straightforward to install and use, provided that you know what you need and what you are doing. [Crosstool-NG's documentation][crosstool_docs] is short and sweet, so I suggest to consult it in doubt, but here is is a short summary:
+[Crosstool-NG][crosstool]'s purpose is to build toolchains. Nothing more, nothing less. It is quite straightforward to install and use, provided that you know what you need and what you are doing. [Crosstool-NG's documentation][crosstool_docs] is short and sweet, so I suggest to consult it in doubt, but here is is a short summary:
 
-The local installation commands are as follow:
+The list of commands to install locally are as follows:
 
 ```bash
 VERSION="1.28.0"
@@ -68,12 +66,13 @@ The best way to configure a toolchain is to select the configuration for a simil
 ./ct-ng list-samples
 ```
 
-Then, the details of a toolchain can be seen with the `show-<tuple>` command. The special `show-config` parses the current `.config` file to show the details of the current toolchain's configuration.
+Then, the details of a toolchain can be seen with the `show-<tuple>` command, while the details of the current toolchain can be seen with `show-config`.
 
 ```bash
-./ct-ng show-<tuple | config>
-
-./ct-ng show-arm-none-eabi
+./ct-ng show-<tuple>
+./ct-ng show-<config>
+# E.g.
+$ ./ct-ng show-arm-none-eabi
 [L...]   arm-none-eabi
     Languages       : C,C++
     OS              : bare-metal
@@ -98,17 +97,25 @@ After that, make configurations in the GUI menu with `nconfig` or `menuconfig`:
 ./ct-ng nconfig
 ```
 
-Finally, after the configuration is to your liking, start build the toolchain with,
+Finally, start building the toolchain with:
 
 ```bash
-./ct-ng show-config
 ./ct-ng build
+```
+
+You may store and load the configuration files with:
+
+```bash
+./ct-ng savedefconfig
+DEFCONFIG=<defconfig_file> ./ct-ng defconfig
 ```
 
 There are two different kinds of toolchains, each with different requirements:
 
 * [Bare-metal toolchains][baremetal_toolchain]: For devices without an OS, or maybe a simple RTOS.
 * [Embedded Linux toolchains][linux_toolchain]: For devices with the Linux OS.
+
+Configuration options and usage are explained in each sub-section.
 
 <!--External links -->
 [bootlin_toolchains]: https://toolchains.bootlin.com/
@@ -119,6 +126,7 @@ There are two different kinds of toolchains, each with different requirements:
 [crosstool_docs]: https://crosstool-ng.github.io/docs/
 
 <!--Internal links-->
+[abi_section]: /docs/arm_assembly/abi
 [binutils_section]: /docs/arm_assembly/binutils
 [baremetal_toolchain]: /docs/embedded/toolchain_baremetal
 [linux_toolchain]: /docs/embedded/toolchain_linux
