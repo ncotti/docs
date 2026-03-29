@@ -127,11 +127,19 @@ make nconfig
 !!! warning
     Make sure that the first line of the `nconfig` menu points to your cross-compiler. Remember to set the `CROSS_COMPILE` env. variable.
 
-After the bootloader is configured, build it by providing a path to a device tree with[^4]:
+After the bootloader is configured, build it by providing a path to a device tree. There are two ways of doing this:
 
-```bash
-make DEVICE_TREE=<device_tree_path>
-```
+1. With the name of a device tree source `.dts` inside `arch/<arch>/dts/<DTS_FILE>.dts`, without its extension:
+
+    ```bash
+    make DEVICE_TREE=<DTS_FILE>
+    ```
+
+2. With the full path to an externally compiled device tree blob `.dtb`:
+
+    ```bash
+    make EXT_DTB=<device_tree.dtb>
+    ```
 
 The binary outputs can be found in the root of the repository.
 
@@ -145,8 +153,6 @@ The binary outputs can be found in the root of the repository.
 [^2]: The following images and examples were extracted from Chapter 26 of the [AM335x Sitara Processors Technical Reference Manual][am335x_trm], which is the processor used in the [BeagleBone Black][bbb_page] board.
 
 [^3]: Besides the SPL, sometimes even a Tertiary Program Loader (TPL) is required. In those cases, the boot order is: TPL -> SPL -> U-Boot.
-
-[^4]: The device tree's path can be absolute, or relative to `arch/<arch>/dts/`.
 
 <!-- Internal links -->
 [bios_section]: #bios-booting

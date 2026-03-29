@@ -41,7 +41,10 @@ Results stored in:
 
 ![Kernel building overview](images/kernel_building_overview.png)
 
-Embedded architectures usually have a lot of non-discoverable hardware (serial, Ethernet, I2C, NAND flash, etc). This hardware needs to be described and passed to the Linux Kernel using device trees.
+Embedded architectures usually have a lot of non-discoverable hardware (serial, Ethernet, I2C, NAND flash, etc). This hardware needs to be described and passed to the Linux Kernel using device trees. The `.dtb` file will be automatically compiled from the `.dts` and `dtsi` files present in the `arch/<arch>/boot/dts/<vendor>/` directory.
+
+!!! tip
+    The device tree blob `.dtb` is not a part of the Linux kernel and does not influence the result of the Linux kernel's compilation. Therefore, you can compile your own `.dtb` and flash it together with the kernel.
 
 !!! tip
     The configuration options in `make nconfig` are quite a lot, but very straight forward. Once you get it to boot, you can start trimming the fat and seeing what actually is truly needed. Your Linux won't stop booting for adding stuff just for the sake of it, but it will not work if one key configuration was not marked.
