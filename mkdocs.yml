@@ -94,13 +94,13 @@ nav:
       - Toolchain introduction: embedded/toolchain.md
       - Bare-metal toolchain: embedded/toolchain_baremetal.md
       - Embedded Linux toolchain: embedded/toolchain_linux.md
-    - Bootloader: 
+    - Bootloader:
       - Bare-metal bootloader: embedded/bootloader_baremetal.md
       - Embedded Linux bootloader: embedded/bootloader_linux.md
       - U-Boot commands: embedded/uboot_commands.md
     - Linux Kernel: embedded/linux_kernel.md
     - Filesystems: embedded/filesystems.md
-    - Buildroot: 
+    - Buildroot:
       - BR intro: embedded/buildroot/buildroot.md
       - BR in-tree packages: embedded/buildroot/br_package_intree.md
       - BR external packages: embedded/buildroot/br_package_external.md
