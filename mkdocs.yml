@@ -104,6 +104,7 @@ nav:
       - BR intro: embedded/buildroot/buildroot.md
       - BR in-tree packages: embedded/buildroot/br_package_intree.md
       - BR external packages: embedded/buildroot/br_package_external.md
+    - Device Tree: embedded/device_tree.md
 
 theme:
   name: material
