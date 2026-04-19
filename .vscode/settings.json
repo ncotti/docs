@@ -39,4 +39,5 @@
         "-output-directory=build", // to change the output directory
         "%DOC%",
     ],
+    "latex-workshop.formatting.latex": "latexindent",
 }

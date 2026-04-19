@@ -37,6 +37,8 @@ echo "export PATH=\"/usr/local/texlive/$(date +%Y)/bin/$(uname -m)-$(uname -s | 
 
 ## Usage
 
+Add this to your `.vscode/settings.json` file:
+
 ```json
 {
     "files.autoSave": "onFocusChange",
@@ -50,11 +52,42 @@ echo "export PATH=\"/usr/local/texlive/$(date +%Y)/bin/$(uname -m)-$(uname -s | 
         "-output-directory=build", // to change the output directory
         "%DOC%",
     ],
+    "latex-workshop.formatting.latex": "latexindent",
 }
+```
+
+The extension autodetects the "root" file as the file which has the `\documentclass{}` attribute set. You may have multiple root files, and the one left open in the VSCode tabs is the one compiled:
+
+```tex
+\documentclass{article}
+
+\begin{document}
+
+Hello World!
+
+\end{document}
 ```
 
 ## Troubleshoot
 
-Recipe terminated with fatal error: spawn latexmk ENOENT.
+* Recipe terminated with fatal error: spawn latexmk ENOENT.
 
 This error happens because you didn't install Latex.
+
+* PDF file is created, but can't be visualized from VSCode Tab, but only from browser or OS PDF viewer.
+
+    Probably need to update VSCode:
+
+    ```bash
+    sudo apt update && sudo apt install --only-upgrade code
+    ```
+
+* Following errors when enabling the formatter:
+
+    * stderr: Can't locate YAML/Tiny.pm
+    * stderr: Can't locate File/HomeDir.pm in @INC (you may need to install the File::HomeDir module)
+
+    ```bash
+    sudo apt install libyaml-tiny-perl libfile-homedir-perl libxml-simple-perl
+    sudo cpan -i File::HomeDir
+    ```
