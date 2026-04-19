@@ -68,6 +68,12 @@ Hello World!
 \end{document}
 ```
 
+## Templates
+
+You may find [IEEE templates][ieee_templates]. This repo includes a copy of the IEEE Journals and Transactions template compiled.
+
+The only difference being that it was modified to use BibTex.
+
 ## Troubleshoot
 
 * Recipe terminated with fatal error: spawn latexmk ENOENT.
@@ -91,3 +97,6 @@ This error happens because you didn't install Latex.
     sudo apt install libyaml-tiny-perl libfile-homedir-perl libxml-simple-perl
     sudo cpan -i File::HomeDir
     ```
+
+<!--External links-->
+[ieee_templates]: https://journals.ieeeauthorcenter.ieee.org/create-your-ieee-journal-article/authoring-tools-and-templates/tools-for-ieee-authors/ieee-article-templates/
