@@ -3,8 +3,7 @@ site_url: https://ncotti.github.io/docs/
 docs_dir: docs
 
 nav:
-  - Home: index.md
-  - About: about.md
+  - Home: home.md
 
   - MkDocs:
     - Introduction: mkdocs/index.md
@@ -165,6 +164,11 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+
+  # font awesome icons
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 # Latex
 extra_javascript:
