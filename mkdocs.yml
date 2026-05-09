@@ -5,51 +5,15 @@ docs_dir: docs
 nav:
   - Home: home.md
 
-  - MkDocs:
-    - Introduction: mkdocs/index.md
-    - Installation and usage: mkdocs/installation_and_usage.md
-    - Deployment: mkdocs/deployment.md
-
-  - CI:
-    - Introduction: ci/index.md
-    - "Events: When workflows run": ci/events.md
-    - "Jobs: What workflows do": ci/jobs.md
-    - "Runners: Where workflows run": ci/runners.md
-
-  - Build Systems:
-    - Introduction: build_systems/index.md
-    - Makefile: build_systems/makefile.md
-    - CMake: build_systems/cmake.md
-    - KConfig: build_systems/kconfig.md
-    - Patches: build_systems/patches.md
-
-  - GDB:
-    - Home: gdb/index.md
-    - Tutorial: gdb/tutorial.md
-    - Reference: gdb/reference.md
-    - How-to Guides:
-      - How to create a gdb script: gdb/how-to-guides/how_to_create_a_gdb_script.md
-
-  - Linters:
-    - Overview: linters/index.md
-    - MarkDown: linters/markdown.md
-    - Python: linters/python.md
-    - C: linters/c.md
-    - Latex: linters/latex.md
-
-  - Docker:
-    - Overview: docker/docker_index.md
-    - Build images: docker/build_images.md
-    - Run containers: docker/run_containers.md
-
-  - Testing:
-    - Gtest: testing/gtest.md
-
-  - Git:
-    - Best Practices: git/best_practices.md
-
-  - Licencing:
-    - Overview: licencing/licencing.md
+  - ARM Assembly:
+    - Introduction: arm_assembly/index.md
+    - Binutils: arm_assembly/binutils.md
+    - Directives: arm_assembly/directives.md
+    - Instructions: arm_assembly/instructions.md
+    - Interruptions: arm_assembly/interruptions.md
+    - SIMD: arm_assembly/simd.md
+    - ABI: arm_assembly/abi.md
+    - Pagination: arm_assembly/pagination.md
 
   - Bare-metal:
     - Introduction: bare_metal/index.md
@@ -63,30 +27,23 @@ nav:
     - Arduino: bare_metal/arduino.md
     - OpenOCD: bare_metal/openocd.md
 
+  - Build Systems:
+    - Introduction: build_systems/index.md
+    - Makefile: build_systems/makefile.md
+    - CMake: build_systems/cmake.md
+    - KConfig: build_systems/kconfig.md
+    - Patches: build_systems/patches.md
 
-  - ARM Assembly:
-    - Introduction: arm_assembly/index.md
-    - Binutils: arm_assembly/binutils.md
-    - Directives: arm_assembly/directives.md
-    - Instructions: arm_assembly/instructions.md
-    - Interruptions: arm_assembly/interruptions.md
-    - SIMD: arm_assembly/simd.md
-    - ABI: arm_assembly/abi.md
-    - Pagination: arm_assembly/pagination.md
+  - CI:
+    - Introduction: ci/index.md
+    - "Events: When workflows run": ci/events.md
+    - "Jobs: What workflows do": ci/jobs.md
+    - "Runners: Where workflows run": ci/runners.md
 
-  - Linker:
-    - Linker Script: linker/linker.md
-    - Virtual Memory: linker/virtual_memory.md
-
-  - PCB:
-    - Common circuits: pcb/common_circuits.md
-
-  - Simulators:
-    - QEMU: simulators/qemu.md
-    - Renode:
-      - Introduction: simulators/renode.md
-      - Renode platforms: simulators/renode_platform.md
-      - Renode scripts: simulators/renode_script.md
+  - Docker:
+    - Overview: docker/docker_index.md
+    - Build images: docker/build_images.md
+    - Run containers: docker/run_containers.md
 
   - Embedded:
     - Introduction: embedded/introduction.md
@@ -105,6 +62,45 @@ nav:
       - BR in-tree packages: embedded/buildroot/br_package_intree.md
       - BR external packages: embedded/buildroot/br_package_external.md
     - Device Tree: embedded/device_tree.md
+
+  - GDB:
+    - Home: gdb/index.md
+    - Tutorial: gdb/tutorial.md
+    - Reference: gdb/reference.md
+    - How-to Guides:
+      - How to create a gdb script: gdb/how-to-guides/how_to_create_a_gdb_script.md
+
+  - Git:
+    - Best Practices: git/best_practices.md
+
+  - Licencing:
+    - Overview: licencing/licencing.md
+
+  - Linters:
+    - Overview: linters/index.md
+    - MarkDown: linters/markdown.md
+    - Python: linters/python.md
+    - C: linters/c.md
+    - Latex: linters/latex.md
+
+  - Linker:
+    - Linker Script: linker/linker.md
+    - Virtual Memory: linker/virtual_memory.md
+
+  - MkDocs:
+    - Introduction: mkdocs/index.md
+    - Installation and usage: mkdocs/installation_and_usage.md
+    - Deployment: mkdocs/deployment.md
+
+  - Simulators:
+    - QEMU: simulators/qemu.md
+    - Renode:
+      - Introduction: simulators/renode.md
+      - Renode platforms: simulators/renode_platform.md
+      - Renode scripts: simulators/renode_script.md
+
+  - Testing:
+    - Gtest: testing/gtest.md
 
 theme:
   name: material
