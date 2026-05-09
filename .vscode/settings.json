@@ -28,6 +28,7 @@
         "cheatsheet",
         "cppcheck",
         "Makefiles",
+        "Pythonic",
         "Tivoization"
     ],
     "[latex]": {
