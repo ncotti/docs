@@ -15,18 +15,6 @@ nav:
     - ABI: arm_assembly/abi.md
     - Pagination: arm_assembly/pagination.md
 
-  - Bare-metal:
-    - Introduction: bare_metal/index.md
-    - Interfaces:
-      - Overview: bare_metal/interfaces/interfaces_overview.md
-      - Jtag/Boundary-scan: bare_metal/interfaces/jtag.md
-      - SWD: bare_metal/interfaces/swd.md
-      - ST-Link: bare_metal/interfaces/stlink.md
-      - USB-UART: bare_metal/interfaces/usb_uart.md
-    - udev: bare_metal/udev.md
-    - Arduino: bare_metal/arduino.md
-    - OpenOCD: bare_metal/openocd.md
-
   - Build Systems:
     - Introduction: build_systems/index.md
     - Makefile: build_systems/makefile.md
@@ -72,6 +60,18 @@ nav:
 
   - Git:
     - Best Practices: git/best_practices.md
+
+  - Hardware probing:
+    - Introduction: hardware_probing/index.md
+    - Interfaces:
+      - Overview: hardware_probing/interfaces/interfaces_overview.md
+      - Jtag/Boundary-scan: hardware_probing/interfaces/jtag.md
+      - SWD: hardware_probing/interfaces/swd.md
+      - ST-Link: hardware_probing/interfaces/stlink.md
+      - USB-UART: hardware_probing/interfaces/usb_uart.md
+    - udev: hardware_probing/udev.md
+    - Arduino: hardware_probing/arduino.md
+    - OpenOCD: hardware_probing/openocd.md
 
   - Licencing:
     - Overview: licencing/licencing.md
