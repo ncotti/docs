@@ -93,12 +93,19 @@ The full list of keys and operators can be found in the [Udev man page][udev]. T
 | KERNEL[S] | Match the name of the event device [or its parent's] |
 | SUBSYSTEM[S] | Match the subsystem of the event device [or its parent's] |
 | DRIVER[S] | Match the driver event of the event device [or its parent's] |
-| ATTR[S]{filename} | Match sysfs attribute value of the event device [or its parent's]. "filename" is an actual file located at sysfs. |
+| ATTR[S]{filename} | Match sysfs attribute value of the event device [or its parent's]. "filename" is an actual file located at sysfs, the most common ones being `ATTRS{idVendor}` and `ATTRS{idProduct}`. |
 | OWNER, GROUP, MODE | Set permissions for the device node. |
 | RUN | Execute a program. It must be a named script with arguments. |
 | SYMLINK | Creates a symbolic link in `/dev/`. This will only work if the device already creates a device node in `/dev/`, for example `/dev/ttyUSB0`. |
 
 Any of the typical assignment (`=`, `+=`, `-=`) or comparison (`==`, `!=`) operators can be between keys and values. Values should always be quoted strings.
+
+A very common udev-rule is the one that changes the permissions of a pluggable device so that the currently logged-in user can access it without root privileges:
+
+```txt
+# Original FT2232 VID:PID. Allows access to user without root privileges.
+ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6010", MODE="660", GROUP="plugdev", TAG+="uaccess"
+```
 
 ### Adding new rules
 

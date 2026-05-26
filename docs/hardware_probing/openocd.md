@@ -1,6 +1,18 @@
 # OpenOCD: On-chip debugger
 
-[OpenOCD][openocd]
+[OpenOCD][openocd] (Open On-Chip Debugger) aims to provide debugging, in-system programming and boundary-scan testing for embedded target devices.
+
+TODO mermaid graphic with parts.
+
+## Dongles: debug adapter hardware
+
+A **dongle** is a small device that plugs into a computer and serves as an adapter from the PC's USB port to the electrical JTAG/SWD interface.
+
+From OpenOCD perspective, the dongle ... TODO: talk about how each dongle talks its own custom language.
+
+TODO FTDI based, JLINK, Black Magic Probe, UART-to-Serial, Lauterbach.
+
+## TODO
 
 Install with:
 
@@ -9,10 +21,6 @@ sudo apt install openocd
 ```
 
 OpenOCD uses [TCL][tcl_in_y_minutes].
-
-## Debug adapter hardware
-
-A **dongle** is a small device that plugs into a computer and serves as an adapter from the PC's USB port to the electrical JTAG/SWD interface.
 
 ## Using OpenOCD
 

@@ -3,8 +3,6 @@ site_url: https://ncotti.github.io/docs/
 docs_dir: docs
 
 nav:
-  - Home: home.md
-
   - ARM Assembly:
     - Introduction: arm_assembly/index.md
     - Binutils: arm_assembly/binutils.md
@@ -63,15 +61,16 @@ nav:
 
   - Hardware probing:
     - Introduction: hardware_probing/index.md
+    - Udev: hardware_probing/udev.md
+    - OpenOCD: hardware_probing/openocd.md
     - Interfaces:
       - Overview: hardware_probing/interfaces/interfaces_overview.md
       - Jtag/Boundary-scan: hardware_probing/interfaces/jtag.md
       - SWD: hardware_probing/interfaces/swd.md
-      - ST-Link: hardware_probing/interfaces/stlink.md
       - USB-UART: hardware_probing/interfaces/usb_uart.md
-    - udev: hardware_probing/udev.md
-    - Arduino: hardware_probing/arduino.md
-    - OpenOCD: hardware_probing/openocd.md
+    - Boards:
+      - Arduino: hardware_probing/boards/arduino.md
+    - FTDI: hardware_probing/ftdi.md
 
   - Licencing:
     - Overview: licencing/licencing.md
