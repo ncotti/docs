@@ -4,6 +4,128 @@
 #include <ncurses.h>
 #include <string.h>
 
+static void alignment_to_position(widget_t *widget) {
+    textbox_t *textbox = (textbox_t *)widget->data;
+    int ypos, xpos;
+    int8_t ypos_increment;
+
+    // Vertical alignment
+    switch (textbox->alignment) {
+    case TEXT_ALIGN_TOP_LEFT:
+    case TEXT_ALIGN_TOP_CENTER:
+    case TEXT_ALIGN_TOP_RIGHT: {
+        ypos = 1;
+        ypos_increment = +1;
+        break;
+    }
+
+    case TEXT_ALIGN_MIDDLE_LEFT:
+    case TEXT_ALIGN_MIDDLE_CENTER:
+    case TEXT_ALIGN_MIDDLE_RIGHT: {
+        ypos = widget->base.height / 2;
+        ypos_increment = +1;
+        break;
+    }
+
+    case TEXT_ALIGN_BOTTOM_LEFT:
+    case TEXT_ALIGN_BOTTOM_CENTER:
+    case TEXT_ALIGN_BOTTOM_RIGHT: {
+        ypos = widget->base.height - 2;
+        ypos_increment = -1;
+        break;
+    }
+    }
+
+    // Minus two because of the borders.
+    const uint16_t max_width = widget->base.width - 2;
+
+    char line[1024] = "";
+    char *copy = strdup(textbox->text);
+
+    char *word = strtok(copy, " ");
+    while (word) {
+        // Add words to the current line while its width does not surpasses the
+        // window's width.
+        if (strlen(line) + strlen(word) < max_width) {
+            // Add space between words
+            if (strlen(line) > 0) {
+                strcat(line, " ");
+            }
+            strcat(line, word);
+        } else {
+            // Print and erase line
+
+            // Horizontal alignment
+            switch (textbox->alignment) {
+            case TEXT_ALIGN_TOP_LEFT:
+            case TEXT_ALIGN_MIDDLE_LEFT:
+            case TEXT_ALIGN_BOTTOM_LEFT: {
+                xpos = 1;
+                break;
+            }
+
+            case TEXT_ALIGN_TOP_CENTER:
+            case TEXT_ALIGN_MIDDLE_CENTER:
+            case TEXT_ALIGN_BOTTOM_CENTER: {
+                xpos = (widget->base.width - 2 - strlen(line)) / 2;
+                break;
+            }
+
+            case TEXT_ALIGN_TOP_RIGHT:
+            case TEXT_ALIGN_MIDDLE_RIGHT:
+            case TEXT_ALIGN_BOTTOM_RIGHT: {
+                xpos = widget->base.width - strlen(line) - 1;
+                break;
+            }
+            }
+
+            wattron(widget->base.window, COLOR_PAIR(textbox->text_color));
+            mvwprintw(widget->base.window, ypos, xpos, "%s", line);
+            ypos += ypos_increment;
+            wattroff(widget->base.window, COLOR_PAIR(textbox->text_color));
+            line[0] = '\0';
+            strcat(line, word);
+        }
+
+        word = strtok(NULL, " ");
+    }
+
+    if (strlen(line) > 0) {
+        // Print and erase line
+
+        // Horizontal alignment
+        switch (textbox->alignment) {
+        case TEXT_ALIGN_TOP_LEFT:
+        case TEXT_ALIGN_MIDDLE_LEFT:
+        case TEXT_ALIGN_BOTTOM_LEFT: {
+            xpos = 1;
+            break;
+        }
+
+        case TEXT_ALIGN_TOP_CENTER:
+        case TEXT_ALIGN_MIDDLE_CENTER:
+        case TEXT_ALIGN_BOTTOM_CENTER: {
+            xpos = (widget->base.width - 2 - strlen(line)) / 2;
+            break;
+        }
+
+        case TEXT_ALIGN_TOP_RIGHT:
+        case TEXT_ALIGN_MIDDLE_RIGHT:
+        case TEXT_ALIGN_BOTTOM_RIGHT: {
+            xpos = widget->base.width - strlen(line) - 1;
+            break;
+        }
+        }
+
+        wattron(widget->base.window, COLOR_PAIR(textbox->text_color));
+        mvwprintw(widget->base.window, ypos, xpos, "%s", line);
+        ypos += ypos_increment;
+        wattroff(widget->base.window, COLOR_PAIR(textbox->text_color));
+    }
+
+    free(copy);
+}
+
 widget_t *textbox_new(const char *text, bool boxed) {
     widget_t *widget;
     textbox_t *textbox;
@@ -72,6 +194,7 @@ void textbox_refresh(widget_t *widget, int height, int width, int ypos,
                      int xpos) {
     textbox_t *textbox = (textbox_t *)widget->data;
     widget_border_t border;
+    pos_t text_pos;
 
     memset(&border, 0, sizeof(widget_border_t));
 
@@ -90,9 +213,11 @@ void textbox_refresh(widget_t *widget, int height, int width, int ypos,
     widget->base.ypos = ypos;
     widget->base.xpos = xpos;
 
-    wattron(widget->base.window, COLOR_PAIR(textbox->text_color));
-    mvwprintw(widget->base.window, 1, 1, "%s", textbox->text);
-    wattroff(widget->base.window, COLOR_PAIR(textbox->text_color));
+    // TODO werase or wclear ?
+    werase(widget->base.window);
+
+    alignment_to_position(widget);
+
     textbox_set_border(widget, true, border);
     wnoutrefresh(widget->base.window);
 }
@@ -102,6 +227,13 @@ void textbox_set_color(widget_t *widget, color_t color) {
     textbox->text_color = color;
     textbox_refresh(widget, widget->base.height, widget->base.width,
                     widget->base.ypos, widget->base.xpos);
+}
+
+void textbox_set_alignment(widget_t *widget, text_align_t alignment) {
+
+    textbox_t *textbox = (textbox_t *)widget->data;
+
+    textbox->alignment = alignment;
 }
 
 void textbox_set_border(widget_t *widget, bool boxed, widget_border_t border) {

@@ -11,10 +11,23 @@
 #define TEXT_LEFT_ALIGN
 #define TEXT_RIGHT_ALIGN
 
+typedef enum text_align_t {
+    TEXT_ALIGN_TOP_LEFT,
+    TEXT_ALIGN_TOP_CENTER,
+    TEXT_ALIGN_TOP_RIGHT,
+    TEXT_ALIGN_MIDDLE_LEFT,
+    TEXT_ALIGN_MIDDLE_CENTER,
+    TEXT_ALIGN_MIDDLE_RIGHT,
+    TEXT_ALIGN_BOTTOM_LEFT,
+    TEXT_ALIGN_BOTTOM_CENTER,
+    TEXT_ALIGN_BOTTOM_RIGHT,
+} text_align_t;
+
 typedef struct textbox_t {
-    char text[128];
+    char text[1024]; // TODO don't fix its size
     uint32_t text_style;
     color_t text_color;
+    text_align_t alignment;
     WINDOW *window;
 } textbox_t;
 
@@ -36,5 +49,6 @@ void textbox_set_color(widget_t *widget, color_t color);
 void textbox_set_text(widget_t *textbox, const char *text);
 void textbox_set_border(widget_t *widget, bool boxed, widget_border_t border);
 void textbox_on_focus(widget_t *widget);
+void textbox_set_alignment(widget_t *widget, text_align_t alignment);
 
 #endif // TEXTBOX_H_

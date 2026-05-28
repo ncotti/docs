@@ -56,4 +56,9 @@ struct widget_t {
     void *data;
 };
 
+typedef struct pos_t {
+    int ypos;
+    int xpos;
+} pos_t;
+
 #endif // WIDGET_H_
