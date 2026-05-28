@@ -1,4 +1,5 @@
 #include "layout.h"
+#include "color.h"
 #include <ncurses.h>
 
 WINDOW *create_newwin(int height, int width, int starty, int startx) {
@@ -27,8 +28,13 @@ layout_t *layout_new(WINDOW *parent, uint8_t rows, uint8_t cols) {
         }
 
         start_color();
-        init_pair(1, COLOR_RED, COLOR_BLACK);
-        init_pair(2, COLOR_GREEN, COLOR_BLACK);
+        init_pair(COLOR_RED_BLACK, COLOR_RED, COLOR_BLACK);
+        init_pair(COLOR_GREEN_BLACK, COLOR_GREEN, COLOR_BLACK);
+        init_pair(COLOR_YELLOW_BLACK, COLOR_YELLOW, COLOR_BLACK);
+        init_pair(COLOR_BLUE_BLACK, COLOR_BLUE, COLOR_BLACK);
+        init_pair(COLOR_MAGENTA_BLACK, COLOR_MAGENTA, COLOR_BLACK);
+        init_pair(COLOR_CYAN_BLACK, COLOR_CYAN, COLOR_BLACK);
+        init_pair(COLOR_WHITE_BLACK, COLOR_WHITE, COLOR_BLACK);
     }
 
     wclear(parent);

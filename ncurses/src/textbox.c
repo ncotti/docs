@@ -1,4 +1,5 @@
 #include "textbox.h"
+#include "color.h"
 #include "widget.h"
 #include <ncurses.h>
 #include <string.h>
@@ -29,6 +30,7 @@ widget_t *textbox_new(const char *text, bool boxed) {
     widget->base.width = 0;
     widget->base.type = WIDGET_TEXTBOX;
 
+    textbox->text_color = COLOR_WHITE_BLACK;
     textbox_set_text(widget, text);
 
     memset(&border, border_ch, sizeof(widget_border_t));
@@ -88,12 +90,19 @@ void textbox_refresh(widget_t *widget, int height, int width, int ypos,
     widget->base.ypos = ypos;
     widget->base.xpos = xpos;
 
+    wattron(widget->base.window, COLOR_PAIR(textbox->text_color));
     mvwprintw(widget->base.window, 1, 1, "%s", textbox->text);
+    wattroff(widget->base.window, COLOR_PAIR(textbox->text_color));
     textbox_set_border(widget, true, border);
     wnoutrefresh(widget->base.window);
 }
 
-void textbox_set_color(void) {}
+void textbox_set_color(widget_t *widget, color_t color) {
+    textbox_t *textbox = (textbox_t *)widget->data;
+    textbox->text_color = color;
+    textbox_refresh(widget, widget->base.height, widget->base.width,
+                    widget->base.ypos, widget->base.xpos);
+}
 
 void textbox_set_border(widget_t *widget, bool boxed, widget_border_t border) {
     wborder(widget->base.window, border.ls, border.rs, border.ts, border.bs,

@@ -1,3 +1,4 @@
+#include "color.h"
 #include "layout.h"
 #include "textbox.h"
 #include <ncurses.h>
@@ -48,6 +49,16 @@ int main(void) {
             layout_change_focus_down(layout);
             break;
         }
+
+        case 'a': {
+            textbox_set_color(text_ul, COLOR_GREEN_BLACK);
+            break;
+        }
+
+        case 'b': {
+            textbox_set_color(text_ul, COLOR_YELLOW_BLACK);
+            break;
+        }
         }
 
         layout_refresh(layout);
@@ -56,5 +67,6 @@ int main(void) {
     layout_del(layout);
 
     printf("%d, %d\n", LINES, COLS);
+    printf("COLORS: %d, COLOR_PAIRS: %d\n", COLORS, COLOR_PAIRS);
     return 0;
 }
