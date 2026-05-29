@@ -48,7 +48,7 @@ void textbox_refresh(widget_t *widget, int height, int width, int ypos,
 void textbox_set_color(widget_t *widget, color_t color);
 void textbox_set_text(widget_t *textbox, const char *text);
 void textbox_set_border(widget_t *widget, bool boxed, widget_border_t border);
-void textbox_on_focus(widget_t *widget);
+bool textbox_on_focus(widget_t *widget, int key_pressed);
 void textbox_set_alignment(widget_t *widget, text_align_t alignment);
 
 #endif // TEXTBOX_H_

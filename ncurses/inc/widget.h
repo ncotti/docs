@@ -20,7 +20,7 @@ typedef enum widget_status_t {
 
 typedef widget_status_t (*widget_del_fn_t)(widget_t *);
 typedef void (*widget_refresh_fn_t)(widget_t *, int, int, int, int);
-typedef void (*widget_on_focus_fn_t)(widget_t *);
+typedef bool (*widget_on_focus_fn_t)(widget_t *, int);
 
 /// @brief Widget types
 typedef enum widget_type_t {

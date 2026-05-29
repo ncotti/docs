@@ -4,8 +4,6 @@
 #include <ncurses.h>
 
 int main(void) {
-    int input;
-
     layout_t *layout;
     widget_t *text_ul;
     widget_t *text_ur;
@@ -27,91 +25,7 @@ int main(void) {
     layout_add(layout, text_dl, 1, 0);
     layout_add(layout, text_dr, 1, 1);
 
-    layout_refresh(layout);
-
-    do {
-        input = getch();
-
-        switch (input) {
-        case KEY_LEFT: {
-            layout_change_focus_left(layout);
-            break;
-        }
-
-        case KEY_RIGHT: {
-            layout_change_focus_right(layout);
-            break;
-        }
-
-        case KEY_UP: {
-            layout_change_focus_up(layout);
-            break;
-        }
-
-        case KEY_DOWN: {
-            layout_change_focus_down(layout);
-            break;
-        }
-
-        case 'a': {
-            textbox_set_color(text_ul, COLOR_GREEN_BLACK);
-            break;
-        }
-
-        case 'b': {
-            textbox_set_color(text_ul, COLOR_YELLOW_BLACK);
-            break;
-        }
-
-        case 'c': {
-            textbox_set_alignment(text_ul, TEXT_ALIGN_TOP_LEFT);
-            break;
-        }
-
-        case 'd': {
-            textbox_set_alignment(text_ul, TEXT_ALIGN_TOP_CENTER);
-            break;
-        }
-
-        case 'e': {
-            textbox_set_alignment(text_ul, TEXT_ALIGN_TOP_RIGHT);
-            break;
-        }
-
-        case 'f': {
-            textbox_set_alignment(text_ul, TEXT_ALIGN_MIDDLE_LEFT);
-            break;
-        }
-
-        case 'g': {
-            textbox_set_alignment(text_ul, TEXT_ALIGN_MIDDLE_CENTER);
-            break;
-        }
-
-        case 'h': {
-            textbox_set_alignment(text_ul, TEXT_ALIGN_MIDDLE_RIGHT);
-            break;
-        }
-
-        case 'i': {
-            textbox_set_alignment(text_ul, TEXT_ALIGN_BOTTOM_LEFT);
-            break;
-        }
-
-        case 'j': {
-            textbox_set_alignment(text_ul, TEXT_ALIGN_BOTTOM_CENTER);
-            break;
-        }
-
-        case 'k': {
-            textbox_set_alignment(text_ul, TEXT_ALIGN_BOTTOM_RIGHT);
-            break;
-        }
-        }
-
-        layout_refresh(layout);
-    } while (input != 'q');
-
+    layout_show(layout);
     layout_del(layout);
 
     printf("%d, %d\n", LINES, COLS);

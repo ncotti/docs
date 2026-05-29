@@ -35,7 +35,7 @@ void layout_add(layout_t *layout, widget_t *widget, uint8_t row, uint8_t col);
 
 /// @brief Refresh all widgets inside the layout.
 /// @param layout Layout to be refreshed.
-void layout_refresh(layout_t *layout);
+void layout_show(layout_t *layout);
 
 /// @brief Frees resources from layout.
 /// @param layout Layout to be deleted. If the layout's parent window is
@@ -50,5 +50,7 @@ void layout_change_focus_down(layout_t *layout);
 void layout_change_focus_left(layout_t *layout);
 
 void layout_change_focus_right(layout_t *layout);
+
+bool layout_consume_key(layout_t *layout, int key);
 
 #endif // LAYOUT_H

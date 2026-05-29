@@ -51,9 +51,9 @@ static void alignment_to_position(widget_t *widget) {
         if (strlen(line) + strlen(word) < max_width) {
             // Add space between words
             if (strlen(line) > 0) {
-                strcat(line, " ");
+                strncat(line, " ", 1);
             }
-            strcat(line, word);
+            strncat(line, word, strlen(word) + 1);
         } else {
             // Print and erase line
 
@@ -86,7 +86,7 @@ static void alignment_to_position(widget_t *widget) {
             wattroff(widget->base.window, COLOR_PAIR(textbox->text_color));
             ypos++;
             line[0] = '\0';
-            strcat(line, word);
+            strncat(line, word, sizeof(word) + 1);
         }
 
         word = strtok(NULL, " ");
@@ -181,22 +181,23 @@ widget_status_t textbox_del(widget_t *widget) {
     return WIDGET_OK;
 }
 
-void textbox_on_focus(widget_t *widget) {
+// Return true if the key was consumed
+bool textbox_on_focus(widget_t *widget, int key_pressed) {
     widget_border_t border;
     memset(&border, 0, sizeof(widget_border_t));
 
     wattron(widget->base.window, COLOR_PAIR(1));
     textbox_set_border(widget, true, border);
-    mvwprintw(widget->base.window, 1, 1, "hi");
     wattroff(widget->base.window, COLOR_PAIR(1));
     wrefresh(widget->base.window);
+
+    return false;
 }
 
 void textbox_refresh(widget_t *widget, int height, int width, int ypos,
                      int xpos) {
-    textbox_t *textbox = (textbox_t *)widget->data;
+    // textbox_t *textbox = (textbox_t *)widget->data;
     widget_border_t border;
-    pos_t text_pos;
 
     memset(&border, 0, sizeof(widget_border_t));
 
