@@ -7,7 +7,15 @@
 static void alignment_to_position(widget_t *widget) {
     textbox_t *textbox = (textbox_t *)widget->data;
     int ypos, xpos;
-    int8_t ypos_increment;
+
+    // Minus two because of the borders.
+    const uint16_t max_width = widget->base.width - 2;
+
+    // Calculate the amount of rows that the text will occupy
+    // The most optimist approach is that each row is fully occupied, the most
+    // pessimist approach is that each row leaves an empty space equal to the
+    // longest word + its space
+    uint16_t min_rows = (strlen(textbox->text) / max_width) + 1;
 
     // Vertical alignment
     switch (textbox->alignment) {
@@ -15,29 +23,23 @@ static void alignment_to_position(widget_t *widget) {
     case TEXT_ALIGN_TOP_CENTER:
     case TEXT_ALIGN_TOP_RIGHT: {
         ypos = 1;
-        ypos_increment = +1;
         break;
     }
 
     case TEXT_ALIGN_MIDDLE_LEFT:
     case TEXT_ALIGN_MIDDLE_CENTER:
     case TEXT_ALIGN_MIDDLE_RIGHT: {
-        ypos = widget->base.height / 2;
-        ypos_increment = +1;
+        ypos = (widget->base.height - min_rows) / 2;
         break;
     }
 
     case TEXT_ALIGN_BOTTOM_LEFT:
     case TEXT_ALIGN_BOTTOM_CENTER:
     case TEXT_ALIGN_BOTTOM_RIGHT: {
-        ypos = widget->base.height - 2;
-        ypos_increment = -1;
+        ypos = widget->base.height - 2 - min_rows;
         break;
     }
     }
-
-    // Minus two because of the borders.
-    const uint16_t max_width = widget->base.width - 2;
 
     char line[1024] = "";
     char *copy = strdup(textbox->text);
@@ -67,7 +69,7 @@ static void alignment_to_position(widget_t *widget) {
             case TEXT_ALIGN_TOP_CENTER:
             case TEXT_ALIGN_MIDDLE_CENTER:
             case TEXT_ALIGN_BOTTOM_CENTER: {
-                xpos = (widget->base.width - 2 - strlen(line)) / 2;
+                xpos = ((max_width - strlen(line)) / 2) + 1;
                 break;
             }
 
@@ -81,8 +83,8 @@ static void alignment_to_position(widget_t *widget) {
 
             wattron(widget->base.window, COLOR_PAIR(textbox->text_color));
             mvwprintw(widget->base.window, ypos, xpos, "%s", line);
-            ypos += ypos_increment;
             wattroff(widget->base.window, COLOR_PAIR(textbox->text_color));
+            ypos++;
             line[0] = '\0';
             strcat(line, word);
         }
@@ -105,7 +107,7 @@ static void alignment_to_position(widget_t *widget) {
         case TEXT_ALIGN_TOP_CENTER:
         case TEXT_ALIGN_MIDDLE_CENTER:
         case TEXT_ALIGN_BOTTOM_CENTER: {
-            xpos = (widget->base.width - 2 - strlen(line)) / 2;
+            xpos = ((max_width - strlen(line)) / 2) + 1;
             break;
         }
 
@@ -119,7 +121,7 @@ static void alignment_to_position(widget_t *widget) {
 
         wattron(widget->base.window, COLOR_PAIR(textbox->text_color));
         mvwprintw(widget->base.window, ypos, xpos, "%s", line);
-        ypos += ypos_increment;
+        ypos++;
         wattroff(widget->base.window, COLOR_PAIR(textbox->text_color));
     }
 
