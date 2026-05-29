@@ -25,9 +25,12 @@ typedef enum text_align_t {
 
 typedef struct textbox_t {
     char text[1024]; // TODO don't fix its size
-    uint32_t text_style;
     color_t text_color;
     text_align_t alignment;
+    uint16_t text_rows;
+    uint16_t top_displayed_text_row;
+    color_t border_color;
+    color_t stored_border_color;
     WINDOW *window;
 } textbox_t;
 
@@ -50,5 +53,7 @@ void textbox_set_text(widget_t *textbox, const char *text);
 void textbox_set_border(widget_t *widget, bool boxed, widget_border_t border);
 bool textbox_on_focus(widget_t *widget, int key_pressed);
 void textbox_set_alignment(widget_t *widget, text_align_t alignment);
+void textbox_set_border_color(widget_t *widget, color_t color);
+void textbox_on_lose_focus(widget_t *widget);
 
 #endif // TEXTBOX_H_

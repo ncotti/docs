@@ -21,6 +21,7 @@ typedef enum widget_status_t {
 typedef widget_status_t (*widget_del_fn_t)(widget_t *);
 typedef void (*widget_refresh_fn_t)(widget_t *, int, int, int, int);
 typedef bool (*widget_on_focus_fn_t)(widget_t *, int);
+typedef void (*widget_on_lose_focus_fn_t)(widget_t *);
 
 /// @brief Widget types
 typedef enum widget_type_t {
@@ -45,6 +46,7 @@ struct widget_base_t {
     widget_refresh_fn_t refresh_fn;
     widget_del_fn_t del_fn;
     widget_on_focus_fn_t on_focus_fn;
+    widget_on_lose_focus_fn_t on_lose_focus_fn;
     int ypos;
     int xpos;
     int height;

@@ -11,12 +11,6 @@ static void alignment_to_position(widget_t *widget) {
     // Minus two because of the borders.
     const uint16_t max_width = widget->base.width - 2;
 
-    // Calculate the amount of rows that the text will occupy
-    // The most optimist approach is that each row is fully occupied, the most
-    // pessimist approach is that each row leaves an empty space equal to the
-    // longest word + its space
-    uint16_t min_rows = (strlen(textbox->text) / max_width) + 1;
-
     // Vertical alignment
     switch (textbox->alignment) {
     case TEXT_ALIGN_TOP_LEFT:
@@ -29,17 +23,21 @@ static void alignment_to_position(widget_t *widget) {
     case TEXT_ALIGN_MIDDLE_LEFT:
     case TEXT_ALIGN_MIDDLE_CENTER:
     case TEXT_ALIGN_MIDDLE_RIGHT: {
-        ypos = (widget->base.height - min_rows) / 2;
+        ypos = (widget->base.height - textbox->text_rows) / 2;
         break;
     }
 
     case TEXT_ALIGN_BOTTOM_LEFT:
     case TEXT_ALIGN_BOTTOM_CENTER:
     case TEXT_ALIGN_BOTTOM_RIGHT: {
-        ypos = widget->base.height - 2 - min_rows;
+        ypos = widget->base.height - 1 - textbox->text_rows;
         break;
     }
     }
+
+    ypos = ypos + textbox->top_displayed_text_row;
+
+    textbox->text_rows = 0;
 
     char line[1024] = "";
     char *copy = strdup(textbox->text);
@@ -85,6 +83,7 @@ static void alignment_to_position(widget_t *widget) {
             mvwprintw(widget->base.window, ypos, xpos, "%s", line);
             wattroff(widget->base.window, COLOR_PAIR(textbox->text_color));
             ypos++;
+            textbox->text_rows++;
             line[0] = '\0';
             strncat(line, word, sizeof(word) + 1);
         }
@@ -122,6 +121,7 @@ static void alignment_to_position(widget_t *widget) {
         wattron(widget->base.window, COLOR_PAIR(textbox->text_color));
         mvwprintw(widget->base.window, ypos, xpos, "%s", line);
         ypos++;
+        textbox->text_rows++;
         wattroff(widget->base.window, COLOR_PAIR(textbox->text_color));
     }
 
@@ -133,6 +133,7 @@ widget_t *textbox_new(const char *text, bool boxed) {
     textbox_t *textbox;
     widget_border_t border;
     const chtype border_ch = boxed ? 'a' : ' ';
+    // const uint16_t max_width = widget->base.width - 2;
 
     widget = (widget_t *)malloc(sizeof(widget_t));
     textbox = (textbox_t *)malloc(sizeof(textbox_t));
@@ -148,6 +149,7 @@ widget_t *textbox_new(const char *text, bool boxed) {
     widget->base.refresh_fn = textbox_refresh;
     widget->base.del_fn = textbox_del;
     widget->base.on_focus_fn = textbox_on_focus;
+    widget->base.on_lose_focus_fn = textbox_on_lose_focus;
     widget->base.xpos = 0;
     widget->base.ypos = 0;
     widget->base.height = 0;
@@ -155,7 +157,13 @@ widget_t *textbox_new(const char *text, bool boxed) {
     widget->base.type = WIDGET_TEXTBOX;
 
     textbox->text_color = COLOR_WHITE_BLACK;
+    textbox->border_color = COLOR_WHITE_BLACK;
+    textbox->stored_border_color = COLOR_WHITE_BLACK;
+
     textbox_set_text(widget, text);
+    // textbox->text_rows = (strlen(textbox->text) / max_width) + 1;
+    textbox->text_rows = 0;
+    textbox->top_displayed_text_row = 0;
 
     memset(&border, border_ch, sizeof(widget_border_t));
 
@@ -182,16 +190,37 @@ widget_status_t textbox_del(widget_t *widget) {
 }
 
 // Return true if the key was consumed
-bool textbox_on_focus(widget_t *widget, int key_pressed) {
+bool textbox_on_focus(widget_t *widget, int key) {
+    textbox_t *textbox = widget->data;
+    bool key_was_consumed = false;
     widget_border_t border;
     memset(&border, 0, sizeof(widget_border_t));
 
-    wattron(widget->base.window, COLOR_PAIR(1));
-    textbox_set_border(widget, true, border);
-    wattroff(widget->base.window, COLOR_PAIR(1));
-    wrefresh(widget->base.window);
+    switch (key) {
+    case 's': {
+        textbox->top_displayed_text_row++;
+        key_was_consumed = true;
+        break;
+    }
 
-    return false;
+    case 'w': {
+        textbox->top_displayed_text_row =
+            (textbox->top_displayed_text_row > 0)
+                ? textbox->top_displayed_text_row - 1
+                : textbox->top_displayed_text_row;
+        key_was_consumed = true;
+        break;
+    }
+    }
+
+    textbox_set_border_color(widget, COLOR_RED_BLACK);
+
+    return key_was_consumed;
+}
+
+void textbox_on_lose_focus(widget_t *widget) {
+    textbox_t *textbox = widget->data;
+    textbox_set_border_color(widget, textbox->stored_border_color);
 }
 
 void textbox_refresh(widget_t *widget, int height, int width, int ypos,
@@ -239,9 +268,18 @@ void textbox_set_alignment(widget_t *widget, text_align_t alignment) {
     textbox->alignment = alignment;
 }
 
+void textbox_set_border_color(widget_t *widget, color_t color) {
+    textbox_t *textbox = (textbox_t *)widget->data;
+    // TODO, there is some badness here with the stored color
+    textbox->border_color = color;
+}
+
 void textbox_set_border(widget_t *widget, bool boxed, widget_border_t border) {
+    textbox_t *textbox = (textbox_t *)widget->data;
+    wattron(widget->base.window, COLOR_PAIR(textbox->border_color));
     wborder(widget->base.window, border.ls, border.rs, border.ts, border.bs,
             border.tl, border.tr, border.bl, border.br);
+    wattroff(widget->base.window, COLOR_PAIR(textbox->border_color));
 }
 
 void textbox_set_text(widget_t *widget, const char *text) {

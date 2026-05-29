@@ -59,13 +59,13 @@ bool layout_refresh_widget(layout_t *layout, uint8_t row, uint8_t col,
     int height = LINES / layout->rows;
     int width = COLS / layout->cols;
 
-    layout->widgets[idx]->base.refresh_fn(layout->widgets[idx], height, width,
-                                          row * height, col * width);
-
     if (row == layout->focus_row && col == layout->focus_col) {
         key_consumed =
             layout->widgets[idx]->base.on_focus_fn(layout->widgets[idx], key);
     }
+
+    layout->widgets[idx]->base.refresh_fn(layout->widgets[idx], height, width,
+                                          row * height, col * width);
 
     return key_consumed;
 }
@@ -75,8 +75,6 @@ void layout_show(layout_t *layout) {
     bool exit = false;
     bool first_time = true;
     int key;
-
-    int iterations = 0;
 
     do {
         key = (!first_time) ? getch() : 0;
@@ -104,7 +102,6 @@ void layout_show(layout_t *layout) {
         doupdate();
         wrefresh(layout->parent);
         first_time = false;
-        iterations++;
     } while (!exit);
 }
 
@@ -220,25 +217,40 @@ void layout_change_focus(layout_t *layout, uint8_t row, uint8_t col) {
 }
 
 void layout_change_focus_up(layout_t *layout) {
-    layout->focus_row =
-        (layout->focus_row > 0) ? layout->focus_row - 1 : layout->focus_row;
+
+    uint16_t idx;
+    if (layout->focus_row > 0) {
+        idx = layout->focus_row * layout->cols + layout->focus_col;
+        layout->widgets[idx]->base.on_lose_focus_fn(layout->widgets[idx]);
+        layout->focus_row--;
+    }
 }
 
 void layout_change_focus_down(layout_t *layout) {
-    layout->focus_row = (layout->focus_row < (layout->rows - 1))
-                            ? layout->focus_row + 1
-                            : layout->focus_row;
+    uint16_t idx;
+    if (layout->focus_row < (layout->rows - 1)) {
+        idx = layout->focus_row * layout->cols + layout->focus_col;
+        layout->widgets[idx]->base.on_lose_focus_fn(layout->widgets[idx]);
+        layout->focus_row++;
+    }
 }
 
 void layout_change_focus_left(layout_t *layout) {
-    layout->focus_col =
-        (layout->focus_col > 0) ? layout->focus_col - 1 : layout->focus_col;
+    uint16_t idx;
+    if (layout->focus_col > 0) {
+        idx = layout->focus_row * layout->cols + layout->focus_col;
+        layout->widgets[idx]->base.on_lose_focus_fn(layout->widgets[idx]);
+        layout->focus_col--;
+    }
 }
 
 void layout_change_focus_right(layout_t *layout) {
-    layout->focus_col = (layout->focus_col < (layout->cols - 1))
-                            ? layout->focus_col + 1
-                            : layout->focus_col;
+    uint16_t idx;
+    if (layout->focus_col < (layout->cols - 1)) {
+        idx = layout->focus_row * layout->cols + layout->focus_col;
+        layout->widgets[idx]->base.on_lose_focus_fn(layout->widgets[idx]);
+        layout->focus_col++;
+    }
 }
 
 void layout_del(layout_t *layout) {
