@@ -3,6 +3,7 @@
 #include "color.h"
 #include "widget.h"
 #include <ncurses.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -14,11 +15,12 @@ static void calculate_rows_and_words(widget_t *widget);
 
 static void alignment_to_position(widget_t *widget) {
     textbox_t *textbox = (textbox_t *)widget->data;
-    int ypos, xpos;
+    int ypos;
+    int xpos;
 
     // Minus two because of the borders.
-    const uint16_t max_width = getmaxx(widget->base.window) - 2;
-    const uint16_t max_height = getmaxy(widget->base.window) - 2;
+    const int max_width = getmaxx(widget->base.window) - 2;
+    const int max_height = getmaxy(widget->base.window) - 2;
 
     // Vertical alignment
     switch (textbox->alignment) {
@@ -58,7 +60,7 @@ static void alignment_to_position(widget_t *widget) {
         if (strlen(line) + strlen(word) < max_width) {
             // Add space between words
             if (strlen(line) > 0) {
-                strncat(line, " ", 1);
+                strncat(line, " ", 2);
             }
             strncat(line, word, strlen(word) + 1);
         } else {
@@ -76,14 +78,14 @@ static void alignment_to_position(widget_t *widget) {
             case TEXT_ALIGN_TOP_CENTER:
             case TEXT_ALIGN_MIDDLE_CENTER:
             case TEXT_ALIGN_BOTTOM_CENTER: {
-                xpos = ((max_width - strlen(line)) / 2) + 1;
+                xpos = ((max_width - (int)strlen(line)) / 2) + 1;
                 break;
             }
 
             case TEXT_ALIGN_TOP_RIGHT:
             case TEXT_ALIGN_MIDDLE_RIGHT:
             case TEXT_ALIGN_BOTTOM_RIGHT: {
-                xpos = getmaxx(widget->base.window) - strlen(line) - 1;
+                xpos = getmaxx(widget->base.window) - (int)strlen(line) - 1;
                 break;
             }
             }
@@ -115,14 +117,14 @@ static void alignment_to_position(widget_t *widget) {
         case TEXT_ALIGN_TOP_CENTER:
         case TEXT_ALIGN_MIDDLE_CENTER:
         case TEXT_ALIGN_BOTTOM_CENTER: {
-            xpos = ((max_width - strlen(line)) / 2) + 1;
+            xpos = ((max_width - (int)strlen(line)) / 2) + 1;
             break;
         }
 
         case TEXT_ALIGN_TOP_RIGHT:
         case TEXT_ALIGN_MIDDLE_RIGHT:
         case TEXT_ALIGN_BOTTOM_RIGHT: {
-            xpos = getmaxx(widget->base.window) - strlen(line) - 1;
+            xpos = getmaxx(widget->base.window) - (int)strlen(line) - 1;
             break;
         }
         }
@@ -158,7 +160,7 @@ static void calculate_rows_and_words(widget_t *widget) {
     textbox->text_words = 0;
 
     // The white-space is counted as character that prefixes words.
-    for (uint16_t i = 0; i < textbox->text[i] != '\0'; i++) {
+    for (uint16_t i = 0; i < (textbox->text[i] != (char)'\0'); i++) {
         chars_in_word++;
         if ((textbox->text[i] == ' ') || (textbox->text[i + 1] == '\0')) {
             textbox->text_words++;
@@ -188,14 +190,9 @@ widget_t *textbox_new(const char *text) {
         return NULL;
     }
 
-    widget->base.window = NULL;
-    widget->data = (void *)textbox;
-    widget->base.on_refresh_fn = textbox_on_refresh;
-    widget->base.del_fn = textbox_del;
-    widget->base.on_focus_fn = textbox_on_focus;
-    widget->base.on_lose_focus_fn = textbox_on_lose_focus;
-    widget->base.on_resize_fn = textbox_on_resize;
-    widget->base.type = WIDGET_TEXTBOX;
+    widget_init(widget, (void *)textbox, WIDGET_TEXTBOX, NULL,
+                textbox_on_refresh, textbox_del, textbox_on_focus,
+                textbox_on_lose_focus, textbox_on_resize);
 
     textbox->text_color = COLOR_WHITE_BLACK;
     textbox->border_color = COLOR_WHITE_BLACK;
@@ -248,6 +245,10 @@ bool textbox_on_focus(widget_t *widget, int key) {
         key_was_consumed = true;
         break;
     }
+
+    default: {
+        break;
+    }
     }
 
     textbox_set_border_color(widget, COLOR_RED_BLACK);
@@ -274,13 +275,12 @@ void textbox_on_refresh(widget_t *widget) {
     wnoutrefresh(widget->base.window);
 }
 
-void textbox_on_resize(widget_t *widget, int height, int width, int ypos,
-                       int xpos) {
+void textbox_on_resize(widget_t *widget, dim_t dim, pos_t pos) {
     if (widget->base.window != NULL) {
         wclear(widget->base.window);
         delwin(widget->base.window);
     }
-    widget->base.window = newwin(height, width, ypos, xpos);
+    widget->base.window = newwin(dim.height, dim.width, pos.y, pos.x);
 
     textbox_on_refresh(widget);
 }

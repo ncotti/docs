@@ -9,7 +9,7 @@
 
 /***[Macros]******************************************************************/
 
-#define MAX_CHARS_IN_LINE 1024
+#define MAX_CHARS_IN_LINE (uint16_t)1024
 
 /***[Types]*******************************************************************/
 typedef enum text_align_t {
@@ -51,14 +51,13 @@ widget_t *textbox_new(const char *text);
 /// @return "WIDGET_OK" on success, or an error code on failure.
 widget_status_t textbox_del(widget_t *widget);
 
-void textbox_on_resize(widget_t *widget, int height, int width, int ypos,
-                       int xpos);
+void textbox_on_resize(widget_t *widget, dim_t dim, pos_t pos);
 void textbox_on_refresh(widget_t *widget);
 bool textbox_on_focus(widget_t *widget, int key_pressed);
 void textbox_on_lose_focus(widget_t *widget);
 
 void textbox_set_color(widget_t *widget, color_t color);
-void textbox_set_text(widget_t *textbox, const char *text);
+void textbox_set_text(widget_t *widget, const char *text);
 void textbox_set_border(widget_t *widget);
 void textbox_set_alignment(widget_t *widget, text_align_t alignment);
 

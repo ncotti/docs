@@ -1,5 +1,7 @@
 /***[Includes]****************************************************************/
 #include "widget.h"
+#include <ncurses.h>
+#include <stddef.h>
 
 /***[Static variables]********************************************************/
 
@@ -21,4 +23,18 @@ void widget_init(widget_t *widget, void *data, widget_type_t type,
     widget->base.on_lose_focus_fn = on_lose_focus_fn;
     widget->base.on_resize_fn = on_resize_fn;
     widget->base.type = type;
+}
+
+widget_status_t widget_cast(widget_t *widget, void **data, widget_type_t type) {
+    if (widget == NULL) {
+        return WIDGET_NULL;
+    }
+
+    if (widget->base.type != type) {
+        return WIDGET_WRONG_TYPE;
+    }
+
+    *data = widget->data;
+
+    return WIDGET_OK;
 }

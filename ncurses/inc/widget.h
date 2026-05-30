@@ -7,8 +7,8 @@
 /***[Macros]******************************************************************/
 
 /***[Types]*******************************************************************/
-/// @brief Widgets are defined by a list of common attributes in their "base",
-/// and a list of custom attributes in their "data".
+/// @brief Widgets are defined by a list of common attributes in their
+/// "base", and a list of custom attributes in their "data".
 typedef struct widget_t widget_t;
 
 /// @brief Common attributes to all widgets.
@@ -20,13 +20,24 @@ typedef enum widget_status_t {
     WIDGET_NULL = -1,
     WIDGET_WRONG_TYPE = -2,
     WIDGET_ENOMEM = -3,
+    WIDGET_OUT_OF_BOUNDS = -4,
 } widget_status_t;
+
+typedef struct pos_t {
+    int y;
+    int x;
+} pos_t;
+
+typedef struct dim_t {
+    int height;
+    int width;
+} dim_t;
 
 typedef widget_status_t (*widget_del_fn_t)(widget_t *);
 typedef void (*widget_on_refresh_fn_t)(widget_t *);
 typedef bool (*widget_on_focus_fn_t)(widget_t *, int);
 typedef void (*widget_on_lose_focus_fn_t)(widget_t *);
-typedef void (*widget_on_resize_t)(widget_t *, int, int, int, int);
+typedef void (*widget_on_resize_t)(widget_t *, dim_t, pos_t);
 
 /// @brief Widget types
 typedef enum widget_type_t {
@@ -61,11 +72,6 @@ struct widget_t {
     void *data;
 };
 
-typedef struct pos_t {
-    int ypos;
-    int xpos;
-} pos_t;
-
 /***[Extern variables]********************************************************/
 
 /***[Functions prototypes]****************************************************/
@@ -76,4 +82,7 @@ void widget_init(widget_t *widget, void *data, widget_type_t type,
                  widget_on_lose_focus_fn_t on_lose_focus_fn,
                  widget_on_resize_t on_resize_fn);
 
-#endif // WIDGET_H_
+__attribute__((warn_unused_result)) widget_status_t
+widget_cast(widget_t *widget, void **data, widget_type_t type);
+
+#endif // WIDGET_H

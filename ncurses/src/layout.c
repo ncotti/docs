@@ -4,6 +4,7 @@
 #include "textbox.h"
 #include "widget.h"
 #include <ncurses.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 /***[Static variables]********************************************************/
@@ -28,10 +29,13 @@ widget_t *layout_new(WINDOW *parent, uint8_t rows, uint8_t cols) {
 
     widget_t *widget = (widget_t *)malloc(sizeof(widget_t));
     layout_t *layout = (layout_t *)malloc(sizeof(layout_t));
+    layout->widgets =
+        (widget_t **)malloc((size_t)rows * cols * sizeof(widget_t *));
 
-    if (widget == NULL || layout == NULL) {
-        free(widget);
-        free(layout);
+    if ((widget == NULL) || (layout == NULL) || (layout->widgets == NULL)) {
+        free((void *)layout->widgets);
+        free((void *)layout);
+        free((void *)widget);
         return NULL;
     }
 
@@ -57,13 +61,8 @@ widget_t *layout_new(WINDOW *parent, uint8_t rows, uint8_t cols) {
                 layout_on_refresh, layout_del, layout_on_focus,
                 layout_on_lose_focus, layout_on_resize);
 
-    wclear(parent);
-    wrefresh(parent);
-    widget->base.window = parent;
     layout->rows = rows;
     layout->cols = cols;
-    layout->widgets = malloc(rows * cols * sizeof(widget_t *));
-
     layout->focus_row = 0;
     layout->focus_col = 0;
     layout->focus_idx = 0;
@@ -71,7 +70,11 @@ widget_t *layout_new(WINDOW *parent, uint8_t rows, uint8_t cols) {
     return widget;
 }
 
-bool layout_on_focus(widget_t *widget, int key) { return true; }
+bool layout_on_focus(widget_t *widget, int key) {
+    (void)key;
+    (void)widget;
+    return true;
+}
 
 void layout_on_lose_focus(widget_t *widget) {}
 
@@ -82,9 +85,12 @@ void layout_show(widget_t *widget) {
 
     layout_t *layout = (layout_t *)widget->data;
 
-    layout_on_resize(widget, getmaxy(widget->base.window),
-                     getmaxx(widget->base.window), getbegy(widget->base.window),
-                     getbegx(widget->base.window));
+    pos_t pos;
+    dim_t dim;
+    getyx(widget->base.window, pos.y, pos.x);
+    getmaxyx(widget->base.window, dim.height, dim.width);
+
+    layout_on_resize(widget, dim, pos);
     layout_on_refresh(widget);
 
     do {
@@ -108,6 +114,8 @@ void layout_show(widget_t *widget) {
 bool layout_consume_key(widget_t *widget, int key) {
 
     layout_t *layout = (layout_t *)widget->data;
+    pos_t pos;
+    dim_t dim;
     bool exit = false;
     switch (key) {
     case KEY_LEFT: {
@@ -191,9 +199,9 @@ bool layout_consume_key(widget_t *widget, int key) {
     }
 
     case KEY_RESIZE: {
-        layout_on_resize(
-            widget, getmaxy(widget->base.window), getmaxx(widget->base.window),
-            getbegy(widget->base.window), getbegx(widget->base.window));
+        getmaxyx(widget->base.window, dim.height, dim.width);
+        getbegyx(widget->base.window, pos.y, pos.x);
+        layout_on_resize(widget, dim, pos);
     }
 
     default: {
@@ -217,44 +225,60 @@ void layout_on_refresh(widget_t *widget) {
     }
 }
 
-void layout_on_resize(widget_t *widget, int height, int width, int ypos,
-                      int xpos) {
+void layout_on_resize(widget_t *widget, dim_t dim, pos_t pos) {
+
+    (void)dim;
+    (void)pos;
+
     uint8_t idx;
 
     layout_t *layout = (layout_t *)widget->data;
 
-    int widget_height = LINES / layout->rows;
-    int widget_width = COLS / layout->cols;
+    pos_t widget_pos;
+    dim_t widget_dim = {
+        .height = LINES / layout->rows,
+        .width = COLS / layout->cols,
+    };
 
     for (uint8_t row = 0; row < layout->rows; row++) {
         for (uint8_t col = 0; col < layout->cols; col++) {
             idx = pos2idx(layout, row, col);
 
-            layout->widgets[idx]->base.on_resize_fn(
-                layout->widgets[idx], widget_height, widget_width,
-                row * widget_height, col * widget_width);
+            widget_pos.y = row * widget_dim.height;
+            widget_pos.x = col * widget_dim.width;
+
+            layout->widgets[idx]->base.on_resize_fn(layout->widgets[idx],
+                                                    widget_dim, widget_pos);
         }
     }
 
     layout_on_refresh(widget);
 }
 
-void layout_add(widget_t *widget, widget_t *new_widget, uint8_t row,
-                uint8_t col) {
+// NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
+widget_status_t layout_add(widget_t *parent, widget_t *child, uint8_t row,
+                           uint8_t col) {
     uint8_t idx;
+    layout_t *layout;
+    widget_status_t ret;
 
-    layout_t *layout = (layout_t *)widget->data;
-
-    if (row > layout->rows) {
-        // Error
+    ret = widget_cast(parent, (void **)&layout, WIDGET_LAYOUT);
+    if (ret != WIDGET_OK) {
+        return ret;
     }
 
-    if (col > layout->cols) {
-        // Error
+    if (row > layout->rows || col > layout->cols) {
+        return WIDGET_OUT_OF_BOUNDS;
+    }
+
+    if (child == NULL) {
+        return WIDGET_NULL;
     }
 
     idx = pos2idx(layout, row, col);
-    layout->widgets[idx] = new_widget;
+    layout->widgets[idx] = child;
+
+    return WIDGET_OK;
 }
 
 void layout_change_focus(widget_t *widget, layout_dir_t dir) {

@@ -2,7 +2,9 @@
 #include "main.h"
 #include "layout.h"
 #include "textbox.h"
+#include "widget.h"
 #include <ncurses.h>
+#include <stdio.h>
 
 /***[Static variables]********************************************************/
 

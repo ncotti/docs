@@ -10,6 +10,7 @@
 /***[Macros]******************************************************************/
 
 /***[Types]*******************************************************************/
+
 typedef enum layout_dir_t {
     LAYOUT_UP,
     LAYOUT_DOWN,
@@ -45,13 +46,13 @@ widget_t *layout_new(WINDOW *parent, uint8_t rows, uint8_t cols);
 
 /**
  * @brief Add or replace a widget into an existing layout.
- * @param layout Layout where to place the widget.
- * @param widget Widget to be placed.
+ * @param widget Layout where to place the widget.
+ * @param new_widget Widget to be placed.
  * @param row Row position for the new widget.
  * @param col Column position for the new widget.
  */
-void layout_add(widget_t *widget, widget_t *new_widget, uint8_t row,
-                uint8_t col);
+widget_status_t layout_add(widget_t *parent, widget_t *child, uint8_t row,
+                           uint8_t col);
 
 /// @brief Refresh all widgets inside the layout.
 /// @param layout Layout to be refreshed.
@@ -66,8 +67,7 @@ void layout_change_focus(widget_t *widget, layout_dir_t dir);
 
 bool layout_consume_key(widget_t *widget, int key);
 
-void layout_on_resize(widget_t *widget, int height, int width, int ypos,
-                      int xpos);
+void layout_on_resize(widget_t *widget, dim_t dim, pos_t pos);
 
 void layout_on_refresh(widget_t *widget);
 
@@ -75,4 +75,4 @@ bool layout_on_focus(widget_t *widget, int key);
 
 void layout_on_lose_focus(widget_t *widget);
 
-#endif // LAYOUT_H
+#endif // LAYOUT_H_

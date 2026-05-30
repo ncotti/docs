@@ -3,7 +3,7 @@
 #------------------------------------------------------------------------------
 SHELL=/bin/bash
 .DELETE_ON_ERROR:
-#.SILENT:
+.SILENT:
 .DEFAULT_GOAL := help
 
 #------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ TOOLCHAIN ?=
 SRC_DIRS ?= src
 HEADER_DIRS ?= inc
 
-CFLAGS ?= -Wall -g
+CFLAGS ?= -Wall -g -Wpedantic
 ASFLAGS ?= -g
 LDFLAGS ?= -g -lncurses -lpanel -lmenu -lform -lcdk
 # Linker script (can be empty)
@@ -120,8 +120,15 @@ _compile: $(ELF)
 
 .PHONY: tidy
 tidy: $(SRCS)
-	echo "Hello"
-	clang-tidy $^ -p $(COMPILE_COMMANDS) --checks="-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling"
+	clang-tidy $^ -p $(COMPILE_COMMANDS) \
+	--checks="clang-analyzer-*,\
+	-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,\
+	bugprone-*,\
+	modernize-*,\
+	portability-*,\
+	misc-*,\
+	readability-*" \
+	-header-filter=.*
 
 
 .PHONY: help
