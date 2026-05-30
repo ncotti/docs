@@ -4,12 +4,15 @@
 #include <ncurses.h>
 #include <string.h>
 
+static void calculate_rows_and_words(widget_t *widget);
+
 static void alignment_to_position(widget_t *widget) {
     textbox_t *textbox = (textbox_t *)widget->data;
     int ypos, xpos;
 
     // Minus two because of the borders.
-    const uint16_t max_width = widget->base.width - 2;
+    const uint16_t max_width = getmaxx(widget->base.window) - 2;
+    const uint16_t max_height = getmaxy(widget->base.window) - 2;
 
     // Vertical alignment
     switch (textbox->alignment) {
@@ -23,14 +26,14 @@ static void alignment_to_position(widget_t *widget) {
     case TEXT_ALIGN_MIDDLE_LEFT:
     case TEXT_ALIGN_MIDDLE_CENTER:
     case TEXT_ALIGN_MIDDLE_RIGHT: {
-        ypos = (widget->base.height - textbox->text_rows) / 2;
+        ypos = (getmaxy(widget->base.window) - textbox->text_rows) / 2;
         break;
     }
 
     case TEXT_ALIGN_BOTTOM_LEFT:
     case TEXT_ALIGN_BOTTOM_CENTER:
     case TEXT_ALIGN_BOTTOM_RIGHT: {
-        ypos = widget->base.height - 1 - textbox->text_rows;
+        ypos = getmaxy(widget->base.window) - 1 - textbox->text_rows;
         break;
     }
     }
@@ -39,7 +42,7 @@ static void alignment_to_position(widget_t *widget) {
 
     textbox->text_rows = 0;
 
-    char line[1024] = "";
+    char line[MAX_CHARS_IN_LINE] = "";
     char *copy = strdup(textbox->text);
 
     char *word = strtok(copy, " ");
@@ -74,7 +77,7 @@ static void alignment_to_position(widget_t *widget) {
             case TEXT_ALIGN_TOP_RIGHT:
             case TEXT_ALIGN_MIDDLE_RIGHT:
             case TEXT_ALIGN_BOTTOM_RIGHT: {
-                xpos = widget->base.width - strlen(line) - 1;
+                xpos = getmaxx(widget->base.window) - strlen(line) - 1;
                 break;
             }
             }
@@ -113,7 +116,7 @@ static void alignment_to_position(widget_t *widget) {
         case TEXT_ALIGN_TOP_RIGHT:
         case TEXT_ALIGN_MIDDLE_RIGHT:
         case TEXT_ALIGN_BOTTOM_RIGHT: {
-            xpos = widget->base.width - strlen(line) - 1;
+            xpos = getmaxx(widget->base.window) - strlen(line) - 1;
             break;
         }
         }
@@ -125,7 +128,43 @@ static void alignment_to_position(widget_t *widget) {
         wattroff(widget->base.window, COLOR_PAIR(textbox->text_color));
     }
 
+    if (textbox->text_rows > max_height) {
+        wattron(widget->base.window, COLOR_PAIR(textbox->text_color));
+        mvwprintw(widget->base.window, 0, 0, "%c%c%c", ACS_UARROW, ACS_UARROW,
+                  ACS_UARROW);
+        mvwprintw(widget->base.window, getmaxy(widget->base.window), 0,
+                  "%c%c%c", ACS_DARROW, ACS_DARROW, ACS_DARROW);
+        wattroff(widget->base.window, COLOR_PAIR(textbox->text_color));
+    }
+
     free(copy);
+}
+
+static void calculate_rows_and_words(widget_t *widget) {
+    textbox_t *textbox = (textbox_t *)widget->data;
+
+    // Minus two because of the borders.
+    const uint16_t max_width = getmaxy(widget->base.window) - 2;
+    uint16_t chars_in_line = 0;
+    uint16_t chars_in_word = 0;
+
+    textbox->text_rows = 0;
+    textbox->text_words = 0;
+
+    // The white-space is counted as character that prefixes words.
+    for (uint16_t i = 0; i < textbox->text[i] != '\0'; i++) {
+        chars_in_word++;
+        if ((textbox->text[i] == ' ') || (textbox->text[i + 1] == '\0')) {
+            textbox->text_words++;
+            if (chars_in_line + chars_in_word <= max_width) {
+                chars_in_line += chars_in_word;
+            } else {
+                textbox->text_rows++;
+                chars_in_line = chars_in_word;
+            }
+            chars_in_word = 0;
+        }
+    }
 }
 
 widget_t *textbox_new(const char *text, bool boxed) {
@@ -146,14 +185,11 @@ widget_t *textbox_new(const char *text, bool boxed) {
 
     widget->base.window = NULL;
     widget->data = (void *)textbox;
-    widget->base.refresh_fn = textbox_refresh;
+    widget->base.on_refresh_fn = textbox_on_refresh;
     widget->base.del_fn = textbox_del;
     widget->base.on_focus_fn = textbox_on_focus;
     widget->base.on_lose_focus_fn = textbox_on_lose_focus;
-    widget->base.xpos = 0;
-    widget->base.ypos = 0;
-    widget->base.height = 0;
-    widget->base.width = 0;
+    widget->base.on_resize_fn = textbox_on_resize;
     widget->base.type = WIDGET_TEXTBOX;
 
     textbox->text_color = COLOR_WHITE_BLACK;
@@ -161,8 +197,6 @@ widget_t *textbox_new(const char *text, bool boxed) {
     textbox->stored_border_color = COLOR_WHITE_BLACK;
 
     textbox_set_text(widget, text);
-    // textbox->text_rows = (strlen(textbox->text) / max_width) + 1;
-    textbox->text_rows = 0;
     textbox->top_displayed_text_row = 0;
 
     memset(&border, border_ch, sizeof(widget_border_t));
@@ -223,27 +257,10 @@ void textbox_on_lose_focus(widget_t *widget) {
     textbox_set_border_color(widget, textbox->stored_border_color);
 }
 
-void textbox_refresh(widget_t *widget, int height, int width, int ypos,
-                     int xpos) {
-    // textbox_t *textbox = (textbox_t *)widget->data;
+void textbox_on_refresh(widget_t *widget) {
     widget_border_t border;
 
     memset(&border, 0, sizeof(widget_border_t));
-
-    if (widget->base.height != height || widget->base.width != width ||
-        widget->base.ypos != ypos || widget->base.xpos != xpos) {
-
-        if (widget->base.window != NULL) {
-            wclear(widget->base.window);
-            delwin(widget->base.window);
-        }
-        widget->base.window = newwin(height, width, ypos, xpos);
-    }
-
-    widget->base.height = height;
-    widget->base.width = width;
-    widget->base.ypos = ypos;
-    widget->base.xpos = xpos;
 
     // TODO werase or wclear ?
     werase(widget->base.window);
@@ -254,11 +271,21 @@ void textbox_refresh(widget_t *widget, int height, int width, int ypos,
     wnoutrefresh(widget->base.window);
 }
 
+void textbox_on_resize(widget_t *widget, int height, int width, int ypos,
+                       int xpos) {
+    if (widget->base.window != NULL) {
+        wclear(widget->base.window);
+        delwin(widget->base.window);
+    }
+    widget->base.window = newwin(height, width, ypos, xpos);
+
+    textbox_on_refresh(widget);
+}
+
 void textbox_set_color(widget_t *widget, color_t color) {
     textbox_t *textbox = (textbox_t *)widget->data;
     textbox->text_color = color;
-    textbox_refresh(widget, widget->base.height, widget->base.width,
-                    widget->base.ypos, widget->base.xpos);
+    textbox_on_refresh(widget);
 }
 
 void textbox_set_alignment(widget_t *widget, text_align_t alignment) {
@@ -285,4 +312,5 @@ void textbox_set_border(widget_t *widget, bool boxed, widget_border_t border) {
 void textbox_set_text(widget_t *widget, const char *text) {
     textbox_t *textbox = (textbox_t *)(widget->data);
     strncpy(textbox->text, text, sizeof(textbox->text));
+    calculate_rows_and_words(widget);
 }

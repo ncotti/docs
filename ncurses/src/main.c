@@ -28,7 +28,9 @@ int main(void) {
     layout_show(layout);
     layout_del(layout);
 
+    textbox_t *textbox = (textbox_t *)text_ul->data;
     printf("%d, %d\n", LINES, COLS);
     printf("COLORS: %d, COLOR_PAIRS: %d\n", COLORS, COLOR_PAIRS);
+    printf("%d, %d\n", textbox->text_rows, textbox->text_words);
     return 0;
 }

@@ -6,6 +6,15 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#define TIMEOUT_MS 100
+
+typedef enum layout_dir_t {
+    LAYOUT_UP,
+    LAYOUT_DOWN,
+    LAYOUT_LEFT,
+    LAYOUT_RIGHT,
+} layout_dir_t;
+
 typedef struct layout_t {
     WINDOW *parent;
     uint8_t rows;
@@ -13,6 +22,7 @@ typedef struct layout_t {
     widget_t **widgets;
     uint8_t focus_row;
     uint8_t focus_col;
+    uint8_t focus_idx;
 } layout_t;
 
 /// @brief Creates a new layout inside "parent" window.
@@ -42,15 +52,11 @@ void layout_show(layout_t *layout);
 /// "stdscr", then ncurses will be uninitialized.
 void layout_del(layout_t *layout);
 
-void layout_change_focus(layout_t *layout, uint8_t row, uint8_t col);
-
-void layout_change_focus_up(layout_t *layout);
-void layout_change_focus_down(layout_t *layout);
-
-void layout_change_focus_left(layout_t *layout);
-
-void layout_change_focus_right(layout_t *layout);
+void layout_change_focus(layout_t *layout, layout_dir_t dir);
 
 bool layout_consume_key(layout_t *layout, int key);
+
+void layout_resize(layout_t *layout);
+void layout_refresh(layout_t *layout);
 
 #endif // LAYOUT_H
