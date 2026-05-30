@@ -10,7 +10,7 @@
 
 /***[Public functions]********************************************************/
 int main(void) {
-    layout_t *layout;
+    widget_t *layout;
     widget_t *text_ul;
     widget_t *text_ur;
     widget_t *text_dl;

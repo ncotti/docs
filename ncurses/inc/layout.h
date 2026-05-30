@@ -18,7 +18,6 @@ typedef enum layout_dir_t {
 } layout_dir_t;
 
 typedef struct layout_t {
-    WINDOW *parent;
     uint8_t rows;
     uint8_t cols;
     widget_t **widgets;
@@ -42,7 +41,7 @@ typedef struct layout_t {
  * widgets.
  * @return The newly created layout, or NULL in case of error.
  */
-layout_t *layout_new(WINDOW *parent, uint8_t rows, uint8_t cols);
+widget_t *layout_new(WINDOW *parent, uint8_t rows, uint8_t cols);
 
 /**
  * @brief Add or replace a widget into an existing layout.
@@ -51,22 +50,29 @@ layout_t *layout_new(WINDOW *parent, uint8_t rows, uint8_t cols);
  * @param row Row position for the new widget.
  * @param col Column position for the new widget.
  */
-void layout_add(layout_t *layout, widget_t *widget, uint8_t row, uint8_t col);
+void layout_add(widget_t *widget, widget_t *new_widget, uint8_t row,
+                uint8_t col);
 
 /// @brief Refresh all widgets inside the layout.
 /// @param layout Layout to be refreshed.
-void layout_show(layout_t *layout);
+void layout_show(widget_t *widget);
 
 /// @brief Frees resources from layout.
 /// @param layout Layout to be deleted. If the layout's parent window is
 /// "stdscr", then ncurses will be uninitialized.
-void layout_del(layout_t *layout);
+widget_status_t layout_del(widget_t *widget);
 
-void layout_change_focus(layout_t *layout, layout_dir_t dir);
+void layout_change_focus(widget_t *widget, layout_dir_t dir);
 
-bool layout_consume_key(layout_t *layout, int key);
+bool layout_consume_key(widget_t *widget, int key);
 
-void layout_resize(layout_t *layout);
-void layout_refresh(layout_t *layout);
+void layout_on_resize(widget_t *widget, int height, int width, int ypos,
+                      int xpos);
+
+void layout_on_refresh(widget_t *widget);
+
+bool layout_on_focus(widget_t *widget, int key);
+
+void layout_on_lose_focus(widget_t *widget);
 
 #endif // LAYOUT_H

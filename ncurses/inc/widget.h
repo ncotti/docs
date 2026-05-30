@@ -32,6 +32,7 @@ typedef void (*widget_on_resize_t)(widget_t *, int, int, int, int);
 typedef enum widget_type_t {
     WIDGET_TEXTBOX,
     WIDGET_BUTTON,
+    WIDGET_LAYOUT,
 } widget_type_t;
 
 typedef struct widget_border_t {
@@ -68,5 +69,11 @@ typedef struct pos_t {
 /***[Extern variables]********************************************************/
 
 /***[Functions prototypes]****************************************************/
+
+void widget_init(widget_t *widget, void *data, widget_type_t type,
+                 WINDOW *window, widget_on_refresh_fn_t on_refresh_fn,
+                 widget_del_fn_t del_fn, widget_on_focus_fn_t on_focus_fn,
+                 widget_on_lose_focus_fn_t on_lose_focus_fn,
+                 widget_on_resize_t on_resize_fn);
 
 #endif // WIDGET_H_
