@@ -1,8 +1,14 @@
-#include "color.h"
+/***[Includes]****************************************************************/
+#include "main.h"
 #include "layout.h"
 #include "textbox.h"
 #include <ncurses.h>
 
+/***[Static variables]********************************************************/
+
+/***[Static functions]********************************************************/
+
+/***[Public functions]********************************************************/
 int main(void) {
     layout_t *layout;
     widget_t *text_ul;
@@ -12,13 +18,13 @@ int main(void) {
 
     layout = layout_new(stdscr, 2, 2);
 
-    text_ul = textbox_new("This text is very large, so it will likely take "
-                          "more than one row to be written. Also, since I am "
-                          "here, I would like to say gambatte!, you can do it!",
-                          true);
-    text_ur = textbox_new("UR", true);
-    text_dl = textbox_new("DL", false);
-    text_dr = textbox_new("DR", true);
+    text_ul =
+        textbox_new("This text is very large, so it will likely take "
+                    "more than one row to be written. Also, since I am "
+                    "here, I would like to say gambatte!, you can do it!");
+    text_ur = textbox_new("UR");
+    text_dl = textbox_new("DL");
+    text_dr = textbox_new("DR");
 
     layout_add(layout, text_ul, 0, 0);
     layout_add(layout, text_ur, 0, 1);

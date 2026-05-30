@@ -1,13 +1,15 @@
 #ifndef LAYOUT_H_
 #define LAYOUT_H_
 
+/***[Includes]****************************************************************/
+
 #include "widget.h"
 #include <ncurses.h>
 #include <stdint.h>
-#include <stdlib.h>
 
-#define TIMEOUT_MS 100
+/***[Macros]******************************************************************/
 
+/***[Types]*******************************************************************/
 typedef enum layout_dir_t {
     LAYOUT_UP,
     LAYOUT_DOWN,
@@ -25,22 +27,30 @@ typedef struct layout_t {
     uint8_t focus_idx;
 } layout_t;
 
-/// @brief Creates a new layout inside "parent" window.
-/// @param parent Parent window where the layout will be built.
-/// If "parent" is NULL, then ncurses will be initialized and "stdscr"
-/// will be used.
-/// @param rows Number of rows. Height will be equally distributed between
-/// widgets.
-/// @param cols Number of columns. Width will be equally distributed between
-/// widgets.
-/// @return The newly created widget, or NULL in case of error.
+/***[Extern variables]********************************************************/
+
+/***[Functions prototypes]****************************************************/
+
+/**
+ * @brief Creates a new layout inside "parent" window.
+ * @param parent Parent window where the layout will be built.
+ * If "parent" is NULL, then ncurses will be initialized and "stdscr"
+ * will be used.
+ * @param rows Number of rows. Height will be equally distributed between
+ * widgets.
+ * @param cols Number of columns. Width will be equally distributed between
+ * widgets.
+ * @return The newly created layout, or NULL in case of error.
+ */
 layout_t *layout_new(WINDOW *parent, uint8_t rows, uint8_t cols);
 
-/// @brief Add or replace a widget intto an existing layout.
-/// @param layout Layout where to place the widget.
-/// @param widget Widget to be placed.
-/// @param row Row position for the new widget.
-/// @param col Column position for the new widget.
+/**
+ * @brief Add or replace a widget into an existing layout.
+ * @param layout Layout where to place the widget.
+ * @param widget Widget to be placed.
+ * @param row Row position for the new widget.
+ * @param col Column position for the new widget.
+ */
 void layout_add(layout_t *layout, widget_t *widget, uint8_t row, uint8_t col);
 
 /// @brief Refresh all widgets inside the layout.

@@ -1,8 +1,12 @@
 #ifndef WIDGET_H_
 #define WIDGET_H_
 
+/***[Includes]****************************************************************/
 #include <ncurses.h>
 
+/***[Macros]******************************************************************/
+
+/***[Types]*******************************************************************/
 /// @brief Widgets are defined by a list of common attributes in their "base",
 /// and a list of custom attributes in their "data".
 typedef struct widget_t widget_t;
@@ -60,5 +64,9 @@ typedef struct pos_t {
     int ypos;
     int xpos;
 } pos_t;
+
+/***[Extern variables]********************************************************/
+
+/***[Functions prototypes]****************************************************/
 
 #endif // WIDGET_H_

@@ -1,8 +1,14 @@
+/***[Includes]****************************************************************/
 #include "textbox.h"
 #include "color.h"
 #include "widget.h"
 #include <ncurses.h>
+#include <stdlib.h>
 #include <string.h>
+
+/***[Static variables]********************************************************/
+
+/***[Static functions]********************************************************/
 
 static void calculate_rows_and_words(widget_t *widget);
 
@@ -167,12 +173,11 @@ static void calculate_rows_and_words(widget_t *widget) {
     }
 }
 
-widget_t *textbox_new(const char *text, bool boxed) {
+/***[Public functions]********************************************************/
+
+widget_t *textbox_new(const char *text) {
     widget_t *widget;
     textbox_t *textbox;
-    widget_border_t border;
-    const chtype border_ch = boxed ? 'a' : ' ';
-    // const uint16_t max_width = widget->base.width - 2;
 
     widget = (widget_t *)malloc(sizeof(widget_t));
     textbox = (textbox_t *)malloc(sizeof(textbox_t));
@@ -199,9 +204,7 @@ widget_t *textbox_new(const char *text, bool boxed) {
     textbox_set_text(widget, text);
     textbox->top_displayed_text_row = 0;
 
-    memset(&border, border_ch, sizeof(widget_border_t));
-
-    textbox_set_border(widget, boxed, border);
+    textbox_set_border(widget);
 
     return widget;
 }
@@ -267,7 +270,7 @@ void textbox_on_refresh(widget_t *widget) {
 
     alignment_to_position(widget);
 
-    textbox_set_border(widget, true, border);
+    textbox_set_border(widget);
     wnoutrefresh(widget->base.window);
 }
 
@@ -301,11 +304,10 @@ void textbox_set_border_color(widget_t *widget, color_t color) {
     textbox->border_color = color;
 }
 
-void textbox_set_border(widget_t *widget, bool boxed, widget_border_t border) {
+void textbox_set_border(widget_t *widget) {
     textbox_t *textbox = (textbox_t *)widget->data;
     wattron(widget->base.window, COLOR_PAIR(textbox->border_color));
-    wborder(widget->base.window, border.ls, border.rs, border.ts, border.bs,
-            border.tl, border.tr, border.bl, border.br);
+    wborder(widget->base.window, 0, 0, 0, 0, 0, 0, 0, 0);
     wattroff(widget->base.window, COLOR_PAIR(textbox->border_color));
 }
 

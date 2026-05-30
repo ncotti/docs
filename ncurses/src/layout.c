@@ -1,23 +1,27 @@
+/***[Includes]****************************************************************/
 #include "layout.h"
 #include "color.h"
 #include "textbox.h"
 #include <ncurses.h>
+#include <stdlib.h>
 
+/***[Static variables]********************************************************/
+
+/***[Static functions]********************************************************/
+
+/**
+ * @brief Returns the index used to access a widget located at a certain
+ * row and column in a layout.
+ * @param layout Layout.
+ * @param row Widget row.
+ * @param col Widget column.
+ * @return The widget index corresponding to the row and column numbers.
+ */
 static uint8_t pos2idx(layout_t *layout, uint8_t row, uint8_t col) {
     return row * layout->cols + col;
 }
 
-WINDOW *create_newwin(int height, int width, int starty, int startx) {
-    WINDOW *local_win;
-
-    local_win = newwin(height, width, starty, startx);
-    box(local_win, 0, 0); /* 0, 0 gives default characters
-                           * for the vertical and horizontal
-                           * lines			*/
-    wrefresh(local_win);  /* Show that box 		*/
-
-    return local_win;
-}
+/***[Public functions]********************************************************/
 
 layout_t *layout_new(WINDOW *parent, uint8_t rows, uint8_t cols) {
 
