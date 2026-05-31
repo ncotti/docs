@@ -120,18 +120,8 @@ _compile: $(ELF)
 
 .PHONY: tidy
 tidy: $(SRCS)
-	clang-tidy $^ -p $(COMPILE_COMMANDS) \
-	-header-filter=.* \
-	--checks="clang-analyzer-*,\
-	-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,\
-	bugprone-*,\
-	modernize-*,\
-	portability-*,\
-	misc-*,\
-	cppcoreguidelines-*,\
-	performance-*,\
-	google-*,\
-	readability-*"
+	clang-tidy --verify-config
+	clang-tidy $^ -p $(COMPILE_COMMANDS)
 
 .PHONY: help
 help: ## Display this message.
