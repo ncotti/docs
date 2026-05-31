@@ -9,6 +9,8 @@
 
 /***[Static variables]********************************************************/
 
+/***[Static functions prototypes]*********************************************/
+
 /***[Static functions]********************************************************/
 
 static void calculate_rows_and_words(widget_t *widget);
@@ -256,7 +258,7 @@ void textbox_on_lose_focus(widget_t *widget) {
     textbox_set_border_color(widget, textbox->stored_border_color);
 }
 
-void textbox_on_refresh(widget_t *widget) {
+bool textbox_on_refresh(widget_t *widget) {
 
     // TODO werase or wclear ?
     werase(widget->base.window);
@@ -265,6 +267,7 @@ void textbox_on_refresh(widget_t *widget) {
 
     textbox_set_border(widget);
     wnoutrefresh(widget->base.window);
+    return true;
 }
 
 void textbox_on_resize(widget_t *widget, dim_t dim, pos_t pos) {

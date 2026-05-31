@@ -21,6 +21,7 @@ typedef enum widget_status_t {
     WIDGET_WRONG_TYPE = -2,
     WIDGET_ENOMEM = -3,
     WIDGET_OUT_OF_BOUNDS = -4,
+    WIDGET_NOT_STDSCR = -5,
 } widget_status_t;
 
 typedef struct pos_t {
@@ -34,7 +35,7 @@ typedef struct dim_t {
 } dim_t;
 
 typedef widget_status_t (*widget_del_fn_t)(widget_t *);
-typedef void (*widget_on_refresh_fn_t)(widget_t *);
+typedef bool (*widget_on_refresh_fn_t)(widget_t *);
 typedef bool (*widget_on_focus_fn_t)(widget_t *, int);
 typedef void (*widget_on_lose_focus_fn_t)(widget_t *);
 typedef void (*widget_on_resize_t)(widget_t *, dim_t, pos_t);
@@ -59,6 +60,7 @@ typedef struct widget_border_t {
 
 struct widget_base_t {
     widget_type_t type;
+    bool dirty;
     WINDOW *window;
     widget_on_refresh_fn_t on_refresh_fn;
     widget_del_fn_t del_fn;

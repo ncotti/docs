@@ -8,6 +8,8 @@
 
 /***[Static variables]********************************************************/
 
+/***[Static functions prototypes]*********************************************/
+
 /***[Static functions]********************************************************/
 
 /***[Public functions]********************************************************/
@@ -18,7 +20,6 @@ int main(void) {
                     "more than one row to be written. Also, since I am "
                     "here, I would like to say gambatte!, you can do it!");
     widget_t *text_ur = textbox_new("UR");
-    ;
     widget_t *text_dl = textbox_new("DL");
     widget_t *text_dr = textbox_new("DR");
 

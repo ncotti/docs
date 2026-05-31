@@ -5,6 +5,8 @@
 
 /***[Static variables]********************************************************/
 
+/***[Static functions prototypes]*********************************************/
+
 /***[Static functions]********************************************************/
 
 /***[Public functions]********************************************************/
@@ -23,6 +25,7 @@ void widget_init(widget_t *widget, void *data, widget_type_t type,
     widget->base.on_lose_focus_fn = on_lose_focus_fn;
     widget->base.on_resize_fn = on_resize_fn;
     widget->base.type = type;
+    widget->base.dirty = true;
 }
 
 widget_status_t widget_cast(widget_t *widget, void **data, widget_type_t type) {

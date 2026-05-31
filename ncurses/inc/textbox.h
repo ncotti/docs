@@ -52,7 +52,7 @@ widget_t *textbox_new(const char *text);
 widget_status_t textbox_del(widget_t *widget);
 
 void textbox_on_resize(widget_t *widget, dim_t dim, pos_t pos);
-void textbox_on_refresh(widget_t *widget);
+bool textbox_on_refresh(widget_t *widget);
 bool textbox_on_focus(widget_t *widget, int key_pressed);
 void textbox_on_lose_focus(widget_t *widget);
 
