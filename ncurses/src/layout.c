@@ -115,6 +115,11 @@ static bool layout_on_refresh(widget_t *widget) {
     layout_t *layout = (layout_t *)widget->data;
     bool refreshed = false;
 
+    if (widget->base.dirty) {
+        // TODO clear or erase?
+        // wclear(widget->base.window);
+    }
+
     for (uint8_t row = 0; row < layout->rows; row++) {
         for (uint8_t col = 0; col < layout->cols; col++) {
             idx = pos2idx(layout, row, col);
@@ -372,6 +377,8 @@ widget_status_t layout_show(widget_t *widget) {
 
         layout_on_refresh(widget);
     } while (!exit);
+
+    return WIDGET_OK;
 }
 
 // TODO layout_resize (change amount of rows and cols)

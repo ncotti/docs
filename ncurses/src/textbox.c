@@ -9,11 +9,18 @@
 
 /***[Static variables]********************************************************/
 
+static const char g_null_char = '\0';
+
 /***[Static functions prototypes]*********************************************/
 
-/***[Static functions]********************************************************/
+static void textbox_on_resize(widget_t *widget, dim_t dim, pos_t pos);
+static bool textbox_on_refresh(widget_t *widget);
+static bool textbox_on_focus(widget_t *widget, int key);
+static void textbox_on_lose_focus(widget_t *widget);
 
 static void calculate_rows_and_words(widget_t *widget);
+
+/***[Static functions]********************************************************/
 
 static void alignment_to_position(widget_t *widget) {
     textbox_t *textbox = (textbox_t *)widget->data;
@@ -52,7 +59,7 @@ static void alignment_to_position(widget_t *widget) {
 
     textbox->text_rows = 0;
 
-    char line[MAX_CHARS_IN_LINE] = "";
+    char line[1024] = "";
     char *copy = strdup(textbox->text);
 
     char *word = strtok(copy, " ");
@@ -177,53 +184,34 @@ static void calculate_rows_and_words(widget_t *widget) {
     }
 }
 
-/***[Public functions]********************************************************/
-
-widget_t *textbox_new(const char *text) {
-    widget_t *widget = (widget_t *)malloc(sizeof(widget_t));
-    textbox_t *textbox = (textbox_t *)malloc(sizeof(textbox_t));
-
-    if ((widget == NULL) || (textbox == NULL)) {
-        free(widget);
-        free(textbox);
-        return NULL;
-    }
-
-    widget_init(widget, (void *)textbox, WIDGET_TEXTBOX, NULL,
-                textbox_on_refresh, textbox_del, textbox_on_focus,
-                textbox_on_lose_focus, textbox_on_resize);
-
-    textbox->text_color = COLOR_WHITE_BLACK;
-    textbox->border_color = COLOR_WHITE_BLACK;
-    textbox->stored_border_color = COLOR_WHITE_BLACK;
-
-    textbox_set_text(widget, text);
-    textbox->top_displayed_text_row = 0;
-
-    textbox_set_border(widget);
-
-    return widget;
+static void textbox_on_resize(widget_t *widget, dim_t dim, pos_t pos) {
+    wresize(widget->base.window, dim.height, dim.width);
+    mvwin(widget->base.window, pos.y, pos.x);
+    widget->base.dirty = true;
 }
 
-widget_status_t textbox_del(widget_t *widget) {
-    if (widget == NULL) {
-        return WIDGET_NULL;
+static bool textbox_on_refresh(widget_t *widget) {
+    textbox_t *textbox = (textbox_t *)widget->data;
+    if (!widget->base.dirty) {
+        return false;
     }
 
-    if (widget->base.type != WIDGET_TEXTBOX) {
-        return WIDGET_WRONG_TYPE;
-    }
-
+    // TODO werase or wclear ?
     wclear(widget->base.window);
-    delwin(widget->base.window);
-    free(widget->data);
-    free((void *)widget);
 
-    return WIDGET_OK;
+    alignment_to_position(widget);
+
+    wattron(widget->base.window, COLOR_PAIR(textbox->border_color));
+    wborder(widget->base.window, 0, 0, 0, 0, 0, 0, 0, 0);
+    wattroff(widget->base.window, COLOR_PAIR(textbox->border_color));
+
+    wnoutrefresh(widget->base.window);
+    widget->base.dirty = false;
+    refresh();
+    return true;
 }
 
-// Return true if the key was consumed
-bool textbox_on_focus(widget_t *widget, int key) {
+static bool textbox_on_focus(widget_t *widget, int key) {
     textbox_t *textbox = widget->data;
     bool key_was_consumed = false;
 
@@ -253,61 +241,123 @@ bool textbox_on_focus(widget_t *widget, int key) {
     return key_was_consumed;
 }
 
-void textbox_on_lose_focus(widget_t *widget) {
+static void textbox_on_lose_focus(widget_t *widget) {
     textbox_t *textbox = widget->data;
     textbox_set_border_color(widget, textbox->stored_border_color);
 }
 
-bool textbox_on_refresh(widget_t *widget) {
+/***[Public functions]********************************************************/
+widget_t *textbox_new(const char *text) {
+    widget_t *widget = (widget_t *)malloc(sizeof(widget_t));
+    textbox_t *textbox = (textbox_t *)malloc(sizeof(textbox_t));
 
-    // TODO werase or wclear ?
-    werase(widget->base.window);
-
-    alignment_to_position(widget);
-
-    textbox_set_border(widget);
-    wnoutrefresh(widget->base.window);
-    return true;
-}
-
-void textbox_on_resize(widget_t *widget, dim_t dim, pos_t pos) {
-    if (widget->base.window != NULL) {
-        wclear(widget->base.window);
-        delwin(widget->base.window);
+    if ((widget == NULL) || (textbox == NULL)) {
+        free(widget);
+        free(textbox);
+        return NULL;
     }
-    widget->base.window = newwin(dim.height, dim.width, pos.y, pos.x);
 
-    textbox_on_refresh(widget);
+    widget_init(widget, (void *)textbox, WIDGET_TEXTBOX, newwin(1, 1, 1, 1),
+                textbox_on_refresh, textbox_del, textbox_on_focus,
+                textbox_on_lose_focus, textbox_on_resize);
+
+    textbox->text_color = COLOR_WHITE_BLACK;
+    textbox->alignment = TEXT_ALIGN_TOP_LEFT;
+    textbox->top_displayed_text_row = 0;
+    textbox->text = NULL;
+    textbox_set_text(widget, text);
+
+    textbox->border_color = COLOR_WHITE_BLACK;
+    textbox->stored_border_color = COLOR_WHITE_BLACK;
+
+    return widget;
 }
 
-void textbox_set_color(widget_t *widget, color_t color) {
-    textbox_t *textbox = (textbox_t *)widget->data;
+widget_status_t textbox_del(widget_t *widget) {
+
+    textbox_t *textbox = NULL;
+    widget_status_t ret =
+        widget_cast(widget, (void **)&textbox, WIDGET_TEXTBOX);
+
+    if (ret != WIDGET_OK) {
+        return ret;
+    }
+
+    wclear(widget->base.window);
+    delwin(widget->base.window);
+    free((void *)textbox->text);
+    free((void *)textbox);
+    free((void *)widget);
+
+    return WIDGET_OK;
+}
+
+widget_status_t textbox_set_text(widget_t *widget, const char *text) {
+    textbox_t *textbox = NULL;
+    widget_status_t ret =
+        widget_cast(widget, (void **)&textbox, WIDGET_TEXTBOX);
+
+    if (ret != WIDGET_OK) {
+        return ret;
+    }
+
+    free((void *)textbox->text);
+    textbox->text = (char *)malloc(strlen(text) + 1);
+
+    if (textbox->text == NULL) {
+        // Point to a safety "\0" to avoid a NULL pointer in text's accesses
+        textbox->text = (char *)&g_null_char;
+        return WIDGET_ENOMEM;
+    }
+
+    strncpy(textbox->text, text, strlen(text));
+    calculate_rows_and_words(widget);
+
+    widget->base.dirty = true;
+    return WIDGET_OK;
+}
+
+widget_status_t textbox_set_color(widget_t *widget, color_t color) {
+    textbox_t *textbox = NULL;
+    widget_status_t ret =
+        widget_cast(widget, (void **)&textbox, WIDGET_TEXTBOX);
+
+    if (ret != WIDGET_OK) {
+        return ret;
+    }
+
     textbox->text_color = color;
-    textbox_on_refresh(widget);
+    widget->base.dirty = true;
+    return WIDGET_OK;
 }
 
-void textbox_set_alignment(widget_t *widget, text_align_t alignment) {
+widget_status_t textbox_set_alignment(widget_t *widget,
+                                      text_align_t alignment) {
+    textbox_t *textbox = NULL;
+    widget_status_t ret =
+        widget_cast(widget, (void **)&textbox, WIDGET_TEXTBOX);
 
-    textbox_t *textbox = (textbox_t *)widget->data;
+    if (ret != WIDGET_OK) {
+        return ret;
+    }
 
     textbox->alignment = alignment;
+    widget->base.dirty = true;
+    return WIDGET_OK;
 }
 
-void textbox_set_border_color(widget_t *widget, color_t color) {
-    textbox_t *textbox = (textbox_t *)widget->data;
+widget_status_t textbox_set_border_color(widget_t *widget, color_t color) {
+    textbox_t *textbox = NULL;
+    widget_status_t ret =
+        widget_cast(widget, (void **)&textbox, WIDGET_TEXTBOX);
+
+    if (ret != WIDGET_OK) {
+        return ret;
+    }
+
     // TODO, there is some badness here with the stored color
     textbox->border_color = color;
-}
 
-void textbox_set_border(widget_t *widget) {
-    textbox_t *textbox = (textbox_t *)widget->data;
-    wattron(widget->base.window, COLOR_PAIR(textbox->border_color));
-    wborder(widget->base.window, 0, 0, 0, 0, 0, 0, 0, 0);
-    wattroff(widget->base.window, COLOR_PAIR(textbox->border_color));
-}
-
-void textbox_set_text(widget_t *widget, const char *text) {
-    textbox_t *textbox = (textbox_t *)(widget->data);
-    strncpy(textbox->text, text, sizeof(textbox->text));
-    calculate_rows_and_words(widget);
+    widget->base.dirty = true;
+    return WIDGET_OK;
 }
