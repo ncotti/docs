@@ -12,21 +12,15 @@
 
 /***[Public functions]********************************************************/
 int main(void) {
-    widget_t *layout;
-    widget_t *text_ul;
-    widget_t *text_ur;
-    widget_t *text_dl;
-    widget_t *text_dr;
-
-    layout = layout_new(stdscr, 2, 2);
-
-    text_ul =
+    widget_t *layout = layout_new(stdscr, 2, 2);
+    widget_t *text_ul =
         textbox_new("This text is very large, so it will likely take "
                     "more than one row to be written. Also, since I am "
                     "here, I would like to say gambatte!, you can do it!");
-    text_ur = textbox_new("UR");
-    text_dl = textbox_new("DL");
-    text_dr = textbox_new("DR");
+    widget_t *text_ur = textbox_new("UR");
+    ;
+    widget_t *text_dl = textbox_new("DL");
+    widget_t *text_dr = textbox_new("DR");
 
     layout_add(layout, text_ul, 0, 0);
     layout_add(layout, text_ur, 0, 1);

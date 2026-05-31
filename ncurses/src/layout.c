@@ -79,9 +79,9 @@ bool layout_on_focus(widget_t *widget, int key) {
 void layout_on_lose_focus(widget_t *widget) {}
 
 void layout_show(widget_t *widget) {
-    bool key_was_consumed_by_widget;
+    bool key_was_consumed_by_widget = false;
     bool exit = false;
-    int key;
+    int key = 0;
 
     layout_t *layout = (layout_t *)widget->data;
 
@@ -213,7 +213,7 @@ bool layout_consume_key(widget_t *widget, int key) {
 }
 
 void layout_on_refresh(widget_t *widget) {
-    uint8_t idx;
+    uint8_t idx = 0;
 
     layout_t *layout = (layout_t *)widget->data;
 
@@ -230,7 +230,7 @@ void layout_on_resize(widget_t *widget, dim_t dim, pos_t pos) {
     (void)dim;
     (void)pos;
 
-    uint8_t idx;
+    uint8_t idx = 0;
 
     layout_t *layout = (layout_t *)widget->data;
 
@@ -258,11 +258,9 @@ void layout_on_resize(widget_t *widget, dim_t dim, pos_t pos) {
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
 widget_status_t layout_add(widget_t *parent, widget_t *child, uint8_t row,
                            uint8_t col) {
-    uint8_t idx;
-    layout_t *layout;
-    widget_status_t ret;
-
-    ret = widget_cast(parent, (void **)&layout, WIDGET_LAYOUT);
+    uint8_t idx = 0;
+    layout_t *layout = NULL;
+    widget_status_t ret = widget_cast(parent, (void **)&layout, WIDGET_LAYOUT);
     if (ret != WIDGET_OK) {
         return ret;
     }

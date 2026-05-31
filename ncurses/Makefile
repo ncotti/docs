@@ -121,15 +121,17 @@ _compile: $(ELF)
 .PHONY: tidy
 tidy: $(SRCS)
 	clang-tidy $^ -p $(COMPILE_COMMANDS) \
+	-header-filter=.* \
 	--checks="clang-analyzer-*,\
 	-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,\
 	bugprone-*,\
 	modernize-*,\
 	portability-*,\
 	misc-*,\
-	readability-*" \
-	-header-filter=.*
-
+	cppcoreguidelines-*,\
+	performance-*,\
+	google-*,\
+	readability-*"
 
 .PHONY: help
 help: ## Display this message.

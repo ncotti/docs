@@ -15,8 +15,8 @@ static void calculate_rows_and_words(widget_t *widget);
 
 static void alignment_to_position(widget_t *widget) {
     textbox_t *textbox = (textbox_t *)widget->data;
-    int ypos;
-    int xpos;
+    int ypos = 0;
+    int xpos = 0;
 
     // Minus two because of the borders.
     const int max_width = getmaxx(widget->base.window) - 2;
@@ -178,11 +178,8 @@ static void calculate_rows_and_words(widget_t *widget) {
 /***[Public functions]********************************************************/
 
 widget_t *textbox_new(const char *text) {
-    widget_t *widget;
-    textbox_t *textbox;
-
-    widget = (widget_t *)malloc(sizeof(widget_t));
-    textbox = (textbox_t *)malloc(sizeof(textbox_t));
+    widget_t *widget = (widget_t *)malloc(sizeof(widget_t));
+    textbox_t *textbox = (textbox_t *)malloc(sizeof(textbox_t));
 
     if ((widget == NULL) || (textbox == NULL)) {
         free(widget);
@@ -227,8 +224,6 @@ widget_status_t textbox_del(widget_t *widget) {
 bool textbox_on_focus(widget_t *widget, int key) {
     textbox_t *textbox = widget->data;
     bool key_was_consumed = false;
-    widget_border_t border;
-    memset(&border, 0, sizeof(widget_border_t));
 
     switch (key) {
     case 's': {
@@ -262,9 +257,6 @@ void textbox_on_lose_focus(widget_t *widget) {
 }
 
 void textbox_on_refresh(widget_t *widget) {
-    widget_border_t border;
-
-    memset(&border, 0, sizeof(widget_border_t));
 
     // TODO werase or wclear ?
     werase(widget->base.window);
