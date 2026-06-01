@@ -1,6 +1,7 @@
 /***[Includes]****************************************************************/
 #include "main.h"
 #include "layout.h"
+#include "logger.h"
 #include "textbox.h"
 #include "widget.h"
 #include <ncurses.h>
@@ -14,11 +15,14 @@
 
 /***[Public functions]********************************************************/
 int main(void) {
+    logger_init();
     widget_t *layout = layout_new(stdscr, 2, 2);
-    widget_t *text_ul =
-        textbox_new("This text is very large, so it will likely take "
-                    "more than one row to be written. Also, since I am "
-                    "here, I would like to say gambatte!, you can do it!");
+    // widget_t *text_ul =
+    //     textbox_new("This text is very large, so it will likely take "
+    //                 "more than one row to be written. Also, since I am "
+    //                 "here, I would like to say gambatte!, you can do it!");
+
+    widget_t *text_ul = textbox_new("UL");
     widget_t *text_ur = textbox_new("UR");
     widget_t *text_dl = textbox_new("DL");
     widget_t *text_dr = textbox_new("DR");

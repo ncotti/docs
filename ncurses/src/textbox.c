@@ -71,7 +71,7 @@ static void alignment_to_position(widget_t *widget) {
             if (strlen(line) > 0) {
                 strncat(line, " ", 2);
             }
-            strncat(line, word, strlen(word) + 1);
+            strncat(line, word, strlen(word));
         } else {
             // Print and erase line
 
@@ -105,7 +105,7 @@ static void alignment_to_position(widget_t *widget) {
             ypos++;
             textbox->text_rows++;
             line[0] = '\0';
-            strncat(line, word, sizeof(word) + 1);
+            strncat(line, word, strlen(word) + 1);
         }
 
         word = strtok(NULL, " ");
@@ -197,6 +197,8 @@ static bool textbox_on_refresh(widget_t *widget) {
     }
 
     // TODO werase or wclear ?
+    // TODO erasing the whole screen shows like a jitter in the terminal.
+    // Be smarter about it
     wclear(widget->base.window);
 
     alignment_to_position(widget);
@@ -207,7 +209,6 @@ static bool textbox_on_refresh(widget_t *widget) {
 
     wnoutrefresh(widget->base.window);
     widget->base.dirty = false;
-    refresh();
     return true;
 }
 
@@ -219,6 +220,7 @@ static bool textbox_on_focus(widget_t *widget, int key) {
     case 's': {
         textbox->top_displayed_text_row++;
         key_was_consumed = true;
+        widget->base.dirty = true;
         break;
     }
 
@@ -228,6 +230,7 @@ static bool textbox_on_focus(widget_t *widget, int key) {
                 ? textbox->top_displayed_text_row - 1
                 : textbox->top_displayed_text_row;
         key_was_consumed = true;
+        widget->base.dirty = true;
         break;
     }
 
@@ -237,7 +240,6 @@ static bool textbox_on_focus(widget_t *widget, int key) {
     }
 
     textbox_set_border_color(widget, COLOR_RED_BLACK);
-
     return key_was_consumed;
 }
 
@@ -310,7 +312,7 @@ widget_status_t textbox_set_text(widget_t *widget, const char *text) {
         return WIDGET_ENOMEM;
     }
 
-    strncpy(textbox->text, text, strlen(text));
+    strncpy(textbox->text, text, strlen(text) + 1);
     calculate_rows_and_words(widget);
 
     widget->base.dirty = true;
@@ -355,9 +357,10 @@ widget_status_t textbox_set_border_color(widget_t *widget, color_t color) {
         return ret;
     }
 
-    // TODO, there is some badness here with the stored color
-    textbox->border_color = color;
-
-    widget->base.dirty = true;
+    if (textbox->border_color != color) {
+        textbox->stored_border_color = textbox->border_color;
+        textbox->border_color = color;
+        widget->base.dirty = true;
+    }
     return WIDGET_OK;
 }

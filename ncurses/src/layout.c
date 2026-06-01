@@ -96,6 +96,13 @@ static void layout_on_resize(widget_t *widget, dim_t dim, pos_t pos) {
         .width = dim.width / layout->cols,
     };
 
+    // Whenever you resize the window, a call to refresh() is needed to
+    // sync the virtual/physical model. Otherwise, the screen may be blank
+    // until updated a second time.
+    if (widget->base.window == stdscr) {
+        refresh();
+    }
+
     for (uint8_t row = 0; row < layout->rows; row++) {
         for (uint8_t col = 0; col < layout->cols; col++) {
             widget_pos.y = pos.y + row * widget_dim.height;
@@ -361,7 +368,7 @@ widget_status_t layout_show(widget_t *widget) {
         return WIDGET_NOT_STDSCR;
     }
 
-    getyx(widget->base.window, pos.y, pos.x);
+    getbegyx(widget->base.window, pos.y, pos.x);
     getmaxyx(widget->base.window, dim.height, dim.width);
     layout_on_resize(widget, dim, pos);
     layout_on_refresh(widget);
@@ -425,10 +432,15 @@ void layout_change_focus(widget_t *widget, layout_dir_t dir) {
     }
     }
 
+    // When a focus change happens, you need to call the "on_lose_focus()" of
+    // the previous widget, and the "on_focus()" of the new one with a dummy
+    // '\0' key, just in case it flags itself dirty and needs refreshing.
     if (lost_focus) {
         layout->widgets[layout->focus_idx]->base.on_lose_focus_fn(
             layout->widgets[layout->focus_idx]);
         layout->focus_idx =
             pos2idx(layout, layout->focus_row, layout->focus_col);
+        layout->widgets[layout->focus_idx]->base.on_focus_fn(
+            layout->widgets[layout->focus_idx], '\0');
     }
 }
