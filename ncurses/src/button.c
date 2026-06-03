@@ -10,6 +10,7 @@
 
 /***[Includes]****************************************************************/
 #include "button.h"
+#include "color.h"
 #include "widget.h"
 #include <ncurses.h>
 #include <stdlib.h>
@@ -23,6 +24,10 @@ static void button_on_resize(widget_t *widget, dim_t dim, pos_t pos);
 static bool button_on_refresh(widget_t *widget);
 static bool button_on_focus(widget_t *widget, int key);
 static void button_on_lose_focus(widget_t *widget);
+
+static void button_write_text(widget_t *widget);
+
+static int calculate_rows(widget_t *widget);
 
 /***[Static functions]********************************************************/
 
@@ -40,6 +45,8 @@ static bool button_on_refresh(widget_t *widget) {
 
     // TODO Be smarter about it
     wclear(widget->base.window);
+
+    button_write_text(widget);
 
     wattron(widget->base.window, COLOR_PAIR(button->border_color));
     wborder(widget->base.window, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -77,6 +84,83 @@ static bool button_on_focus(widget_t *widget, int key) {
 static void button_on_lose_focus(widget_t *widget) {
     button_t *button = widget->data;
     button_set_border_color(widget, button->stored_border_color);
+}
+
+// Assuming middle_center alignment for buttons
+static void button_write_text(widget_t *widget) {
+    button_t *button = (button_t *)widget->data;
+
+    const int max_height = getmaxy(widget->base.window) - 2;
+    const int max_width = getmaxx(widget->base.window) - 2;
+    int rows = calculate_rows(widget);
+
+    rows = (rows <= max_height) ? rows : max_height;
+
+    int ypos = (getmaxy(widget->base.window) - rows) / 2;
+    int xpos = 0;
+
+    char line[BUTTON_MAX_TEXT_LENGTH] = "";
+    char *copy = strdup(button->text);
+
+    char *word = strtok(copy, " ");
+    while (word) {
+        // Add words to the current line while its width does not surpasses the
+        // window's width.
+        if (strlen(line) + strlen(word) < max_width) {
+            // Add space between words
+            if (strlen(line) > 0) {
+                strncat(line, " ", 2);
+            }
+            strncat(line, word, strlen(word));
+        } else {
+            xpos = ((max_width - (int)strlen(line)) / 2) + 1;
+
+            wattron(widget->base.window, COLOR_PAIR(button->color));
+            mvwprintw(widget->base.window, ypos, xpos, "%s", line);
+            wattroff(widget->base.window, COLOR_PAIR(button->color));
+            ypos++;
+            line[0] = '\0';
+            strncat(line, word, strlen(word) + 1);
+        }
+
+        word = strtok(NULL, " ");
+    }
+
+    if (strlen(line) > 0) {
+        xpos = ((max_width - (int)strlen(line)) / 2) + 1;
+
+        wattron(widget->base.window, COLOR_PAIR(button->color));
+        mvwprintw(widget->base.window, ypos, xpos, "%s", line);
+        wattroff(widget->base.window, COLOR_PAIR(button->color));
+        ypos++;
+    }
+
+    free(copy);
+}
+
+static int calculate_rows(widget_t *widget) {
+    button_t *button = (button_t *)widget->data;
+
+    // Minus two because of the borders.
+    const uint16_t max_width = getmaxy(widget->base.window) - 2;
+    uint16_t chars_in_line = 0;
+    uint16_t chars_in_word = 0;
+    int rows = 0;
+    // The white-space is counted as character that prefixes words.
+    for (uint16_t i = 0; i < (button->text[i] != (char)'\0'); i++) {
+        chars_in_word++;
+        if ((button->text[i] == ' ') || (button->text[i + 1] == '\0')) {
+            if (chars_in_line + chars_in_word <= max_width) {
+                chars_in_line += chars_in_word;
+            } else {
+                rows++;
+                chars_in_line = chars_in_word;
+            }
+            chars_in_word = 0;
+        }
+    }
+
+    return rows;
 }
 
 /***[Public functions]********************************************************/

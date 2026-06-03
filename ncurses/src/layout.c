@@ -71,17 +71,7 @@ static WINDOW *ncurses_init(void) {
     noecho();
     cbreak();
     keypad(stdscr, true);
-    if (has_colors() == FALSE) {
-        exit(1);
-    }
-    start_color();
-    init_pair(COLOR_RED_BLACK, COLOR_RED, COLOR_BLACK);
-    init_pair(COLOR_GREEN_BLACK, COLOR_GREEN, COLOR_BLACK);
-    init_pair(COLOR_YELLOW_BLACK, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(COLOR_BLUE_BLACK, COLOR_BLUE, COLOR_BLACK);
-    init_pair(COLOR_MAGENTA_BLACK, COLOR_MAGENTA, COLOR_BLACK);
-    init_pair(COLOR_CYAN_BLACK, COLOR_CYAN, COLOR_BLACK);
-    init_pair(COLOR_WHITE_BLACK, COLOR_WHITE, COLOR_BLACK);
+    color_init();
 
     return parent;
 }
