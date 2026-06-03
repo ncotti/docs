@@ -45,6 +45,7 @@ typedef enum widget_type_t {
     WIDGET_TEXTBOX,
     WIDGET_BUTTON,
     WIDGET_LAYOUT,
+    WIDGET_BUTTON_PANEL,
 } widget_type_t;
 
 typedef struct widget_border_t {

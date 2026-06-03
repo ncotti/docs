@@ -390,6 +390,7 @@ widget_status_t layout_show(widget_t *widget) {
 
 // TODO layout_resize (change amount of rows and cols)
 
+// TODO layout do not lose focus for now
 void layout_on_lose_focus(widget_t *widget) {}
 
 void layout_change_focus(widget_t *widget, layout_dir_t dir) {
