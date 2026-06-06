@@ -30,10 +30,14 @@ static WINDOW *ncurses_init(void);
  * The layout will re-calculate the new dimensions and positions for each widget
  * and propagate the resize event to all its children.
  * @param widget Widget to be resized.
- * @param dim Widget's new dimensions (height,width).
+ * @param height Widget's new height.
+ * @param width Widget's new width.
+ * @param y Widget's new beginning "y" position.
+ * @param x Widget's new beginning "x" position.
  * @param pos Widget's new position (y,x)
  */
-static void layout_on_resize(widget_t *widget, dim_t dim, pos_t pos);
+static void layout_on_resize(widget_t *widget, int height, int width, int y,
+                             int x);
 
 /**
  * @brief Called whenever a refresh event is triggered. The refresh will only
@@ -76,15 +80,15 @@ static WINDOW *ncurses_init(void) {
     return parent;
 }
 
-static void layout_on_resize(widget_t *widget, dim_t dim, pos_t pos) {
+static void layout_on_resize(widget_t *widget, int height, int width, int y,
+                             int x) {
     uint8_t idx = 0;
     layout_t *layout = (layout_t *)widget->data;
 
-    pos_t widget_pos;
-    dim_t widget_dim = {
-        .height = dim.height / layout->rows,
-        .width = dim.width / layout->cols,
-    };
+    const int widget_height = height / layout->rows;
+    const int widget_width = width / layout->cols;
+    int widget_y = 0;
+    int widget_x = 0;
 
     // Whenever you resize the window, a call to refresh() is needed to
     // sync the virtual/physical model. Otherwise, the screen may be blank
@@ -95,12 +99,13 @@ static void layout_on_resize(widget_t *widget, dim_t dim, pos_t pos) {
 
     for (uint8_t row = 0; row < layout->rows; row++) {
         for (uint8_t col = 0; col < layout->cols; col++) {
-            widget_pos.y = pos.y + row * widget_dim.height;
-            widget_pos.x = pos.x + col * widget_dim.width;
+            widget_y = y + row * widget_height;
+            widget_x = x + col * widget_width;
 
             idx = pos2idx(layout, row, col);
             layout->widgets[idx]->base.on_resize_fn(layout->widgets[idx],
-                                                    widget_dim, widget_pos);
+                                                    widget_height, widget_width,
+                                                    widget_y, widget_x);
         }
     }
 
@@ -174,47 +179,56 @@ static bool layout_on_focus(widget_t *widget, int key) {
     }
 
     case 'c': {
-        textbox_set_alignment(layout->widgets[0], TEXT_ALIGN_TOP_LEFT);
+        textbox_set_alignment(layout->widgets[0], TEXT_V_ALIGN_TOP,
+                              TEXT_H_ALIGN_LEFT);
         break;
     }
 
     case 'd': {
-        textbox_set_alignment(layout->widgets[0], TEXT_ALIGN_TOP_CENTER);
+        textbox_set_alignment(layout->widgets[0], TEXT_V_ALIGN_TOP,
+                              TEXT_H_ALIGN_CENTER);
         break;
     }
 
     case 'e': {
-        textbox_set_alignment(layout->widgets[0], TEXT_ALIGN_TOP_RIGHT);
+        textbox_set_alignment(layout->widgets[0], TEXT_V_ALIGN_TOP,
+                              TEXT_H_ALIGN_RIGHT);
         break;
     }
 
     case 'f': {
-        textbox_set_alignment(layout->widgets[0], TEXT_ALIGN_MIDDLE_LEFT);
+        textbox_set_alignment(layout->widgets[0], TEXT_V_ALIGN_MIDDLE,
+                              TEXT_H_ALIGN_LEFT);
         break;
     }
 
     case 'g': {
-        textbox_set_alignment(layout->widgets[0], TEXT_ALIGN_MIDDLE_CENTER);
+        textbox_set_alignment(layout->widgets[0], TEXT_V_ALIGN_MIDDLE,
+                              TEXT_H_ALIGN_CENTER);
         break;
     }
 
     case 'h': {
-        textbox_set_alignment(layout->widgets[0], TEXT_ALIGN_MIDDLE_RIGHT);
+        textbox_set_alignment(layout->widgets[0], TEXT_V_ALIGN_MIDDLE,
+                              TEXT_H_ALIGN_RIGHT);
         break;
     }
 
     case 'i': {
-        textbox_set_alignment(layout->widgets[0], TEXT_ALIGN_BOTTOM_LEFT);
+        textbox_set_alignment(layout->widgets[0], TEXT_V_ALIGN_BOTTOM,
+                              TEXT_H_ALIGN_LEFT);
         break;
     }
 
     case 'j': {
-        textbox_set_alignment(layout->widgets[0], TEXT_ALIGN_BOTTOM_CENTER);
+        textbox_set_alignment(layout->widgets[0], TEXT_V_ALIGN_BOTTOM,
+                              TEXT_H_ALIGN_CENTER);
         break;
     }
 
     case 'k': {
-        textbox_set_alignment(layout->widgets[0], TEXT_ALIGN_BOTTOM_RIGHT);
+        textbox_set_alignment(layout->widgets[0], TEXT_V_ALIGN_BOTTOM,
+                              TEXT_H_ALIGN_RIGHT);
         break;
     }
 
@@ -224,11 +238,10 @@ static bool layout_on_focus(widget_t *widget, int key) {
     }
 
     case KEY_RESIZE: {
-        pos_t pos;
-        dim_t dim;
-        getmaxyx(widget->base.window, dim.height, dim.width);
-        getbegyx(widget->base.window, pos.y, pos.x);
-        layout_on_resize(widget, dim, pos);
+        int height, width, y, x;
+        getmaxyx(widget->base.window, height, width);
+        getbegyx(widget->base.window, y, x);
+        layout_on_resize(widget, height, width, y, x);
     }
 
     default: {
@@ -345,8 +358,7 @@ widget_status_t layout_show(widget_t *widget) {
     bool key_was_used = false;
     bool exit = false;
     int key = 0;
-    pos_t pos;
-    dim_t dim;
+    int height, width, y, x;
 
     layout_t *layout = NULL;
     widget_status_t ret = widget_cast(widget, (void **)&layout, WIDGET_LAYOUT);
@@ -358,9 +370,9 @@ widget_status_t layout_show(widget_t *widget) {
         return WIDGET_NOT_STDSCR;
     }
 
-    getbegyx(widget->base.window, pos.y, pos.x);
-    getmaxyx(widget->base.window, dim.height, dim.width);
-    layout_on_resize(widget, dim, pos);
+    getbegyx(widget->base.window, y, x);
+    getmaxyx(widget->base.window, height, width);
+    layout_on_resize(widget, height, width, y, x);
     layout_on_refresh(widget);
 
     do {

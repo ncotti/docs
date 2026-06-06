@@ -1,7 +1,9 @@
 /***[Includes]****************************************************************/
 #include "textbox.h"
 #include "color.h"
+#include "logger.h"
 #include "widget.h"
+#include <math.h>
 #include <ncurses.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -13,60 +15,80 @@ static const char g_null_char = '\0';
 
 /***[Static functions prototypes]*********************************************/
 
-static void textbox_on_resize(widget_t *widget, dim_t dim, pos_t pos);
+static void textbox_on_resize(widget_t *widget, int height, int width, int y,
+                              int x);
 static bool textbox_on_refresh(widget_t *widget);
 static bool textbox_on_focus(widget_t *widget, int key);
 static void textbox_on_lose_focus(widget_t *widget);
 
 static void calculate_rows_and_words(widget_t *widget);
 
+static void draw_border(widget_t *widget);
+
 /***[Static functions]********************************************************/
+
+static void draw_border(widget_t *widget) {
+    textbox_t *textbox = (textbox_t *)widget->data;
+
+    const size_t word_counter_width =
+        strlen("Words: ") + (size_t)ceilf(log10f(textbox->text_words));
+
+    wattron(widget->base.window, COLOR_PAIR(textbox->border_color));
+    wborder(widget->base.window, 0, 0, 0, 0, 0, 0, 0, 0);
+    wattroff(widget->base.window, COLOR_PAIR(textbox->border_color));
+
+    wattron(widget->base.window,
+            COLOR_PAIR(COLOR_NEGATE(textbox->border_color)));
+
+    mvwprintw(widget->base.window, getmaxy(widget->base.window) - 1, 1,
+              "Rows: %d", textbox->text_rows);
+    mvwprintw(widget->base.window, getmaxy(widget->base.window) - 1,
+              getmaxx(widget->base.window) - word_counter_width - 1,
+              "Words: %d", textbox->text_words);
+
+    wattroff(widget->base.window,
+             COLOR_NEGATE(COLOR_PAIR(textbox->border_color)));
+}
 
 static void alignment_to_position(widget_t *widget) {
     textbox_t *textbox = (textbox_t *)widget->data;
     int ypos = 0;
     int xpos = 0;
+    uint16_t line_counter = 0;
+    uint16_t lines_written = 0;
 
     // Minus two because of the borders.
     const int max_width = getmaxx(widget->base.window) - 2;
     const int max_height = getmaxy(widget->base.window) - 2;
 
     // Vertical alignment
-    switch (textbox->alignment) {
-    case TEXT_ALIGN_TOP_LEFT:
-    case TEXT_ALIGN_TOP_CENTER:
-    case TEXT_ALIGN_TOP_RIGHT: {
+    switch (textbox->v_alignment) {
+    case TEXT_V_ALIGN_TOP: {
         ypos = 1;
         break;
     }
 
-    case TEXT_ALIGN_MIDDLE_LEFT:
-    case TEXT_ALIGN_MIDDLE_CENTER:
-    case TEXT_ALIGN_MIDDLE_RIGHT: {
+    case TEXT_V_ALIGN_MIDDLE: {
         ypos = (getmaxy(widget->base.window) - textbox->text_rows) / 2;
         break;
     }
 
-    case TEXT_ALIGN_BOTTOM_LEFT:
-    case TEXT_ALIGN_BOTTOM_CENTER:
-    case TEXT_ALIGN_BOTTOM_RIGHT: {
+    case TEXT_V_ALIGN_BOTTOM: {
         ypos = getmaxy(widget->base.window) - 1 - textbox->text_rows;
         break;
     }
     }
 
-    ypos = ypos + textbox->top_displayed_text_row;
-
-    textbox->text_rows = 0;
-
-    char line[1024] = "";
+    // TODO right line size
+    char *line = (char *)malloc((size_t)max_width * 2U);
+    line[0] = g_null_char;
     char *copy = strdup(textbox->text);
 
-    char *word = strtok(copy, " ");
-    while (word) {
+    char *word = strtok(copy, " \n\t");
+    while (word && (ypos <= max_height)) {
         // Add words to the current line while its width does not surpasses the
         // window's width.
-        if (strlen(line) + strlen(word) < max_width) {
+        if (strlen(line) + strlen(word) + 1 <= max_width) {
             // Add space between words
             if (strlen(line) > 0) {
                 strncat(line, " ", 2);
@@ -76,63 +98,59 @@ static void alignment_to_position(widget_t *widget) {
             // Print and erase line
 
             // Horizontal alignment
-            switch (textbox->alignment) {
-            case TEXT_ALIGN_TOP_LEFT:
-            case TEXT_ALIGN_MIDDLE_LEFT:
-            case TEXT_ALIGN_BOTTOM_LEFT: {
+            switch (textbox->h_alignment) {
+            case TEXT_H_ALIGN_LEFT: {
                 xpos = 1;
                 break;
             }
 
-            case TEXT_ALIGN_TOP_CENTER:
-            case TEXT_ALIGN_MIDDLE_CENTER:
-            case TEXT_ALIGN_BOTTOM_CENTER: {
+            case TEXT_H_ALIGN_CENTER: {
                 xpos = ((max_width - (int)strlen(line)) / 2) + 1;
                 break;
             }
 
-            case TEXT_ALIGN_TOP_RIGHT:
-            case TEXT_ALIGN_MIDDLE_RIGHT:
-            case TEXT_ALIGN_BOTTOM_RIGHT: {
+            case TEXT_H_ALIGN_RIGHT: {
                 xpos = getmaxx(widget->base.window) - (int)strlen(line) - 1;
                 break;
             }
             }
 
-            wattron(widget->base.window, COLOR_PAIR(textbox->text_color));
-            mvwprintw(widget->base.window, ypos, xpos, "%s", line);
-            wattroff(widget->base.window, COLOR_PAIR(textbox->text_color));
-            ypos++;
-            textbox->text_rows++;
-            line[0] = '\0';
+            if (line_counter >= textbox->first_row_shown) {
+                wattron(widget->base.window, COLOR_PAIR(textbox->text_color));
+                mvwprintw(widget->base.window, ypos, xpos, "%s", line);
+                wattroff(widget->base.window, COLOR_PAIR(textbox->text_color));
+                ypos++;
+                lines_written++;
+            }
+
+            line[0] = g_null_char;
+            line_counter++;
             strncat(line, word, strlen(word) + 1);
         }
 
-        word = strtok(NULL, " ");
+        word = strtok(NULL, " \n\t");
     }
 
-    if (strlen(line) > 0) {
+    char buffer_2[128];
+    sprintf(buffer_2, "Last word: %s; last line: %s\n", word, line);
+    logger_print(buffer_2);
+
+    if ((strlen(line) > 0) && (ypos <= max_height)) {
         // Print and erase line
 
         // Horizontal alignment
-        switch (textbox->alignment) {
-        case TEXT_ALIGN_TOP_LEFT:
-        case TEXT_ALIGN_MIDDLE_LEFT:
-        case TEXT_ALIGN_BOTTOM_LEFT: {
+        switch (textbox->h_alignment) {
+        case TEXT_H_ALIGN_LEFT: {
             xpos = 1;
             break;
         }
 
-        case TEXT_ALIGN_TOP_CENTER:
-        case TEXT_ALIGN_MIDDLE_CENTER:
-        case TEXT_ALIGN_BOTTOM_CENTER: {
+        case TEXT_H_ALIGN_CENTER: {
             xpos = ((max_width - (int)strlen(line)) / 2) + 1;
             break;
         }
 
-        case TEXT_ALIGN_TOP_RIGHT:
-        case TEXT_ALIGN_MIDDLE_RIGHT:
-        case TEXT_ALIGN_BOTTOM_RIGHT: {
+        case TEXT_H_ALIGN_RIGHT: {
             xpos = getmaxx(widget->base.window) - (int)strlen(line) - 1;
             break;
         }
@@ -140,40 +158,55 @@ static void alignment_to_position(widget_t *widget) {
 
         wattron(widget->base.window, COLOR_PAIR(textbox->text_color));
         mvwprintw(widget->base.window, ypos, xpos, "%s", line);
-        ypos++;
-        textbox->text_rows++;
         wattroff(widget->base.window, COLOR_PAIR(textbox->text_color));
+        lines_written++;
     }
 
-    if (textbox->text_rows > max_height) {
+    textbox->last_row_shown = textbox->first_row_shown + lines_written - 1;
+
+    if (textbox->first_row_shown > 0) {
         wattron(widget->base.window, COLOR_PAIR(textbox->text_color));
-        mvwprintw(widget->base.window, 0, 0, "%c%c%c", ACS_UARROW, ACS_UARROW,
-                  ACS_UARROW);
-        mvwprintw(widget->base.window, getmaxy(widget->base.window), 0,
-                  "%c%c%c", ACS_DARROW, ACS_DARROW, ACS_DARROW);
+        mvwprintw(widget->base.window, 0, max_width / 2 - 1, "%s",
+                  ((max_width % 2) == 0) ? "^^^^" : "^^^^^");
         wattroff(widget->base.window, COLOR_PAIR(textbox->text_color));
     }
+    if (textbox->last_row_shown < textbox->text_rows - 1) {
+        mvwprintw(widget->base.window, getmaxy(widget->base.window) - 1,
+                  max_width / 2 - 1, "%s",
+                  ((max_width % 2) == 0) ? "vvvv" : "vvvvv");
+    }
 
+    char buffer[128];
+    sprintf(buffer, "First row: %d; last row: %d\n", textbox->first_row_shown,
+            textbox->last_row_shown);
+    logger_print(buffer);
+
+    free(line);
     free(copy);
 }
 
 static void calculate_rows_and_words(widget_t *widget) {
     textbox_t *textbox = (textbox_t *)widget->data;
 
-    // Minus two because of the borders.
-    const uint16_t max_width = getmaxy(widget->base.window) - 2;
+    // Minus one because of the left border.
+    // If the last character is a space or newline, we can afford not to
+    // print it, that's why the right border is ignored.
+    const uint16_t max_width = getmaxx(widget->base.window) - 1;
     uint16_t chars_in_line = 0;
     uint16_t chars_in_word = 0;
 
     textbox->text_rows = 0;
     textbox->text_words = 0;
 
-    // The white-space is counted as character that prefixes words.
-    for (uint16_t i = 0; i < (textbox->text[i] != (char)'\0'); i++) {
+    // The white-space is counted as a character that prefixes words.
+    // The "+1" is to count the "'\0'" as if it were a white-space.
+    // It is considered an skippable character, such as " " or "\n".
+    for (size_t i = 0; i < strlen(textbox->text) + 1; i++) {
         chars_in_word++;
-        if ((textbox->text[i] == ' ') || (textbox->text[i + 1] == '\0')) {
+        if ((textbox->text[i] == ' ') || (textbox->text[i] == '\n') ||
+            (textbox->text[i] == '\t') || (textbox->text[i] == '\0')) {
             textbox->text_words++;
-            if (chars_in_line + chars_in_word <= max_width) {
+            if ((chars_in_line + chars_in_word) <= max_width) {
                 chars_in_line += chars_in_word;
             } else {
                 textbox->text_rows++;
@@ -182,16 +215,25 @@ static void calculate_rows_and_words(widget_t *widget) {
             chars_in_word = 0;
         }
     }
+
+    if ((chars_in_line > 0)) {
+        textbox->text_rows++;
+    }
 }
 
-static void textbox_on_resize(widget_t *widget, dim_t dim, pos_t pos) {
-    wresize(widget->base.window, dim.height, dim.width);
-    mvwin(widget->base.window, pos.y, pos.x);
+static void textbox_on_resize(widget_t *widget, int height, int width, int y,
+                              int x) {
+    textbox_t *textbox = (textbox_t *)widget->data;
+    wresize(widget->base.window, height, width);
+    mvwin(widget->base.window, y, x);
+    calculate_rows_and_words(widget);
+    textbox_set_alignment(widget, textbox->stored_v_alignment,
+                          textbox->h_alignment);
+    textbox->first_row_shown = 0;
     widget->base.dirty = true;
 }
 
 static bool textbox_on_refresh(widget_t *widget) {
-    textbox_t *textbox = (textbox_t *)widget->data;
     if (!widget->base.dirty) {
         return false;
     }
@@ -201,11 +243,9 @@ static bool textbox_on_refresh(widget_t *widget) {
     // Be smarter about it
     wclear(widget->base.window);
 
-    alignment_to_position(widget);
+    draw_border(widget);
 
-    wattron(widget->base.window, COLOR_PAIR(textbox->border_color));
-    wborder(widget->base.window, 0, 0, 0, 0, 0, 0, 0, 0);
-    wattroff(widget->base.window, COLOR_PAIR(textbox->border_color));
+    alignment_to_position(widget);
 
     wnoutrefresh(widget->base.window);
     widget->base.dirty = false;
@@ -218,17 +258,19 @@ static bool textbox_on_focus(widget_t *widget, int key) {
 
     switch (key) {
     case 's': {
-        textbox->top_displayed_text_row++;
+        textbox->first_row_shown =
+            (textbox->last_row_shown < textbox->text_rows - 1)
+                ? textbox->first_row_shown + 1
+                : textbox->first_row_shown;
         key_was_consumed = true;
         widget->base.dirty = true;
         break;
     }
 
     case 'w': {
-        textbox->top_displayed_text_row =
-            (textbox->top_displayed_text_row > 0)
-                ? textbox->top_displayed_text_row - 1
-                : textbox->top_displayed_text_row;
+        textbox->first_row_shown = (textbox->first_row_shown > 0)
+                                       ? textbox->first_row_shown - 1
+                                       : textbox->first_row_shown;
         key_was_consumed = true;
         widget->base.dirty = true;
         break;
@@ -264,10 +306,9 @@ widget_t *textbox_new(const char *text) {
                 textbox_on_lose_focus, textbox_on_resize);
 
     textbox->text_color = COLOR_WHITE_BLACK;
-    textbox->alignment = TEXT_ALIGN_TOP_LEFT;
-    textbox->top_displayed_text_row = 0;
     textbox->text = NULL;
     textbox_set_text(widget, text);
+    textbox_set_alignment(widget, TEXT_V_ALIGN_TOP, TEXT_H_ALIGN_LEFT);
 
     textbox->border_color = COLOR_WHITE_BLACK;
     textbox->stored_border_color = COLOR_WHITE_BLACK;
@@ -315,6 +356,8 @@ widget_status_t textbox_set_text(widget_t *widget, const char *text) {
     strncpy(textbox->text, text, strlen(text) + 1);
     calculate_rows_and_words(widget);
 
+    textbox->first_row_shown = 0;
+
     widget->base.dirty = true;
     return WIDGET_OK;
 }
@@ -334,8 +377,10 @@ widget_status_t textbox_set_color(widget_t *widget, color_t color) {
 }
 
 widget_status_t textbox_set_alignment(widget_t *widget,
-                                      text_align_t alignment) {
+                                      text_v_align_t v_alignment,
+                                      text_h_align_t h_alignment) {
     textbox_t *textbox = NULL;
+    const int max_height = getmaxy(widget->base.window) - 2;
     widget_status_t ret =
         widget_cast(widget, (void **)&textbox, WIDGET_TEXTBOX);
 
@@ -343,7 +388,14 @@ widget_status_t textbox_set_alignment(widget_t *widget,
         return ret;
     }
 
-    textbox->alignment = alignment;
+    textbox->h_alignment = h_alignment;
+    textbox->stored_v_alignment = v_alignment;
+
+    // If the text does not fit in the textbox, the alignment is forced to be
+    // from the top.
+    textbox->v_alignment = (textbox->text_rows < max_height)
+                               ? textbox->stored_v_alignment
+                               : TEXT_V_ALIGN_TOP;
     widget->base.dirty = true;
     return WIDGET_OK;
 }

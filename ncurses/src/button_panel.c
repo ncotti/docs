@@ -13,7 +13,8 @@
 /***[Static functions prototypes]*********************************************/
 
 static bool button_panel_on_refresh(widget_t *widget);
-static void button_panel_on_resize(widget_t *widget, dim_t dim, pos_t pos);
+static void button_panel_on_resize(widget_t *widget, int height, int width,
+                                   int y, int x);
 static bool button_panel_on_focus(widget_t *widget, int key);
 static void button_panel_on_lose_focus(widget_t *widget);
 
@@ -49,9 +50,10 @@ static bool button_panel_on_refresh(widget_t *widget) {
     widget->base.dirty = false;
     return true;
 }
-static void button_panel_on_resize(widget_t *widget, dim_t dim, pos_t pos) {
-    wresize(widget->base.window, dim.height, dim.width);
-    mvwin(widget->base.window, pos.y, pos.x);
+static void button_panel_on_resize(widget_t *widget, int height, int width,
+                                   int y, int x) {
+    wresize(widget->base.window, height, width);
+    mvwin(widget->base.window, y, x);
     widget->base.dirty = true;
 }
 static bool button_panel_on_focus(widget_t *widget, int key) {
@@ -91,7 +93,7 @@ static void negotiate_position_and_dimension(widget_t *widget) {
 
 /***[Public functions]********************************************************/
 
-widget_t *button_panel_new(dim_t dim, button_t *button) {
+widget_t *button_panel_new(int height, int width, button_t *button) {
     widget_t *widget = (widget_t *)malloc(sizeof(widget_t));
     button_panel_t *button_panel =
         (button_panel_t *)malloc(sizeof(button_panel_t));
@@ -110,8 +112,8 @@ widget_t *button_panel_new(dim_t dim, button_t *button) {
     button_panel->border_color = COLOR_WHITE_BLACK;
     button_panel->buttons = NULL;
     button_panel->button_qtty = 0;
-    button_panel->dim.height = dim.height;
-    button_panel->dim.width = dim.width;
+    button_panel->height = height;
+    button_panel->width = width;
     widget_status_t ret = button_panel_add(widget, button);
     if (ret != WIDGET_OK) {
         button_panel_del(widget);

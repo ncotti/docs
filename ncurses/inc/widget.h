@@ -24,21 +24,11 @@ typedef enum widget_status_t {
     WIDGET_NOT_STDSCR = -5,
 } widget_status_t;
 
-typedef struct pos_t {
-    int y;
-    int x;
-} pos_t;
-
-typedef struct dim_t {
-    int height;
-    int width;
-} dim_t;
-
 typedef widget_status_t (*widget_del_fn_t)(widget_t *);
 typedef bool (*widget_on_refresh_fn_t)(widget_t *);
 typedef bool (*widget_on_focus_fn_t)(widget_t *, int);
 typedef void (*widget_on_lose_focus_fn_t)(widget_t *);
-typedef void (*widget_on_resize_t)(widget_t *, dim_t, pos_t);
+typedef void (*widget_on_resize_t)(widget_t *, int, int, int, int);
 
 /// @brief Widget types
 typedef enum widget_type_t {

@@ -5,6 +5,7 @@
 
 /***[Macros]******************************************************************/
 #define COLOR_NEGATE(color) (0xFF - ((color) & 0xFF))
+#define COLOR_INVERTED(color) COLOR_NEGATE
 
 /***[Types]*******************************************************************/
 

@@ -17,14 +17,15 @@ typedef struct button_panel_t {
     uint8_t button_qtty;
     color_t border_color;
     color_t stored_border_color;
-    dim_t dim;
+    int height;
+    int width;
 } button_panel_t;
 
 /***[Extern variables]********************************************************/
 
 /***[Functions prototypes]****************************************************/
 
-widget_t *button_panel_new(dim_t dim, button_t *button);
+widget_t *button_panel_new(int height, int width, button_t *button);
 
 widget_status_t button_panel_del(widget_t *widget);
 

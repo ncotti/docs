@@ -20,7 +20,8 @@
 
 /***[Static functions prototypes]*********************************************/
 
-static void button_on_resize(widget_t *widget, dim_t dim, pos_t pos);
+static void button_on_resize(widget_t *widget, int height, int width, int y,
+                             int x);
 static bool button_on_refresh(widget_t *widget);
 static bool button_on_focus(widget_t *widget, int key);
 static void button_on_lose_focus(widget_t *widget);
@@ -31,9 +32,10 @@ static int calculate_rows(widget_t *widget);
 
 /***[Static functions]********************************************************/
 
-static void button_on_resize(widget_t *widget, dim_t dim, pos_t pos) {
-    wresize(widget->base.window, dim.height, dim.width);
-    mvwin(widget->base.window, pos.y, pos.x);
+static void button_on_resize(widget_t *widget, int height, int width, int y,
+                             int x) {
+    wresize(widget->base.window, height, width);
+    mvwin(widget->base.window, y, x);
     widget->base.dirty = true;
 }
 

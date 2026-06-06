@@ -17,7 +17,7 @@ HEADER_DIRS ?= inc
 
 CFLAGS ?= -Wall -g -Wpedantic
 ASFLAGS ?= -g
-LDFLAGS ?= -g -lncurses -lpanel -lmenu -lform -lcdk
+LDFLAGS ?= -g -lncurses -lpanel -lmenu -lform -lcdk -lm
 # Linker script (can be empty)
 LDSCRIPT ?=
 
