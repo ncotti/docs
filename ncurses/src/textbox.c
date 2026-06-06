@@ -40,11 +40,16 @@ static void draw_border(widget_t *widget) {
     wattron(widget->base.window,
             COLOR_PAIR(COLOR_NEGATE(textbox->border_color)));
 
-    mvwprintw(widget->base.window, getmaxy(widget->base.window) - 1, 1,
-              "Rows: %d", textbox->text_rows);
-    mvwprintw(widget->base.window, getmaxy(widget->base.window) - 1,
-              getmaxx(widget->base.window) - word_counter_width - 1,
-              "Words: %d", textbox->text_words);
+    if (textbox->row_counter_enabled) {
+        mvwprintw(widget->base.window, getmaxy(widget->base.window) - 1, 1,
+                  "Rows: %d", textbox->text_rows);
+    }
+
+    if (textbox->word_counter_enabled) {
+        mvwprintw(widget->base.window, getmaxy(widget->base.window) - 1,
+                  getmaxx(widget->base.window) - word_counter_width - 1,
+                  "Words: %d", textbox->text_words);
+    }
 
     wattroff(widget->base.window,
              COLOR_NEGATE(COLOR_PAIR(textbox->border_color)));
@@ -131,10 +136,6 @@ static void alignment_to_position(widget_t *widget) {
         word = strtok(NULL, " \n\t");
     }
 
-    char buffer_2[128];
-    sprintf(buffer_2, "Last word: %s; last line: %s\n", word, line);
-    logger_print(buffer_2);
-
     if ((strlen(line) > 0) && (ypos <= max_height)) {
         // Print and erase line
 
@@ -175,11 +176,6 @@ static void alignment_to_position(widget_t *widget) {
                   max_width / 2 - 1, "%s",
                   ((max_width % 2) == 0) ? "vvvv" : "vvvvv");
     }
-
-    char buffer[128];
-    sprintf(buffer, "First row: %d; last row: %d\n", textbox->first_row_shown,
-            textbox->last_row_shown);
-    logger_print(buffer);
 
     free(line);
     free(copy);
@@ -309,6 +305,8 @@ widget_t *textbox_new(const char *text) {
     textbox->text = NULL;
     textbox_set_text(widget, text);
     textbox_set_alignment(widget, TEXT_V_ALIGN_TOP, TEXT_H_ALIGN_LEFT);
+    textbox_enable_row_counter(widget);
+    textbox_enable_word_counter(widget);
 
     textbox->border_color = COLOR_WHITE_BLACK;
     textbox->stored_border_color = COLOR_WHITE_BLACK;
@@ -414,5 +412,65 @@ widget_status_t textbox_set_border_color(widget_t *widget, color_t color) {
         textbox->border_color = color;
         widget->base.dirty = true;
     }
+    return WIDGET_OK;
+}
+
+widget_status_t textbox_enable_word_counter(widget_t *widget) {
+    textbox_t *textbox = NULL;
+    widget_status_t ret =
+        widget_cast(widget, (void **)&textbox, WIDGET_TEXTBOX);
+
+    if (ret != WIDGET_OK) {
+        return ret;
+    }
+
+    textbox->word_counter_enabled = true;
+    widget->base.dirty = true;
+
+    return WIDGET_OK;
+}
+
+widget_status_t textbox_disable_word_counter(widget_t *widget) {
+    textbox_t *textbox = NULL;
+    widget_status_t ret =
+        widget_cast(widget, (void **)&textbox, WIDGET_TEXTBOX);
+
+    if (ret != WIDGET_OK) {
+        return ret;
+    }
+
+    textbox->word_counter_enabled = false;
+    widget->base.dirty = true;
+
+    return WIDGET_OK;
+}
+
+widget_status_t textbox_enable_row_counter(widget_t *widget) {
+    textbox_t *textbox = NULL;
+    widget_status_t ret =
+        widget_cast(widget, (void **)&textbox, WIDGET_TEXTBOX);
+
+    if (ret != WIDGET_OK) {
+        return ret;
+    }
+
+    textbox->row_counter_enabled = true;
+    widget->base.dirty = true;
+
+    return WIDGET_OK;
+}
+
+widget_status_t textbox_disable_row_counter(widget_t *widget) {
+    textbox_t *textbox = NULL;
+    widget_status_t ret =
+        widget_cast(widget, (void **)&textbox, WIDGET_TEXTBOX);
+
+    if (ret != WIDGET_OK) {
+        return ret;
+    }
+
+    textbox->row_counter_enabled = false;
+    widget->base.dirty = true;
+
     return WIDGET_OK;
 }

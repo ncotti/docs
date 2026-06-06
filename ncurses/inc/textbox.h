@@ -41,6 +41,10 @@ typedef struct textbox_t {
     color_t stored_border_color; /**< User-set border's color */
     uint16_t first_row_shown; /**< First row shown on screen, starting from 0 */
     uint16_t last_row_shown;  /**< Last row shown on screen, starting from 0 */
+    bool row_counter_enabled; /**< Whether to show the number of rows in the
+                                 text */
+    bool word_counter_enabled; /**< Whether to show the number of words in the
+                                  text */
 } textbox_t;
 
 /***[Extern variables]********************************************************/
@@ -95,5 +99,10 @@ widget_status_t textbox_set_alignment(widget_t *widget,
  * @return widget_status_t WIDGET_OK on success.
  */
 widget_status_t textbox_set_border_color(widget_t *widget, color_t color);
+
+widget_status_t textbox_enable_word_counter(widget_t *widget);
+widget_status_t textbox_disable_word_counter(widget_t *widget);
+widget_status_t textbox_enable_row_counter(widget_t *widget);
+widget_status_t textbox_disable_row_counter(widget_t *widget);
 
 #endif // TEXTBOX_H_
